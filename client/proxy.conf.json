@@ -1,9 +1,6 @@
 {
-  "/api/auth": {
-    "target": "http://localhost:5001",
-    "secure": false,
-    "pathRewrite": {
-      "^/api": ""
-    }
+  "/spotify": {
+    "target": "http://localhost:7200",
+    "secure": false
   }
 }
