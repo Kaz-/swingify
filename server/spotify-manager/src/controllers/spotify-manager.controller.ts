@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { AxiosResponse } from 'axios';
 
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
 import { AuthService } from 'src/services/auth.service';
+
+import { SpotifyEnvironment } from 'src/models/spotify.models';
 
 @Controller('spotify')
 export class SpotifyManagerController {
@@ -15,9 +16,10 @@ export class SpotifyManagerController {
         private authService: AuthService
     ) { }
 
-    @Get('authorize')
-    authorize(): Observable<AxiosResponse<any>> {
-        return this.authService.authorize();
+    @Get('environment')
+    getSpotifyEnvironment(): SpotifyEnvironment {
+        this.logger.log(`Received an authorize request, redirecting to Spotify's registration page`)
+        return this.authService.getSpotifyEnvironment();
     }
 
     @Post('ping')

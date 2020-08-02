@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  spotify: {
+    serverPath: 'http://localhost:4200/api/spotify',
+    accountsPath: 'https://accounts.spotify.com',
+    apiPath: 'https://api.spotify.com/v1'
+  }
 };
 
 /*
