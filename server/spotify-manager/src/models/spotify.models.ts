@@ -1,5 +1,4 @@
-export interface SpotifyEnvironment {
+export interface SpotifyConfiguration {
     clientId: string;
-    accountsPath?: string;
-    apiPath?: string;
+    clientSecret: string;
 }

@@ -4,9 +4,10 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { ExportComponent } from './components/export/export.component';
 import { SpotifyService } from './services/spotify.service';
+import { ProcessComponent } from './components/process/process.component';
 
 @NgModule({
-  declarations: [ExportComponent],
+  declarations: [ExportComponent, ProcessComponent],
   imports: [
     CommonModule,
     HttpClientModule

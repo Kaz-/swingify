@@ -1,7 +1,6 @@
-export interface SpotifyEnvironment {
+export interface SpotifyConfiguration {
   clientId: string;
-  accountsPath?: string;
-  apiPath?: string;
+  clientSecret: string;
 }
 
 export interface AuthorizeQueryOptions {
@@ -11,4 +10,12 @@ export interface AuthorizeQueryOptions {
   scope?: string;
   state?: string;
   showDialog?: boolean;
+}
+
+export interface AuthorizationToken {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+  scope: string;
+  token_type: string;
 }

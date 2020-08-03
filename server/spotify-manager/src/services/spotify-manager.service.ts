@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
+import { SpotifyConfiguration } from 'src/models/spotify.models';
+
 @Injectable()
 export class SpotifyManagerService {
 
@@ -17,8 +19,9 @@ export class SpotifyManagerService {
         })
     }
 
-    pingCoreMicroservice(data: string): Observable<string> {
-        return this.client.send('receive', data);
+    getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
+        // Sending empty string because there is no need to send any data
+        return this.client.send('spotifyConfiguration', '');
     }
 
 }
