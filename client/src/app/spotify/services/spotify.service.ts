@@ -5,7 +5,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { SpotifyConfiguration, AuthorizationToken } from '../models/spotify.models';
+import { SpotifyConfiguration, AuthorizationToken, SpotifyPlaylist, SpotifyUser } from '../models/spotify.models';
 
 @Injectable()
 export class SpotifyService {
@@ -32,6 +32,14 @@ export class SpotifyService {
         };
         return this.http.post<AuthorizationToken>(`${environment.spotify.accountsPath}/api/token`, null, options);
       }));
+  }
+
+  getUser(): Observable<SpotifyUser> {
+    return this.http.get<SpotifyUser>(`${environment.spotify.serverPath}/me`);
+  }
+
+  getPlaylists(): Observable<SpotifyPlaylist[]> {
+    return this.http.get<SpotifyPlaylist[]>(`${environment.spotify.serverPath}/playlists`);
   }
 
 }

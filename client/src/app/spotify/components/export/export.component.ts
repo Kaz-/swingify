@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { SpotifyService } from '../../services/spotify.service';
+import { SpotifyPlaylist, SpotifyUser } from '../../models/spotify.models';
 
 @Component({
   selector: 'exp-export',
@@ -7,8 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExportComponent implements OnInit {
 
-  constructor() { }
+  spotifyUser$: Observable<SpotifyUser>;
+  spotifyPlaylists$: Observable<SpotifyPlaylist[]>;
 
-  ngOnInit(): void { }
+  constructor(private spotifyService: SpotifyService) { }
+
+  ngOnInit(): void {
+    this.spotifyUser$ = this.spotifyService.getUser();
+    this.spotifyPlaylists$ = this.spotifyService.getPlaylists();
+  }
 
 }
