@@ -1,8 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
-import { AuthorizeQueryOptions } from 'src/app/spotify/models/spotify.models';
+import { AuthorizeQueryOptions, AuthorizationToken } from 'src/app/spotify/models/spotify.models';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,9 +15,20 @@ export class HomeComponent {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private spotifyService: SpotifyService) { }
+    private router: Router,
+    private spotifyService: SpotifyService
+  ) { }
 
   redirect(): void {
+    const token: AuthorizationToken = SpotifyService.getToken();
+    if (token) {
+      SpotifyService.isTokenExpired ? this.refresh(token) : this.router.navigateByUrl('/export');
+    } else {
+      this.authorize();
+    }
+  }
+
+  private authorize(): void {
     this.spotifyService.getSpotifyConfiguration().subscribe(config => {
       const options: AuthorizeQueryOptions = {
         responseType: 'code',
@@ -25,6 +37,13 @@ export class HomeComponent {
       };
       this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
         `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}`;
+    });
+  }
+
+  private refresh(token: AuthorizationToken): void {
+    this.spotifyService.verify(token.refresh_token).subscribe(refreshedToken => {
+      token.created_at = Date.now() / 1000; // in seconds
+      localStorage.setItem('spotify_token', JSON.stringify(refreshedToken));
     });
   }
 

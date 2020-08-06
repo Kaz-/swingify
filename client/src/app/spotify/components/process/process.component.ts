@@ -22,6 +22,7 @@ export class ProcessComponent implements OnInit {
     this.route.queryParams
       .pipe(flatMap(params => this.spotifyService.verify(params[CODE])))
       .subscribe(token => {
+        token.created_at = Math.round(Date.now() / 1000); // in seconds
         localStorage.setItem('spotify_token', JSON.stringify(token));
         this.router.navigateByUrl('/spotify/export', { relativeTo: this.route });
       });

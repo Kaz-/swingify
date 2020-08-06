@@ -12,6 +12,16 @@ export class SpotifyService {
 
   constructor(private http: HttpClient) { }
 
+  static getToken(): AuthorizationToken {
+    return JSON.parse(localStorage.getItem('spotify_token'));
+  }
+
+  static isTokenExpired(token: AuthorizationToken): boolean {
+    const expirationDate: number = token.created_at + token.expires_in;
+    const current: number = Date.now() / 1000;
+    return current > expirationDate;
+  }
+
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
     return this.http.get<SpotifyConfiguration>(`${environment.spotify.serverPath}/configuration`);
   }

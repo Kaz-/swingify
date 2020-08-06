@@ -33,10 +33,11 @@ export class SpotifyManagerController {
     @Get('playlists')
     getPlaylists(@Req() request: Request): Observable<SpotifyPlaylist[]> {
         const authorization = { Authorization: request.headers['authorization'] };
-        return this.getUserProfile(request).pipe(flatMap(user =>
-            this.http.get<SpotifyPlaylist[]>(`${this.baseApiUrl}/users/${user.id}/playlists`, { headers: authorization })
-                .pipe(map(response => response.data))
-        ));
+        return this.getUserProfile(request)
+            .pipe(flatMap(user =>
+                this.http.get<SpotifyPlaylist[]>(`${this.baseApiUrl}/users/${user.id}/playlists`, { headers: authorization })
+                    .pipe(map(response => response.data))
+            ));
     }
 
 }

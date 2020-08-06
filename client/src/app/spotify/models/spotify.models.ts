@@ -18,6 +18,7 @@ export interface AuthorizationToken {
   readonly refresh_token: string;
   readonly scope: string;
   readonly token_type: string;
+  created_at?: number;
 }
 
 export interface SpotifyUser {

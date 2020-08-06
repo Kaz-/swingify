@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  baseUrl: 'http://localhost:4200',
   spotify: {
     serverPath: 'http://localhost:4200/api/spotify',
     accountsPath: 'https://accounts.spotify.com',
