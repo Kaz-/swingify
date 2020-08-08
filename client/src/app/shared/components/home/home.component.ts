@@ -1,23 +1,30 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 import { AuthorizeQueryOptions, AuthorizationToken } from 'src/app/spotify/models/spotify.models';
 import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'exp-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
     private spotifyService: SpotifyService
   ) { }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
 
   redirect(): void {
     const token: AuthorizationToken = SpotifyService.getToken();
@@ -29,22 +36,27 @@ export class HomeComponent {
   }
 
   private authorize(): void {
-    this.spotifyService.getSpotifyConfiguration().subscribe(config => {
-      const options: AuthorizeQueryOptions = {
-        responseType: 'code',
-        clientId: config.clientId,
-        redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fspotify%2Fprocess'
-      };
-      this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
-        `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}`;
-    });
+    this.subscriptions.push(
+      this.spotifyService.getSpotifyConfiguration().subscribe(config => {
+        const options: AuthorizeQueryOptions = {
+          responseType: 'code',
+          clientId: config.clientId,
+          redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fspotify%2Fprocess'
+        };
+        this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
+          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}`;
+      })
+    );
   }
 
   private refresh(token: AuthorizationToken): void {
-    this.spotifyService.verify(token.refresh_token).subscribe(refreshedToken => {
-      token.created_at = Date.now() / 1000; // in seconds
-      localStorage.setItem('spotify_token', JSON.stringify(refreshedToken));
-    });
+    this.subscriptions.push(
+      this.spotifyService.verify(token.refresh_token)
+        .subscribe(refreshedToken => {
+          token.created_at = Date.now() / 1000; // in seconds
+          SpotifyService.setToken(refreshedToken);
+        }, () => this.authorize())
+    );
   }
 
 }

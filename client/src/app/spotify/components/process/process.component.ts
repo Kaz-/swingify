@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { flatMap } from 'rxjs/operators';
 
 import { SpotifyService } from '../../services/spotify.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'exp-process',
   templateUrl: './process.component.html',
   styleUrls: ['./process.component.scss']
 })
-export class ProcessComponent implements OnInit {
+export class ProcessComponent implements OnInit, OnDestroy {
+
+  private subscription: Subscription;
 
   constructor(
     private router: Router,
@@ -19,13 +22,17 @@ export class ProcessComponent implements OnInit {
 
   ngOnInit(): void {
     const CODE = 'code';
-    this.route.queryParams
+    this.subscription = this.route.queryParams
       .pipe(flatMap(params => this.spotifyService.verify(params[CODE])))
       .subscribe(token => {
         token.created_at = Math.round(Date.now() / 1000); // in seconds
-        localStorage.setItem('spotify_token', JSON.stringify(token));
+        SpotifyService.setToken(token);
         this.router.navigateByUrl('/spotify/export', { relativeTo: this.route });
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 }

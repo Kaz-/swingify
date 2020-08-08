@@ -12,7 +12,6 @@ export class SpotifyInterceptor implements HttpInterceptor {
   }
 
   private processInterception(token: AuthorizationToken | null, request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log(SpotifyService.isTokenExpired(token));
     if (token && !SpotifyService.isTokenExpired(token)) {
       request = request.clone({
         setHeaders: {

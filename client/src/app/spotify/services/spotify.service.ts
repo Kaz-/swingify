@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -11,6 +11,10 @@ import { SpotifyConfiguration, AuthorizationToken, SpotifyPlaylist, SpotifyUser 
 export class SpotifyService {
 
   constructor(private http: HttpClient) { }
+
+  static setToken(token: AuthorizationToken): void {
+    localStorage.setItem('spotify_token', JSON.stringify(token));
+  }
 
   static getToken(): AuthorizationToken {
     return JSON.parse(localStorage.getItem('spotify_token'));
