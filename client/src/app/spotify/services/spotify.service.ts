@@ -41,7 +41,7 @@ export class SpotifyService {
           params: {
             grant_type: 'authorization_code',
             code: authorizationCode,
-            redirect_uri: 'http://localhost:4200/spotify/process'
+            redirect_uri: 'http://localhost:4200/process'
           }
         };
         return this.http.post<AuthorizationToken>(`${environment.spotify.accountsPath}/api/token`, null, options);

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { SpotifyService } from '../../services/spotify.service';
-import { Subscription } from 'rxjs';
+import { SpotifyService } from '../../../spotify/services/spotify.service';
 
 @Component({
   selector: 'exp-process',
@@ -27,7 +27,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
       .subscribe(token => {
         token.created_at = Math.round(Date.now() / 1000); // in seconds
         SpotifyService.setToken(token);
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl('/spotify/home');
       });
   }
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { share } from 'rxjs/operators';
+import { shareReplay } from 'rxjs/operators';
 
-import { NavLink, NAV_LINKS } from '../../models/shared.models';
+import { NavLink, NAV_LINKS } from '../../../shared/models/shared.models';
 import { SpotifyUser, SpotifyPlaylists } from 'src/app/spotify/models/spotify.models';
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 
@@ -20,7 +20,7 @@ export class MainComponent implements OnInit {
   constructor(private spotifyService: SpotifyService) { }
 
   ngOnInit(): void {
-    this.spotifyUser$ = this.spotifyService.getUser().pipe(share());
+    this.spotifyUser$ = this.spotifyService.getUser().pipe(shareReplay());
     this.spotifyPlaylists$ = this.spotifyService.getPlaylists();
   }
 

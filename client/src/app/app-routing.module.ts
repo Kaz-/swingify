@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './shared/components/login/login.component';
+import { ProcessComponent } from './shared/components/process/process.component';
 import { HomeComponent } from './shared/components/home/home.component';
-import { ProcessComponent } from './spotify/components/process/process.component';
+
+import { MainComponent } from './spotify/components/main/main.component';
 import { ExportComponent } from './spotify/components/export/export.component';
 
 
@@ -18,15 +20,21 @@ const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: 'home',
-    component: HomeComponent,
+    path: 'process',
+    component: ProcessComponent
   },
   {
     path: 'spotify',
+    component: MainComponent,
     children: [
       {
-        path: 'process',
-        component: ProcessComponent
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+      },
+      {
+        path: 'home',
+        component: HomeComponent,
       },
       {
         path: 'export',

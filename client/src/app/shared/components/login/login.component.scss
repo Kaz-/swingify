@@ -1,6 +1,10 @@
 @import "../../../../assets/styles/colors";
 @import "../../../../assets/styles/icons";
 :host {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  padding: 2em 0;
   header {
     margin-bottom: 5em;
     text-align: center;

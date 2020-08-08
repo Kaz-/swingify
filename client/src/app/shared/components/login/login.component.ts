@@ -29,7 +29,7 @@ export class LoginComponent implements OnDestroy {
   redirect(): void {
     const token: AuthorizationToken = SpotifyService.getToken();
     if (token) {
-      SpotifyService.isTokenExpired ? this.refresh(token) : this.router.navigateByUrl('/home');
+      SpotifyService.isTokenExpired ? this.refresh(token) : this.router.navigateByUrl('/spotify/home');
     } else {
       this.authorize();
     }
@@ -41,7 +41,7 @@ export class LoginComponent implements OnDestroy {
         const options: AuthorizeQueryOptions = {
           responseType: 'code',
           clientId: config.clientId,
-          redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fspotify%2Fprocess'
+          redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fprocess'
         };
         this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
           `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}`;

@@ -2,16 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { HomeComponent } from './components/home/home.component';
-import { MainComponent } from './components/main/main.component';
 import { LoginComponent } from './components/login/login.component';
+import { ProcessComponent } from './components/process/process.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
-  declarations: [HomeComponent, MainComponent, LoginComponent],
+  declarations: [LoginComponent, ProcessComponent, HomeComponent],
   imports: [
     CommonModule,
     RouterModule
   ],
-  exports: [MainComponent]
+  exports: []
 })
 export class SharedModule { }
