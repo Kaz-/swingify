@@ -1,0 +1,34 @@
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+.icon {
+  @extend .fas;
+  &.user {
+    @extend .fa-user-circle;
+  }
+  &.warning {
+    @extend .fa-exclamation-triangle;
+  }
+  &.long-arrow-right {
+    @extend .fa-long-arrow-alt-right;
+  }
+  &.home {
+    @extend .fa-home;
+  }
+  &.search {
+    @extend .fa-search;
+  }
+  &.magic {
+    @extend .fa-magic;
+  }
+}
+.brand {
+  @extend .fab;
+  &.github {
+    @extend .fa-github;
+  }
+  &.twitter {
+    @extend .fa-twitter;
+  }
+}

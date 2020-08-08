@@ -1,0 +1,126 @@
+@import "../../../../assets/styles/icons";
+@import "../../../../assets/styles/colors";
+:host {
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "nav-bar top-bar top-bar"
+    "nav-bar main-view main-view";
+  .top-bar {
+    grid-area: top-bar;
+    height: 50px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid #777777;
+    .shares {
+      display: grid;
+      grid-gap: 1.5em;
+      grid-auto-flow: column;
+      .share-link {
+        color: $white;
+        opacity: 0.7;
+        font-size: 25px;
+        z-index: 3;
+        &:hover {
+          transition: opacity 0.2s linear;
+          opacity: 1;
+          cursor: pointer;
+        }
+      }
+    }
+    .profile {
+      i,
+      img {
+        margin-right: 0.5em;
+      }
+    }
+  }
+  .nav-bar {
+    grid-area: nav-bar;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    nav {
+      padding-top: 1em;
+      .banner {
+        font-size: 30px;
+        text-align: center;
+      }
+      ul {
+        list-style: none;
+        padding: 1em 0;
+        li {
+          padding: 0 8px;
+          .nav-link {
+            color: $white;
+            text-decoration: none;
+            border-radius: 4px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            height: 40px;
+            cursor: pointer;
+            i {
+              margin-right: 1em;
+            }
+          }
+          .nav-link.is-active,
+          .nav-link:hover {
+            background-color: #282828;
+          }
+        }
+      }
+      .playlists {
+        h3 {
+          padding: 0 0.75em;
+        }
+        ul {
+          list-style: none;
+          li {
+            padding: 0 8px;
+            .playlist-link {
+              color: #ffffff;
+              text-decoration: none;
+              padding: 5px 16px;
+              display: flex;
+              align-items: center;
+              height: 40px;
+              cursor: pointer;
+              opacity: 0.7;
+              transition: opacity 0.2s linear;
+              i,
+              img {
+                margin-right: 0.5em;
+                width: 30px;
+                height: 30px;
+              }
+            }
+            .playlist-link.is-active,
+            .playlist-link:hover {
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+  .main-view {
+    grid-area: main-view;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background-color: $second-background;
+    padding: 1em;
+  }
+}

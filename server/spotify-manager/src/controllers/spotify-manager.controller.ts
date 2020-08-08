@@ -4,7 +4,7 @@ import { map, flatMap } from 'rxjs/operators';
 
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
 
-import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylist } from 'src/models/spotify.models';
+import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylists } from 'src/models/spotify.models';
 
 @Controller('spotify')
 export class SpotifyManagerController {
@@ -25,17 +25,17 @@ export class SpotifyManagerController {
 
     @Get('me')
     getUserProfile(@Req() request: Request): Observable<SpotifyUser> {
-        const authorization = { Authorization: request.headers['authorization'] };
+        const authorization = { Authorization: request.headers['authorization'] ? request.headers['authorization'] : null  };
         return this.http.get<SpotifyUser>(`${this.baseApiUrl}/me`, { headers: authorization })
             .pipe(map(response => response.data));
     }
 
     @Get('playlists')
-    getPlaylists(@Req() request: Request): Observable<SpotifyPlaylist[]> {
-        const authorization = { Authorization: request.headers['authorization'] };
+    getPlaylists(@Req() request: Request): Observable<SpotifyPlaylists> {
+        const authorization = { Authorization: request.headers['authorization'] ? request.headers['authorization'] : null };
         return this.getUserProfile(request)
             .pipe(flatMap(user =>
-                this.http.get<SpotifyPlaylist[]>(`${this.baseApiUrl}/users/${user.id}/playlists`, { headers: authorization })
+                this.http.get<SpotifyPlaylists>(`${this.baseApiUrl}/users/${user.id}/playlists`, { headers: authorization })
                     .pipe(map(response => response.data))
             ));
     }

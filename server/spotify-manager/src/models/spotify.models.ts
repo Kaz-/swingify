@@ -17,6 +17,16 @@ export interface SpotifyUser {
     readonly uri: string;
 }
 
+export interface SpotifyPlaylists {
+    readonly href: string;
+    readonly items: SpotifyPlaylist[];
+    readonly limit: number;
+    readonly next: string | null;
+    readonly offset: number;
+    readonly previous: string | null;
+    readonly total: number;
+}
+
 export interface SpotifyPlaylist {
     collaborative: boolean;
     description: string;

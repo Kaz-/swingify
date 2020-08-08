@@ -1,0 +1,49 @@
+@import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/icons";
+:host {
+  header {
+    margin-bottom: 5em;
+    text-align: center;
+    h1 {
+      font-weight: 800;
+    }
+    p {
+      color: $grey;
+    }
+  }
+  section {
+    display: flex;
+    justify-content: center;
+    .separator {
+      display: flex;
+      align-items: center;
+      margin: 0 5em;
+      i {
+        font-size: 75px;
+      }
+    }
+    .primary {
+      display: grid;
+      grid-gap: 1.5em;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    .secondary {
+      align-self: center;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      padding: 20px 20px 16px;
+      background: #282828;
+      border-radius: 8px;
+      isolation: isolate;
+      p {
+        font-size: 13px;
+        margin: 0.5em 0;
+        color: #c3c3c3;
+      }
+    }
+  }
+}

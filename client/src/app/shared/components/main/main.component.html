@@ -1,0 +1,51 @@
+<ng-container *ngIf="spotifyUser$ | async">
+  <div class="top-bar">
+    <div class="shares">
+      <a class="share-link" href="https://github.com/nohanna" target="_blank">
+        <i class="fab fa-github"></i>
+      </a>
+      <a class="share-link" href="https://twitter.com/Tombery_" target="_blank">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </div>
+    <div class="profile">
+      <ng-container *ngIf="(spotifyUser$ | async)?.images.length > 0; then image; else default"></ng-container>
+      <ng-template #default>
+        <i class="icon user"></i>
+      </ng-template>
+      <ng-template #image>
+        <img src="(spotifyUser$ | async)?.images[0].url">
+      </ng-template>
+      <span class="display-name">{{ (spotifyUser$ | async)?.display_name }}</span>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <nav>
+      <div class="banner">Exportify</div>
+      <div class="nav">
+        <ul>
+          <li *ngFor="let navLink of navLinks">
+            <a class="nav-link" [routerLink]="navLink.link" [routerLinkActive]="['is-active']">
+              <i class="icon {{ navLink.icon }}"></i>
+              <span>{{ navLink.name }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="playlists">
+        <h3>Playlists</h3>
+        <ul>
+          <li *ngFor="let playlist of (spotifyPlaylists$ | async)?.items">
+            <a class="playlist-link" [href]="playlist.external_urls.spotify" target="_blank">
+              <img [src]="playlist.images[0].url">
+              <div>{{ playlist.name }}</div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</ng-container>
+<div class="main-view">
+  <ng-content></ng-content>
+</div>

@@ -3,9 +3,12 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/c
 import { Observable } from 'rxjs';
 import { AuthorizationToken } from '../models/spotify.models';
 import { SpotifyService } from './spotify.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class SpotifyInterceptor implements HttpInterceptor {
+
+  constructor(private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.processInterception(SpotifyService.getToken(), request, next);

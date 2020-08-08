@@ -27,7 +27,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
       .subscribe(token => {
         token.created_at = Math.round(Date.now() / 1000); // in seconds
         SpotifyService.setToken(token);
-        this.router.navigateByUrl('/spotify/export', { relativeTo: this.route });
+        this.router.navigateByUrl('/home');
       });
   }
 
