@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
-import { SpotifyUser, SpotifyPlaylists } from 'src/app/spotify/models/spotify.models';
+import { SpotifyUser, SpotifyPlaylists, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 
 @Component({
   selector: 'exp-home',
@@ -25,8 +25,8 @@ export class HomeComponent {
     return this.spotifyService.playlists$;
   }
 
-  redirect(): void {
-    this.router.navigateByUrl('/spotify/export');
+  redirect(playlistId: string): void {
+    this.router.navigate(['/spotify/export', playlistId]);
   }
 
 }

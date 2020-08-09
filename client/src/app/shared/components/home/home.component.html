@@ -4,7 +4,7 @@
     <h3>Select a playlist and let the magic happen !</h3>
   </div>
   <ul>
-    <li class="playlist" *ngFor="let playlist of (spotifyPlaylists$ | async)?.items" (click)="redirect()">
+    <li class="playlist" *ngFor="let playlist of (spotifyPlaylists$ | async)?.items" (click)="redirect(playlist.id)">
       <div class="box">
         <img [src]="playlist.images[0].url">
         <div class="overlay">

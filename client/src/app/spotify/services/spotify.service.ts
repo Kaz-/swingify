@@ -5,7 +5,7 @@ import { shareReplay } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { SpotifyUser, SpotifyPlaylists } from '../models/spotify.models';
+import { SpotifyUser, SpotifyPlaylists, SpotifyPlaylist } from '../models/spotify.models';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +34,10 @@ export class SpotifyService implements OnDestroy {
   private updatePlaylists(): Subscription {
     return this.http.get<SpotifyPlaylists>(`${environment.spotify.serverPath}/playlists`)
       .subscribe(playlists => this.playlists.next(playlists));
+  }
+
+  getPlaylist(id: number): Observable<SpotifyPlaylist> {
+    return this.http.get<SpotifyPlaylist>(`${environment.spotify.serverPath}/playlist/${id}`);
   }
 
 }
