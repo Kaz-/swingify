@@ -21,9 +21,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const CODE = 'code';
     this.subscription = this.route.queryParams
-      .pipe(flatMap(params => this.authService.verify(params[CODE])))
+      .pipe(flatMap(params => this.authService.verify(params.code)))
       .subscribe(token => {
         token.created_at = Math.round(Date.now() / 1000); // in seconds
         AuthService.setToken(token);

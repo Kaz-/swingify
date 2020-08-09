@@ -1,0 +1,30 @@
+@import "../../../../assets/styles/colors";
+:host {
+  flex-grow: 1;
+  background-image: linear-gradient(90deg, #4891ad, #521063);
+  .container {
+    display: grid;
+    grid-template-columns: 250px auto 250px;
+    grid-template-areas: "primary-nav content secondary-nav";
+    height: 100%;
+    .block {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+    }
+    .primary-nav {
+      grid-area: primary-nav;
+      background-color: $background;
+    }
+    .content {
+      grid-area: content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .secondary-nav {
+      grid-area: secondary-nav;
+      background-color: $background;
+    }
+  }
+}

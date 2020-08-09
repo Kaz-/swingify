@@ -1,6 +1,8 @@
 @import "../../../../assets/styles/icons";
 @import "../../../../assets/styles/colors";
 :host {
+  flex-grow: 1;
+  background-image: linear-gradient(90deg, #4891ad, #521063);
   .selector {
     display: flex;
     align-items: center;
@@ -39,6 +41,7 @@
           max-width: 250px;
           max-height: 250px;
           background: $background;
+          box-shadow: 1px 1px 16px -2px rgba(0, 0, 0, 0.3);
           img {
             opacity: 1;
             width: 250px;

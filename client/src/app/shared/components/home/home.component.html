@@ -7,7 +7,9 @@
     <li class="playlist" *ngFor="let playlist of (spotifyPlaylists$ | async)?.items" (click)="redirect()">
       <div class="box">
         <img [src]="playlist.images[0].url">
-        <div class="overlay"><i class="icon magic"></i>Export</div>
+        <div class="overlay">
+          <div><i class="icon magic"></i>{{ playlist.name }}</div>
+        </div>
       </div>
     </li>
   </ul>
