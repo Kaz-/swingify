@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 import { MainComponent } from './components/main/main.component';
 import { ExportComponent } from './components/export/export.component';
 
-import { SpotifyService } from './services/spotify.service';
 import { SpotifyInterceptor } from './services/spotify.interceptor';
 
 @NgModule({
@@ -17,7 +16,6 @@ import { SpotifyInterceptor } from './services/spotify.interceptor';
     RouterModule
   ],
   providers: [
-    SpotifyService,
     { provide: HTTP_INTERCEPTORS, useClass: SpotifyInterceptor, multi: true }
   ]
 })

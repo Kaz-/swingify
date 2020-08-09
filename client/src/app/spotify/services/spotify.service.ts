@@ -1,59 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { SpotifyConfiguration, AuthorizationToken, SpotifyUser, SpotifyPlaylists } from '../models/spotify.models';
+import { SpotifyUser, SpotifyPlaylists } from '../models/spotify.models';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SpotifyService {
 
-  constructor(private http: HttpClient) { }
+  private user: Subject<SpotifyUser> = new Subject<SpotifyUser>();
+  private playlists: Subject<SpotifyPlaylists> = new Subject<SpotifyPlaylists>();
+  user$: Observable<SpotifyUser> = this.user.asObservable().pipe(shareReplay());
+  playlists$: Observable<SpotifyPlaylists> = this.playlists.asObservable().pipe(shareReplay());
 
-  static setToken(token: AuthorizationToken): void {
-    localStorage.setItem('spotify_token', JSON.stringify(token));
+  constructor(private http: HttpClient) {
+    this.updateUser();
+    this.updatePlaylists();
   }
 
-  static getToken(): AuthorizationToken {
-    return JSON.parse(localStorage.getItem('spotify_token'));
+  private updateUser(): void {
+    this.http.get<SpotifyUser>(`${environment.spotify.serverPath}/me`)
+      .subscribe(user => this.user.next(user));
   }
 
-  static isTokenExpired(token: AuthorizationToken): boolean {
-    const expirationDate: number = token.created_at + token.expires_in;
-    const current: number = Date.now() / 1000;
-    return current > expirationDate;
-  }
-
-  getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
-    return this.http.get<SpotifyConfiguration>(`${environment.spotify.serverPath}/configuration`);
-  }
-
-  verify(authorizationCode: string): Observable<AuthorizationToken> {
-    return this.getSpotifyConfiguration()
-      .pipe(switchMap(config => {
-        const options = {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Basic ${btoa(`${config.clientId}:${config.clientSecret}`)}`
-          },
-          params: {
-            grant_type: 'authorization_code',
-            code: authorizationCode,
-            redirect_uri: 'http://localhost:4200/process'
-          }
-        };
-        return this.http.post<AuthorizationToken>(`${environment.spotify.accountsPath}/api/token`, null, options);
-      }));
-  }
-
-  getUser(): Observable<SpotifyUser> {
-    return this.http.get<SpotifyUser>(`${environment.spotify.serverPath}/me`);
-  }
-
-  getPlaylists(): Observable<SpotifyPlaylists> {
-    return this.http.get<SpotifyPlaylists>(`${environment.spotify.serverPath}/playlists`);
+  private updatePlaylists(): void {
+    this.http.get<SpotifyPlaylists>(`${environment.spotify.serverPath}/playlists`)
+      .subscribe(playlists => this.playlists.next(playlists));
   }
 
 }

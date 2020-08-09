@@ -4,7 +4,7 @@ import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
-import { SpotifyService } from 'src/app/spotify/services/spotify.service';
+import { AuthService } from '../../services/auth.service';
 import { AuthorizationToken, AuthorizeQueryOptions } from 'src/app/spotify/models/spotify.models';
 
 @Component({
@@ -19,7 +19,7 @@ export class LoginComponent implements OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
-    private spotifyService: SpotifyService
+    private authService: AuthService
   ) { }
 
   ngOnDestroy(): void {
@@ -27,9 +27,9 @@ export class LoginComponent implements OnDestroy {
   }
 
   redirect(): void {
-    const token: AuthorizationToken = SpotifyService.getToken();
+    const token: AuthorizationToken = AuthService.getToken();
     if (token) {
-      SpotifyService.isTokenExpired ? this.refresh(token) : this.router.navigateByUrl('/spotify/home');
+      AuthService.isTokenExpired ? this.refresh(token) : this.router.navigateByUrl('/spotify/home');
     } else {
       this.authorize();
     }
@@ -37,7 +37,7 @@ export class LoginComponent implements OnDestroy {
 
   private authorize(): void {
     this.subscriptions.push(
-      this.spotifyService.getSpotifyConfiguration().subscribe(config => {
+      this.authService.getSpotifyConfiguration().subscribe(config => {
         const options: AuthorizeQueryOptions = {
           responseType: 'code',
           clientId: config.clientId,
@@ -51,10 +51,10 @@ export class LoginComponent implements OnDestroy {
 
   private refresh(token: AuthorizationToken): void {
     this.subscriptions.push(
-      this.spotifyService.verify(token.refresh_token)
+      this.authService.verify(token.refresh_token)
         .subscribe(refreshedToken => {
           token.created_at = Date.now() / 1000; // in seconds
-          SpotifyService.setToken(refreshedToken);
+          AuthService.setToken(refreshedToken);
         }, () => this.authorize())
     );
   }

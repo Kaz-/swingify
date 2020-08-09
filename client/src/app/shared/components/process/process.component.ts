@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { SpotifyService } from '../../../spotify/services/spotify.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'exp-process',
@@ -17,16 +17,16 @@ export class ProcessComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private spotifyService: SpotifyService
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
     const CODE = 'code';
     this.subscription = this.route.queryParams
-      .pipe(flatMap(params => this.spotifyService.verify(params[CODE])))
+      .pipe(flatMap(params => this.authService.verify(params[CODE])))
       .subscribe(token => {
         token.created_at = Math.round(Date.now() / 1000); // in seconds
-        SpotifyService.setToken(token);
+        AuthService.setToken(token);
         this.router.navigateByUrl('/spotify/home');
       });
   }

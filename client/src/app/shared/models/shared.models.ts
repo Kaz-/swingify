@@ -7,7 +7,7 @@ export interface NavLink {
 export const NAV_LINKS: NavLink[] = [
   {
     name: 'Home',
-    link: '/home',
+    link: '/spotify/home',
     icon: 'home'
   },
   {
