@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { NavLink, NAV_LINKS } from '../../../shared/models/shared.models';
-import { SpotifyUser, SpotifyPlaylists } from 'src/app/spotify/models/spotify.models';
+import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class MainComponent {
     return this.spotifyService.user$;
   }
 
-  get spotifyPlaylists$(): Observable<SpotifyPlaylists> {
+  get spotifyPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
     return this.spotifyService.playlists$;
   }
 

@@ -38,7 +38,7 @@
         <h3>Playlists</h3>
         <ul>
           <li *ngFor="let playlist of (spotifyPlaylists$ | async)?.items">
-            <a class="playlist-link" [href]="playlist.external_urls.spotify" target="_blank">
+            <a class="playlist-link" [routerLink]="['/spotify/export', playlist.id]">
               <img [src]="playlist.images[0].url">
               <div>{{ playlist.name }}</div>
             </a>

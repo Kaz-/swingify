@@ -22,6 +22,15 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   &.magic {
     @extend .fa-magic;
   }
+  &.music {
+    @extend .fa-music;
+  }
+  &.plus {
+    @extend .fa-plus;
+  }
+  &.minus {
+    @extend .fa-minus;
+  }
 }
 .brand {
   @extend .fab;

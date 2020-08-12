@@ -5,7 +5,7 @@ import { shareReplay } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { SpotifyUser, SpotifyPlaylists, SpotifyPlaylist } from '../models/spotify.models';
+import { SpotifyUser, SpotifyPlaylist, SpotifyPaging } from '../models/spotify.models';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,9 @@ import { SpotifyUser, SpotifyPlaylists, SpotifyPlaylist } from '../models/spotif
 export class SpotifyService implements OnDestroy {
 
   private user: Subject<SpotifyUser> = new Subject<SpotifyUser>();
-  private playlists: Subject<SpotifyPlaylists> = new Subject<SpotifyPlaylists>();
+  private playlists: Subject<SpotifyPaging<SpotifyPlaylist>> = new Subject<SpotifyPaging<SpotifyPlaylist>>();
   user$: Observable<SpotifyUser> = this.user.asObservable().pipe(shareReplay());
-  playlists$: Observable<SpotifyPlaylists> = this.playlists.asObservable().pipe(shareReplay());
+  playlists$: Observable<SpotifyPaging<SpotifyPlaylist>> = this.playlists.asObservable().pipe(shareReplay());
   private subscriptions: Subscription[] = [];
 
   constructor(private http: HttpClient) {
@@ -32,11 +32,11 @@ export class SpotifyService implements OnDestroy {
   }
 
   private updatePlaylists(): Subscription {
-    return this.http.get<SpotifyPlaylists>(`${environment.spotify.serverPath}/playlists`)
+    return this.http.get<SpotifyPaging<SpotifyPlaylist>>(`${environment.spotify.serverPath}/playlists`)
       .subscribe(playlists => this.playlists.next(playlists));
   }
 
-  getPlaylist(id: number): Observable<SpotifyPlaylist> {
+  getPlaylist(id: string): Observable<SpotifyPlaylist> {
     return this.http.get<SpotifyPlaylist>(`${environment.spotify.serverPath}/playlist/${id}`);
   }
 

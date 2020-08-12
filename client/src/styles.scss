@@ -42,6 +42,14 @@ button {
   border-radius: 500px;
   padding: 11px 32px 9px;
 }
+.red-button {
+  color: $white;
+  background-color: $red;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 500px;
+  padding: 11px 32px 9px;
+}
 .youtube-button {
   color: $white;
   background-color: $youtube;

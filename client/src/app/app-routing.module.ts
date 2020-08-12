@@ -37,7 +37,7 @@ const routes: Routes = [
         component: HomeComponent,
       },
       {
-        path: 'export',
+        path: 'export/:id',
         component: ExportComponent
       }
     ]

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
-import { SpotifyUser, SpotifyPlaylists, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
+import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 
 @Component({
   selector: 'exp-home',
@@ -21,7 +21,7 @@ export class HomeComponent {
     return this.spotifyService.user$;
   }
 
-  get spotifyPlaylists$(): Observable<SpotifyPlaylists> {
+  get spotifyPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
     return this.spotifyService.playlists$;
   }
 

@@ -1,10 +1,12 @@
-import { Controller, Get, Logger, HttpService, Req, Request } from '@nestjs/common';
+import { Controller, Get, Logger, HttpService, Req } from '@nestjs/common';
+import { Request } from 'express';
+import { AxiosRequestConfig } from 'axios';
 import { Observable } from 'rxjs';
 import { map, flatMap } from 'rxjs/operators';
 
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
 
-import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylists } from 'src/models/spotify.models';
+import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylist, SpotifyPaging } from 'src/models/spotify.models';
 
 @Controller('spotify')
 export class SpotifyManagerController {
@@ -17,6 +19,11 @@ export class SpotifyManagerController {
         private spotifyService: SpotifyManagerService
     ) { }
 
+    private getAuthorizationHeader(request: Request): AxiosRequestConfig {
+        const authorization = { Authorization: request.headers['authorization'] ? request.headers['authorization'] : null };
+        return { headers: authorization };
+    }
+
     @Get('configuration')
     getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
         this.logger.log('Requesting Spotify configuration');
@@ -25,19 +32,23 @@ export class SpotifyManagerController {
 
     @Get('me')
     getUserProfile(@Req() request: Request): Observable<SpotifyUser> {
-        const authorization = { Authorization: request.headers['authorization'] ? request.headers['authorization'] : null  };
-        return this.http.get<SpotifyUser>(`${this.baseApiUrl}/me`, { headers: authorization })
+        return this.http.get<SpotifyUser>(`${this.baseApiUrl}/me`, this.getAuthorizationHeader(request))
             .pipe(map(response => response.data));
     }
 
     @Get('playlists')
-    getPlaylists(@Req() request: Request): Observable<SpotifyPlaylists> {
-        const authorization = { Authorization: request.headers['authorization'] ? request.headers['authorization'] : null };
+    getPlaylists(@Req() request: Request): Observable<SpotifyPaging<SpotifyPlaylist>> {
         return this.getUserProfile(request)
             .pipe(flatMap(user =>
-                this.http.get<SpotifyPlaylists>(`${this.baseApiUrl}/users/${user.id}/playlists`, { headers: authorization })
+                this.http.get<SpotifyPaging<SpotifyPlaylist>>(`${this.baseApiUrl}/users/${user.id}/playlists`, this.getAuthorizationHeader(request))
                     .pipe(map(response => response.data))
             ));
+    }
+
+    @Get('playlist/:id')
+    getPlaylist(@Req() request: Request): Observable<SpotifyPlaylist> {
+        return this.http.get<SpotifyPlaylist>(`${this.baseApiUrl}/playlists/${request.params.id}`, this.getAuthorizationHeader(request))
+            .pipe(map(response => response.data));
     }
 
 }
