@@ -1,0 +1,6 @@
+<h1>
+  <i class="fab fa-{{ platform.toLowerCase() }}"></i>
+  <span>{{ platform }}</span>
+</h1>
+<p *ngIf="description">{{ description }}</p>
+<button class="{{ platform.toLowerCase() }}-button" (click)="authenticate()">Log In</button>

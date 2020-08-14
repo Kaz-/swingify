@@ -1,3 +1,8 @@
+export enum AUTH_PLATFORMS {
+  Spotify = 'Spotify',
+  YouTube = 'YouTube'
+}
+
 export interface NavLink {
   name: string;
   link: string;

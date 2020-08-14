@@ -1,0 +1,18 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'exp-card',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.scss']
+})
+export class CardComponent {
+
+  @Input() platform: string;
+  @Input() description: string;
+  @Output() auth: EventEmitter<string> = new EventEmitter<string>();
+
+  authenticate(): void {
+    this.auth.emit(this.platform);
+  }
+
+}

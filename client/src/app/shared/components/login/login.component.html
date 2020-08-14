@@ -3,17 +3,7 @@
   <p>You can start exporting your playlists from one to another Spotify account !</p>
 </header>
 <section>
-  <div class="card">
-    <h2>Spotify</h2>
-    <p>Authenticate with Spotify</p>
-    <p>This account will be the "exporter", this means that you will export your music from this account to another.</p>
-    <button class="primary-button" (click)="redirect()">Log In</button>
-  </div>
-  <div class="card">
-    <h2>YouTube</h2>
-    <p>Authenticate with YouTube</p>
-    <p>This account will be the "exporter", this means that you will export your music from this account to another.</p>
-    <button class="youtube-button">Log In</button>
-  </div>
+  <exp-card platform="Spotify" description="Authenticate with Spotify" (auth)="redirect($event)"></exp-card>
+  <exp-card platform="YouTube" description="Authenticate with YouTube" (auth)="redirect($event)"></exp-card>
 </section>
 

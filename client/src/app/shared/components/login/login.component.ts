@@ -5,7 +5,9 @@ import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../../services/auth.service';
+
 import { AuthorizationToken, AuthorizeQueryOptions } from 'src/app/spotify/models/spotify.models';
+import { AUTH_PLATFORMS } from '../../models/shared.models';
 
 @Component({
   selector: 'exp-login',
@@ -26,13 +28,30 @@ export class LoginComponent implements OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  redirect(): void {
+  redirect(platform: string): void {
+    switch (platform) {
+      case AUTH_PLATFORMS.Spotify:
+        this.authenticateWithSpotify();
+        break;
+      case AUTH_PLATFORMS.YouTube:
+        this.authenticateWithYoutube();
+        break;
+      default:
+        break;
+    }
+  }
+
+  private authenticateWithSpotify(): void {
     const token: AuthorizationToken = AuthService.getToken();
     if (token) {
       AuthService.isTokenExpired ? this.refresh(token) : this.router.navigateByUrl('/spotify/home');
     } else {
       this.authorize();
     }
+  }
+
+  private authenticateWithYoutube(): void {
+    // TODO: implement YouTube authentication
   }
 
   private authorize(): void {

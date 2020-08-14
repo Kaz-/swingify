@@ -40,4 +40,10 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   &.twitter {
     @extend .fa-twitter;
   }
+  &.spotify {
+    @extend .fa-spotify;
+  }
+  &.youtube {
+    @extend .fa-youtube;
+  }
 }

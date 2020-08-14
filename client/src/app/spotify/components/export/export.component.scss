@@ -25,6 +25,10 @@
     .secondary-nav {
       grid-area: secondary-nav;
       background-color: $background;
+      exp-card {
+        max-width: 250px;
+        margin: auto;
+      }
     }
   }
 }

@@ -9,14 +9,21 @@ import { LoginComponent } from './components/login/login.component';
 import { ProcessComponent } from './components/process/process.component';
 import { HomeComponent } from './components/home/home.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
-  declarations: [LoginComponent, ProcessComponent, HomeComponent, PlaylistComponent],
+  declarations: [
+    LoginComponent,
+    ProcessComponent,
+    HomeComponent,
+    PlaylistComponent,
+    CardComponent
+  ],
   imports: [
     CommonModule,
     RouterModule
   ],
   providers: [AuthService, AuthGuard],
-  exports: [PlaylistComponent]
+  exports: [PlaylistComponent, CardComponent]
 })
 export class SharedModule { }

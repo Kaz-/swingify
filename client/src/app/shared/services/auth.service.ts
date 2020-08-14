@@ -12,15 +12,27 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   static setToken(token: AuthorizationToken): void {
-    localStorage.setItem('spotify_token', JSON.stringify(token));
+    localStorage.setItem('primary_spotify_token', JSON.stringify(token));
+  }
+
+  static setSecondaryToken(token: AuthorizationToken): void {
+    localStorage.setItem('secondary_spotify_token', JSON.stringify(token));
   }
 
   static getToken(): AuthorizationToken {
-    return JSON.parse(localStorage.getItem('spotify_token'));
+    return JSON.parse(localStorage.getItem('primary_spotify_token'));
+  }
+
+  static getSecondaryToken(): AuthorizationToken {
+    return JSON.parse(localStorage.getItem('secondary_spotify_token'));
   }
 
   static removeToken(): void {
-    localStorage.removeItem('spotify_token');
+    localStorage.removeItem('primary_spotify_token');
+  }
+
+  static removeSecondaryToken(): void {
+    localStorage.removeItem('secondary_spotify_token');
   }
 
   static isTokenExpired(token: AuthorizationToken): boolean {
@@ -31,6 +43,11 @@ export class AuthService {
 
   static isAuthenticated(): boolean {
     const token = AuthService.getToken();
+    return token && !AuthService.isTokenExpired(token);
+  }
+
+  static isSecondaryAuthenticated(): boolean {
+    const token = AuthService.getSecondaryToken();
     return token && !AuthService.isTokenExpired(token);
   }
 

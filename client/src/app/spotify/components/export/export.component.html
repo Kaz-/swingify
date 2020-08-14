@@ -7,6 +7,13 @@
     <div>Make your wishlist and start exporting.</div>
   </div>
   <div class="secondary-nav">
-    <exp-playlist [playlist$]="secondaryPlaylist$"></exp-playlist>
+    <ng-container *ngIf="isSecondaryAuthenticated(); then playlist; else card"></ng-container>
+    <ng-template #playlist>
+      <exp-playlist [playlist$]="secondaryPlaylist$"></exp-playlist>
+    </ng-template>
+    <ng-template #card>
+      <exp-card platform="Spotify" description="Authenticate with your second account to import your favorite music"
+        (auth)="authenticate($event)"></exp-card>
+    </ng-template>
   </div>
 </div>

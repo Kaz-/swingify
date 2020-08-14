@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { flatMap, shareReplay } from 'rxjs/operators';
 
 import { SpotifyService } from '../../services/spotify.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+
 import { SpotifyPlaylist } from '../../models/spotify.models';
 
 @Component({
@@ -31,6 +33,14 @@ export class ExportComponent implements OnInit {
 
   isLargeScreen(): boolean {
     return window.screen.width > 1280;
+  }
+
+  isSecondaryAuthenticated(): boolean {
+    return AuthService.isSecondaryAuthenticated();
+  }
+
+  authenticate(): void {
+    console.log('hehehe');
   }
 
 }
