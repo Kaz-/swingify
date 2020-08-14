@@ -1,84 +1,11 @@
-@import "../../../../assets/styles/icons";
 @import "../../../../assets/styles/colors";
 :host {
   flex-grow: 1;
-  background-image: linear-gradient(90deg, #31b7a4, #e21500);
   .container {
     display: grid;
     grid-template-columns: 500px auto 500px;
     grid-template-areas: "primary-nav content secondary-nav";
     height: 100%;
-    .block {
-      display: flex;
-      flex-grow: 1;
-      flex-direction: column;
-      padding: 1em;
-      .header {
-        display: inherit;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1em;
-        a {
-          display: inherit;
-          &:hover {
-            text-decoration: underline;
-            small {
-              color: $white;
-            }
-          }
-          img {
-            margin-right: 0.5em;
-            width: 50px;
-            height: 50px;
-          }
-          h3 {
-            font-weight: normal;
-          }
-          small {
-            color: $alt;
-          }
-        }
-      }
-      .tracklist {
-        display: grid;
-        grid-gap: 0.75em;
-        .track {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0.5em;
-          .music {
-            margin-right: 1.5em;
-          }
-          &-informations {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-grow: 1;
-            .wrapper {
-              max-width: 265px;
-              .from {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-                color: $alt;
-              }
-              .track-duration {
-                margin-left: 1.5em;
-              }
-            }
-          }
-          &:hover {
-            background-color: $negative-background;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-          }
-          button {
-            margin-left: 1.5em;
-          }
-        }
-      }
-    }
     .primary-nav {
       grid-area: primary-nav;
       background-color: $background;
@@ -88,11 +15,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      >div {
+      flex-grow: 1;
+      flex-direction: column;
+      background-image: linear-gradient(90deg, #31b7a4, #7d1e76);
+      > div {
         margin-bottom: 1em;
-      }
-      button {
-        background-color: #136f7d;
       }
     }
     .secondary-nav {

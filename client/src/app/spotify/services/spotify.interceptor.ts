@@ -13,7 +13,7 @@ export class SpotifyInterceptor implements HttpInterceptor {
   }
 
   private processInterception(token: AuthorizationToken | null, request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (token && !AuthService.isTokenExpired(token)) {
+    if (AuthService.isAuthenticated()) {
       request = request.clone({
         setHeaders: {
           Authorization: `${token.token_type} ${token.access_token}`

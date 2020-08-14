@@ -1,57 +1,12 @@
 <div class="container">
-  <div class="block primary-nav">
-    <div class="header">
-      <a href="{{ (playlist$ | async)?.external_urls.spotify }}" target="_blank">
-        <img [src]="(playlist$ | async)?.images[0].url">
-        <div>
-          <h3>{{ (playlist$ | async)?.name }}</h3>
-          <small>By {{ (playlist$ | async)?.owner.display_name }}</small>
-        </div>
-      </a>
-      <span class="total">{{ (playlist$ | async)?.tracks.total }} tracks</span>
-    </div>
-    <ul class="tracklist">
-      <li class="track" *ngFor="let item of (playlist$ | async)?.tracks.items">
-        <i class="icon music"></i>
-        <div class="track-informations">
-          <div class="wrapper">
-            <div class="name">{{ item.track.name }}</div>
-            <div class="from">{{ item.track.artists[0]?.name }} ·	{{ item.track.album.name }}</div>
-          </div>
-          <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
-        </div>
-        <button class="primary-button"><i class="icon plus"></i></button>
-      </li>
-    </ul>
+  <div class="primary-nav">
+    <exp-playlist [playlist$]="primaryPlaylist$"></exp-playlist>
   </div>
-  <div class="block content">
+  <div class="content" *ngIf="isLargeScreen()">
     <h1>Wanna see a magic trick?</h1>
     <div>Make your wishlist and start exporting.</div>
-    <button class="primary-button">Export</button>
   </div>
-  <div class="block secondary-nav">
-    <div class="header">
-      <a href="{{ (playlist$ | async)?.external_urls.spotify }}" target="_blank">
-        <img [src]="(playlist$ | async)?.images[0].url">
-        <div>
-          <h3>{{ (playlist$ | async)?.name }}</h3>
-          <small>By {{ (playlist$ | async)?.owner.display_name }}</small>
-        </div>
-      </a>
-      <span class="total">{{ (playlist$ | async)?.tracks.total }} tracks</span>
-    </div>
-    <ul class="tracklist">
-      <li class="track" *ngFor="let item of (playlist$ | async)?.tracks.items">
-        <i class="icon music"></i>
-        <div class="track-informations">
-          <div class="wrapper">
-            <div class="name">{{ item.track.name }}</div>
-            <div class="from">{{ item.track.artists[0]?.name }} ·	{{ item.track.album.name }}</div>
-          </div>
-          <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
-        </div>
-        <button class="red-button"><i class="icon minus"></i></button>
-      </li>
-    </ul>
+  <div class="secondary-nav">
+    <exp-playlist [playlist$]="secondaryPlaylist$"></exp-playlist>
   </div>
 </div>

@@ -19,10 +19,19 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('spotify_token'));
   }
 
+  static removeToken(): void {
+    localStorage.removeItem('spotify_token');
+  }
+
   static isTokenExpired(token: AuthorizationToken): boolean {
     const expirationDate: number = token.created_at + token.expires_in;
     const current: number = Date.now() / 1000;
     return current > expirationDate;
+  }
+
+  static isAuthenticated(): boolean {
+    const token = AuthService.getToken();
+    return token && !AuthService.isTokenExpired(token);
   }
 
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {

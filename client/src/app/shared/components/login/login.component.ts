@@ -36,27 +36,34 @@ export class LoginComponent implements OnDestroy {
   }
 
   private authorize(): void {
-    this.subscriptions.push(
-      this.authService.getSpotifyConfiguration().subscribe(config => {
-        const options: AuthorizeQueryOptions = {
-          responseType: 'code',
-          clientId: config.clientId,
-          redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fprocess'
-        };
-        this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
-          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}`;
-      })
-    );
+    this.subscriptions.push(this.getSpotifyConfiguration());
   }
 
   private refresh(token: AuthorizationToken): void {
-    this.subscriptions.push(
-      this.authService.verify(token.refresh_token)
-        .subscribe(refreshedToken => {
-          token.created_at = Date.now() / 1000; // in seconds
-          AuthService.setToken(refreshedToken);
-        }, () => this.authorize())
-    );
+    this.subscriptions.push(this.verify(token));
+  }
+
+  private getSpotifyConfiguration(): Subscription {
+    return this.authService.getSpotifyConfiguration().subscribe(config => {
+      const options: AuthorizeQueryOptions = {
+        responseType: 'code',
+        clientId: config.clientId,
+        redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fprocess'
+      };
+      this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
+        `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}`;
+    });
+  }
+
+  private verify(token: AuthorizationToken): Subscription {
+    return this.authService.verify(token.refresh_token)
+      .subscribe(refreshedToken => {
+        token.created_at = Date.now() / 1000; // in seconds
+        AuthService.setToken(refreshedToken);
+      }, () => {
+        AuthService.removeToken();
+        this.authorize();
+      });
   }
 
 }

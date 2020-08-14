@@ -8,6 +8,8 @@ import { HomeComponent } from './shared/components/home/home.component';
 import { MainComponent } from './spotify/components/main/main.component';
 import { ExportComponent } from './spotify/components/export/export.component';
 
+import { AuthGuard } from './shared/guards/auth.guard';
+
 
 const routes: Routes = [
   {
@@ -26,15 +28,17 @@ const routes: Routes = [
   {
     path: 'spotify',
     component: MainComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',
         redirectTo: 'home',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'home',
-        component: HomeComponent,
+        component: HomeComponent
       },
       {
         path: 'export/:id',

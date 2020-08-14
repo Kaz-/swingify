@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { flatMap, share } from 'rxjs/operators';
+import { flatMap, shareReplay } from 'rxjs/operators';
 
 import { SpotifyService } from '../../services/spotify.service';
 import { SpotifyPlaylist } from '../../models/spotify.models';
@@ -13,7 +13,8 @@ import { SpotifyPlaylist } from '../../models/spotify.models';
 })
 export class ExportComponent implements OnInit {
 
-  playlist$: Observable<SpotifyPlaylist>;
+  primaryPlaylist$: Observable<SpotifyPlaylist>;
+  secondaryPlaylist$: Observable<SpotifyPlaylist>;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,17 +22,15 @@ export class ExportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.playlist$ = this.route.params
+    this.primaryPlaylist$ = this.route.params
       .pipe(
         flatMap(params => this.spotifyService.getPlaylist(params.id)),
-        share()
+        shareReplay()
       );
   }
 
-  toDuration(durationInMs: number): string {
-    const minutes: number = Math.floor(durationInMs / 60000);
-    const seconds: string = ((durationInMs % 60000) / 1000).toFixed(0);
-    return `${minutes}:${parseInt(seconds, 10) < 10 ? '0' : ''}${seconds}`;
+  isLargeScreen(): boolean {
+    return window.screen.width > 1280;
   }
 
 }

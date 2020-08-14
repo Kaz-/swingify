@@ -1,0 +1,83 @@
+@import "../../../../assets/styles/icons";
+@import "../../../../assets/styles/colors";
+:host {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  padding: 1em;
+  max-height: calc(100vh - 110px);
+  .header {
+    display: inherit;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    a {
+      display: inherit;
+      &:hover {
+        text-decoration: underline;
+        small {
+          color: $white;
+        }
+      }
+      img {
+        margin-right: 0.5em;
+        width: 50px;
+        height: 50px;
+      }
+      h3 {
+        font-weight: normal;
+      }
+      small {
+        color: $alt;
+      }
+    }
+  }
+  .tracklist {
+    display: grid;
+    grid-gap: 0.75em;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $negative-background;
+    }
+    .track {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em;
+      .music {
+        margin-right: 1em;
+      }
+      &-informations {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-grow: 1;
+        .wrapper {
+          max-width: 265px;
+          .from {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            color: $alt;
+          }
+          .track-duration {
+            margin-left: 1.5em;
+          }
+        }
+      }
+      &:hover {
+        background-color: $negative-background;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      button {
+        margin: 0 1.5em;
+      }
+    }
+  }
+}
