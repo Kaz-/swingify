@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, HttpService, Req } from '@nestjs/common';
+import { Controller, Get, Logger, HttpService, Req, Post } from '@nestjs/common';
 import { Request } from 'express';
 import { AxiosRequestConfig } from 'axios';
 import { Observable } from 'rxjs';
@@ -20,8 +20,11 @@ export class SpotifyManagerController {
     ) { }
 
     private getAuthorizationHeader(request: Request): AxiosRequestConfig {
-        const authorization = { Authorization: request.headers['authorization'] ? request.headers['authorization'] : null };
-        return { headers: authorization };
+        const headers = {
+            Authorization: request.headers['authorization'] ? request.headers['authorization'] : null,
+            'Content-Type': 'application/json'
+        };
+        return { headers: headers };
     }
 
     @Get('configuration')
@@ -49,6 +52,15 @@ export class SpotifyManagerController {
     getPlaylist(@Req() request: Request): Observable<SpotifyPlaylist> {
         return this.http.get<SpotifyPlaylist>(`${this.baseApiUrl}/playlists/${request.params.id}`, this.getAuthorizationHeader(request))
             .pipe(map(response => response.data));
+    }
+
+    @Post('users/:id/playlists')
+    createPlaylist(@Req() request: Request): Observable<SpotifyPlaylist> {
+        console.log(JSON.stringify(request.body));
+        return this.http.post<SpotifyPlaylist>(
+            `${this.baseApiUrl}/users/${request.params.id}/playlists`, JSON.stringify(request.body),
+            this.getAuthorizationHeader(request)
+        ).pipe(map(response => response.data));
     }
 
 }

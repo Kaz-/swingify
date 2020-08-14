@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { SpotifyUser, SpotifyPlaylist, SpotifyPaging } from '../models/spotify.models';
+import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation } from '../models/spotify.models';
 
 @Injectable({
   providedIn: 'root'
@@ -26,18 +26,44 @@ export class SpotifyService implements OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  getUser(isSecondary: boolean): Observable<SpotifyUser> {
+    return this.http.get<SpotifyUser>(
+      `${environment.spotify.serverPath}/me`,
+      { headers: this.setSecondaryHeader(isSecondary) }
+    );
+  }
+
+  getPlaylists(isSecondary: boolean): Observable<SpotifyPaging<SpotifyPlaylist>> {
+    return this.http.get<SpotifyPaging<SpotifyPlaylist>>(
+      `${environment.spotify.serverPath}/playlists`,
+      { headers: this.setSecondaryHeader(isSecondary) }
+    );
+  }
+
   private updateUser(): Subscription {
-    return this.http.get<SpotifyUser>(`${environment.spotify.serverPath}/me`)
-      .subscribe(user => this.user.next(user));
+    return this.getUser(false).subscribe(user => this.user.next(user));
   }
 
   private updatePlaylists(): Subscription {
-    return this.http.get<SpotifyPaging<SpotifyPlaylist>>(`${environment.spotify.serverPath}/playlists`)
-      .subscribe(playlists => this.playlists.next(playlists));
+    return this.getPlaylists(false).subscribe(playlists => this.playlists.next(playlists));
   }
 
-  getPlaylist(id: string): Observable<SpotifyPlaylist> {
-    return this.http.get<SpotifyPlaylist>(`${environment.spotify.serverPath}/playlist/${id}`);
+  getPlaylist(id: string, isSecondary: boolean): Observable<SpotifyPlaylist> {
+    return this.http.get<SpotifyPlaylist>(
+      `${environment.spotify.serverPath}/playlist/${id}`,
+      { headers: this.setSecondaryHeader(isSecondary) }
+    );
+  }
+
+  createPlaylist(userId: string, playlist: PlaylistCreation, isSecondary: boolean): Observable<SpotifyPlaylist> {
+    return this.http.post<SpotifyPlaylist>(
+      `${environment.spotify.serverPath}/users/${userId}/playlists`, playlist,
+      { headers: this.setSecondaryHeader(isSecondary) }
+    );
+  }
+
+  private setSecondaryHeader(isSecondary: boolean): HttpHeaders {
+    return new HttpHeaders({ Secondary: isSecondary ? 'true' : 'false' });
   }
 
 }

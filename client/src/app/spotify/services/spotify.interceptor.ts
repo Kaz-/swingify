@@ -9,20 +9,48 @@ import { AuthorizationToken } from '../models/spotify.models';
 export class SpotifyInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return this.processInterception(AuthService.getToken(), request, next);
+    return this.processInterception(request, next);
   }
 
-  private processInterception(token: AuthorizationToken | null, request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  private processInterception(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    request = request.headers.get('Secondary') === 'true'
+      ? this.transformRequestForSecondary(request)
+      : this.transformRequestForPrimary(request);
+    return next.handle(request);
+  }
+
+  private transformRequestForPrimary(request: HttpRequest<any>): HttpRequest<any> {
+    const token: AuthorizationToken = AuthService.getToken();
     if (AuthService.isAuthenticated()) {
       request = request.clone({
+        headers: request.headers.delete('Secondary'),
         setHeaders: {
           Authorization: `${token.token_type} ${token.access_token}`
         }
       });
     } else {
-      request = request.clone();
+      request = request.clone({
+        headers: request.headers.delete('Secondary'),
+      });
     }
-    return next.handle(request);
+    return request;
+  }
+
+  private transformRequestForSecondary(request: HttpRequest<any>): HttpRequest<any> {
+    if (AuthService.isSecondaryAuthenticated()) {
+      const token: AuthorizationToken = AuthService.getSecondaryToken();
+      request = request.clone({
+        headers: request.headers.delete('Secondary'),
+        setHeaders: {
+          Authorization: `${token.token_type} ${token.access_token}`
+        }
+      });
+    } else {
+      request = request.clone({
+        headers: request.headers.delete('Secondary'),
+      });
+    }
+    return request;
   }
 
 }

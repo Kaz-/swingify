@@ -1,15 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
+import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { AuthorizationToken, SpotifyConfiguration } from 'src/app/spotify/models/spotify.models';
+import { AuthorizationToken, SpotifyConfiguration, AuthorizeQueryOptions } from 'src/app/spotify/models/spotify.models';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnDestroy {
 
-  constructor(private http: HttpClient) { }
+  private subscriptions: Subscription[] = [];
+
+  constructor(
+    private http: HttpClient,
+    @Inject(DOCUMENT) private document: Document,
+  ) { }
 
   static setToken(token: AuthorizationToken): void {
     localStorage.setItem('primary_spotify_token', JSON.stringify(token));
@@ -51,15 +57,20 @@ export class AuthService {
     return token && !AuthService.isTokenExpired(token);
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
     return this.http.get<SpotifyConfiguration>(`${environment.spotify.serverPath}/configuration`);
   }
 
-  verify(authorizationCode: string): Observable<AuthorizationToken> {
+  verify(authorizationCode: string, isSecondary: boolean): Observable<AuthorizationToken> {
     return this.getSpotifyConfiguration()
       .pipe(switchMap(config => {
         const options = {
           headers: {
+            Secondary: isSecondary ? 'true' : 'false',
             'Content-Type': 'application/x-www-form-urlencoded',
             Authorization: `Basic ${btoa(`${config.clientId}:${config.clientSecret}`)}`
           },
@@ -71,6 +82,38 @@ export class AuthService {
         };
         return this.http.post<AuthorizationToken>(`${environment.spotify.accountsPath}/api/token`, null, options);
       }));
+  }
+
+  authorize(): void {
+    this.subscriptions.push(this._authorize());
+  }
+
+  refresh(token: AuthorizationToken): void {
+    this.subscriptions.push(this._refresh(token));
+  }
+
+  private _authorize(): Subscription {
+    return this.getSpotifyConfiguration().subscribe(config => {
+      const options: AuthorizeQueryOptions = {
+        responseType: 'code',
+        clientId: config.clientId,
+        redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fprocess',
+        scope: 'playlist-modify-public'
+      };
+      this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
+        `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}&scope=${options.scope}`;
+    });
+  }
+
+  private _refresh(token: AuthorizationToken): Subscription {
+    return this.verify(token.refresh_token, false)
+      .subscribe(refreshedToken => {
+        token.created_at = Date.now() / 1000; // in seconds
+        AuthService.setToken(refreshedToken);
+      }, () => {
+        AuthService.removeToken();
+        this.authorize();
+      });
   }
 
 }

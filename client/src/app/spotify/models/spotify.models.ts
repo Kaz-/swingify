@@ -7,7 +7,7 @@ export interface AuthorizeQueryOptions {
   clientId: string;
   responseType: string;
   redirectUri: string;
-  scope?: string;
+  scope: string;
   state?: string;
   showDialog?: boolean;
 }
@@ -136,4 +136,11 @@ export interface SimplifiedArtist {
   readonly name: string;
   readonly type: string;
   readonly uri: string;
+}
+
+export interface PlaylistCreation {
+  name: string;
+  public?: boolean;
+  colloborative?: boolean;
+  description?: string;
 }

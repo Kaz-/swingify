@@ -6,7 +6,7 @@ import { flatMap, shareReplay } from 'rxjs/operators';
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
-import { SpotifyPlaylist } from '../../models/spotify.models';
+import { SpotifyPlaylist, PlaylistCreation } from '../../models/spotify.models';
 
 @Component({
   selector: 'exp-export',
@@ -20,15 +20,34 @@ export class ExportComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.primaryPlaylist$ = this.route.params
-      .pipe(
-        flatMap(params => this.spotifyService.getPlaylist(params.id)),
+    this.primaryPlaylist$ = this.initPrimaryPlaylist();
+    this.secondaryPlaylist$ = this.initSecondaryPlaylist();
+  }
+
+  private initPrimaryPlaylist(): Observable<SpotifyPlaylist> {
+    return this.route.params.pipe(
+      flatMap(params => this.spotifyService.getPlaylist(params.primary, false)),
+      shareReplay()
+    );
+  }
+
+  private initSecondaryPlaylist(): Observable<SpotifyPlaylist> {
+    if (AuthService.isSecondaryAuthenticated()) {
+      return this.spotifyService.getUser(true).pipe(
+        flatMap(user => this.primaryPlaylist$.pipe(
+          flatMap(playlist => {
+            const creation: PlaylistCreation = { name: playlist.name };
+            return this.spotifyService.createPlaylist(user.id, creation, true);
+          })
+        )),
         shareReplay()
       );
+    }
   }
 
   isLargeScreen(): boolean {
@@ -40,7 +59,7 @@ export class ExportComponent implements OnInit {
   }
 
   authenticate(): void {
-    console.log('hehehe');
+    this.authService.authorize();
   }
 
 }

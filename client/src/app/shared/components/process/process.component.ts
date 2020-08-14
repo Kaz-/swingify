@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { Subscription, Observable } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth.service';
+import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
 
 @Component({
   selector: 'exp-process',
@@ -22,16 +23,26 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.route.queryParams
-      .pipe(flatMap(params => this.authService.verify(params.code)))
+      .pipe(flatMap(params => this.isSecondaryAuthentication(params)))
       .subscribe(token => {
         token.created_at = Math.round(Date.now() / 1000); // in seconds
-        AuthService.setToken(token);
-        this.router.navigateByUrl('/spotify/home');
+        this.setTokenAccordingly(token);
       });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  private isSecondaryAuthentication(params: Params): Observable<AuthorizationToken> {
+    return AuthService.isAuthenticated()
+      ? this.authService.verify(params.code, true)
+      : this.authService.verify(params.code, false);
+  }
+
+  private setTokenAccordingly(token: AuthorizationToken): void {
+    AuthService.isAuthenticated() ? AuthService.setSecondaryToken(token) : AuthService.setToken(token);
+    this.router.navigateByUrl('/spotify/home');
   }
 
 }

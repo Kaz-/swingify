@@ -1,25 +1,31 @@
-<div class="header">
-  <a href="{{ (playlist$ | async)?.external_urls.spotify }}" target="_blank">
-    <img [src]="(playlist$ | async)?.images[0].url">
-    <div>
-      <h3>{{ (playlist$ | async)?.name }}</h3>
-      <small>By {{ (playlist$ | async)?.owner.display_name }}</small>
-    </div>
-  </a>
-  <span class="total">{{ (playlist$ | async)?.tracks.total }} tracks</span>
-</div>
-<ul class="tracklist">
-  <li class="track" *ngFor="let item of (playlist$ | async)?.tracks.items">
-    <i class="icon music"></i>
-    <div class="track-informations">
-      <div class="wrapper">
-        <div class="name" [title]="item.track.name">{{ item.track.name }}</div>
-        <div class="from" title="{{ item.track.artists[0]?.name }} · {{ item.track.album.name }}">
-          {{ item.track.artists[0]?.name }} ·	{{ item.track.album.name }}
-        </div>
+<ng-container *ngIf="(playlist$ | async); then playlist; else selection"></ng-container>
+<ng-template #playlist>
+  <div class="header">
+    <a href="{{ (playlist$ | async)?.external_urls.spotify }}" target="_blank">
+      <img [src]="(playlist$ | async)?.images[0].url">
+      <div>
+        <h3>{{ (playlist$ | async)?.name }}</h3>
+        <small>By {{ (playlist$ | async)?.owner.display_name }}</small>
       </div>
-      <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
-    </div>
-    <button class="spotify-button"><i class="icon plus"></i></button>
-  </li>
-</ul>
+    </a>
+    <span class="total">{{ (playlist$ | async)?.tracks.total }} tracks</span>
+  </div>
+  <ul class="tracklist">
+    <li class="track" *ngFor="let item of (playlist$ | async)?.tracks.items">
+      <i class="icon music"></i>
+      <div class="track-informations">
+        <div class="wrapper">
+          <div class="name" [title]="item.track.name">{{ item.track.name }}</div>
+          <div class="from" title="{{ item.track.artists[0]?.name }} · {{ item.track.album.name }}">
+            {{ item.track.artists[0]?.name }} ·	{{ item.track.album.name }}
+          </div>
+        </div>
+        <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
+      </div>
+      <button class="spotify-button"><i class="icon plus"></i></button>
+    </li>
+  </ul>
+</ng-template>
+<ng-template #selection>
+
+</ng-template>
