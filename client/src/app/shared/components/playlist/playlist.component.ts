@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
+
+import { SpotifyPlaylist, SpotifyPaging } from 'src/app/spotify/models/spotify.models';
 
 @Component({
   selector: 'exp-playlist',
@@ -9,6 +10,7 @@ import { SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 })
 export class PlaylistComponent {
 
+  @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
   @Input() playlist$: Observable<SpotifyPlaylist>;
 
   toDuration(durationInMs: number): string {

@@ -14,7 +14,7 @@
         <i class="icon user"></i>
       </ng-template>
       <ng-template #image>
-        <img src="(spotifyUser$ | async)?.images[0].url">
+        <img src="(spotifyUser$ | async)?.images[0]?.url">
       </ng-template>
       <span class="display-name">{{ (spotifyUser$ | async)?.display_name }}</span>
     </div>
@@ -39,7 +39,7 @@
         <ul>
           <li *ngFor="let playlist of (spotifyPlaylists$ | async)?.items">
             <a class="playlist-link" [routerLink]="['/spotify/export', playlist.id]">
-              <img [src]="playlist.images[0].url">
+              <img [src]="playlist.images[0]?.url">
               <div>{{ playlist.name }}</div>
             </a>
           </li>

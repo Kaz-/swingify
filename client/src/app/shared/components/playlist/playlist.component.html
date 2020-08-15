@@ -27,5 +27,12 @@
   </ul>
 </ng-template>
 <ng-template #selection>
-
+  <ul class="playlists">
+    <li *ngFor="let playlist of (playlists$ | async)?.items">
+      <a class="playlist-link">
+        <img [src]="playlist.images[0].url">
+        <div>{{ playlist.name }}</div>
+      </a>
+    </li>
+  </ul>
 </ng-template>

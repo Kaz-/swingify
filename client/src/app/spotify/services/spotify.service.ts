@@ -6,20 +6,30 @@ import { shareReplay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation } from '../models/spotify.models';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyService implements OnDestroy {
 
-  private user: Subject<SpotifyUser> = new Subject<SpotifyUser>();
-  private playlists: Subject<SpotifyPaging<SpotifyPlaylist>> = new Subject<SpotifyPaging<SpotifyPlaylist>>();
-  user$: Observable<SpotifyUser> = this.user.asObservable().pipe(shareReplay());
-  playlists$: Observable<SpotifyPaging<SpotifyPlaylist>> = this.playlists.asObservable().pipe(shareReplay());
+  private primaryUser: Subject<SpotifyUser> = new Subject<SpotifyUser>();
+  private primaryPlaylists: Subject<SpotifyPaging<SpotifyPlaylist>> = new Subject<SpotifyPaging<SpotifyPlaylist>>();
+  primaryUser$: Observable<SpotifyUser> = this.primaryUser.asObservable().pipe(shareReplay());
+  primaryPlaylists$: Observable<SpotifyPaging<SpotifyPlaylist>> = this.primaryPlaylists.asObservable().pipe(shareReplay());
+
+  private secondaryUser: Subject<SpotifyUser> = new Subject<SpotifyUser>();
+  private secondaryPlaylists: Subject<SpotifyPaging<SpotifyPlaylist>> = new Subject<SpotifyPaging<SpotifyPlaylist>>();
+  secondaryUser$: Observable<SpotifyUser> = this.secondaryUser.asObservable().pipe(shareReplay());
+  secondaryPlaylists$: Observable<SpotifyPaging<SpotifyPlaylist>> = this.secondaryPlaylists.asObservable().pipe(shareReplay());
+
   private subscriptions: Subscription[] = [];
 
   constructor(private http: HttpClient) {
-    this.subscriptions.push(this.updateUser(), this.updatePlaylists());
+    this.subscriptions.push(
+      this.updateUser(false),
+      this.updatePlaylists(false)
+    );
   }
 
   ngOnDestroy(): void {
@@ -40,12 +50,14 @@ export class SpotifyService implements OnDestroy {
     );
   }
 
-  private updateUser(): Subscription {
-    return this.getUser(false).subscribe(user => this.user.next(user));
+  updateUser(isSecondary: boolean): Subscription {
+    return this.getUser(isSecondary)
+      .subscribe(user => isSecondary ? this.secondaryUser.next(user) : this.primaryUser.next(user));
   }
 
-  private updatePlaylists(): Subscription {
-    return this.getPlaylists(false).subscribe(playlists => this.playlists.next(playlists));
+  updatePlaylists(isSecondary: boolean): Subscription {
+    return this.getPlaylists(isSecondary)
+      .subscribe(playlists => isSecondary ? this.secondaryPlaylists.next(playlists) : this.primaryPlaylists.next(playlists));
   }
 
   getPlaylist(id: string, isSecondary: boolean): Observable<SpotifyPlaylist> {

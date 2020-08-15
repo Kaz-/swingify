@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { flatMap, shareReplay } from 'rxjs/operators';
 
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
-import { SpotifyPlaylist, PlaylistCreation } from '../../models/spotify.models';
+import { SpotifyPlaylist, SpotifyUser, SpotifyPaging } from '../../models/spotify.models';
 
 @Component({
   selector: 'exp-export',
@@ -18,6 +18,8 @@ export class ExportComponent implements OnInit {
   primaryPlaylist$: Observable<SpotifyPlaylist>;
   secondaryPlaylist$: Observable<SpotifyPlaylist>;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private spotifyService: SpotifyService,
@@ -26,28 +28,35 @@ export class ExportComponent implements OnInit {
 
   ngOnInit(): void {
     this.primaryPlaylist$ = this.initPrimaryPlaylist();
-    this.secondaryPlaylist$ = this.initSecondaryPlaylist();
+    if (AuthService.isSecondaryAuthenticated()) {
+      this.subscriptions.push(
+        this.spotifyService.updateUser(true),
+        this.spotifyService.updatePlaylists(true)
+      );
+    }
+  }
+
+  get primaryUser$(): Observable<SpotifyUser> {
+    return this.spotifyService.primaryUser$;
+  }
+
+  get primaryPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
+    return this.spotifyService.primaryPlaylists$;
+  }
+
+  get secondaryUser$(): Observable<SpotifyUser> {
+    return this.spotifyService.secondaryUser$;
+  }
+
+  get secondaryPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
+    return this.spotifyService.secondaryPlaylists$;
   }
 
   private initPrimaryPlaylist(): Observable<SpotifyPlaylist> {
     return this.route.params.pipe(
-      flatMap(params => this.spotifyService.getPlaylist(params.primary, false)),
+      flatMap(params => this.spotifyService.getPlaylist(params.id, false)),
       shareReplay()
     );
-  }
-
-  private initSecondaryPlaylist(): Observable<SpotifyPlaylist> {
-    if (AuthService.isSecondaryAuthenticated()) {
-      return this.spotifyService.getUser(true).pipe(
-        flatMap(user => this.primaryPlaylist$.pipe(
-          flatMap(playlist => {
-            const creation: PlaylistCreation = { name: playlist.name };
-            return this.spotifyService.createPlaylist(user.id, creation, true);
-          })
-        )),
-        shareReplay()
-      );
-    }
   }
 
   isLargeScreen(): boolean {
@@ -59,7 +68,7 @@ export class ExportComponent implements OnInit {
   }
 
   authenticate(): void {
-    this.authService.authorize();
+    this.authService.authorize().subscribe();
   }
 
 }

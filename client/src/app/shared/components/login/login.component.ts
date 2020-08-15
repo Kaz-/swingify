@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -11,12 +12,18 @@ import { AUTH_PLATFORMS } from '../../models/shared.models';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private router: Router,
     private authService: AuthService
   ) { }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
 
   redirect(platform: string): void {
     switch (platform) {
@@ -34,9 +41,11 @@ export class LoginComponent {
   private authenticateWithSpotify(): void {
     const token: AuthorizationToken = AuthService.getToken();
     if (token) {
-      AuthService.isTokenExpired ? this.authService.refresh(token) : this.router.navigateByUrl('/spotify/home');
+      AuthService.isTokenExpired(token)
+        ? this.subscriptions.push(this.authService.refresh(token).subscribe())
+        : this.router.navigateByUrl('/spotify/home');
     } else {
-      this.authService.authorize();
+      this.subscriptions.push(this.authService.authorize().subscribe());
     }
   }
 

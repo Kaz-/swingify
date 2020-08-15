@@ -33,17 +33,6 @@
     }
   }
   .tracklist {
-    display: grid;
-    grid-gap: 0.75em;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    &::-webkit-scrollbar {
-      width: 10px;
-      background-color: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: $negative-background;
-    }
     .track {
       display: flex;
       align-items: center;
@@ -59,6 +48,11 @@
         flex-grow: 1;
         .wrapper {
           max-width: 265px;
+          .name {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+          }
           .from {
             text-overflow: ellipsis;
             overflow: hidden;
@@ -78,6 +72,42 @@
       button {
         margin: 0 1.5em;
       }
+    }
+  }
+  .playlists {
+    li {
+      .playlist-link {
+        padding: 5px 16px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s linear;
+        i,
+        img {
+          margin-right: 0.5em;
+          width: 60px;
+          height: 60px;
+        }
+      }
+      .playlist-link.is-active,
+      .playlist-link:hover {
+        opacity: 1;
+      }
+    }
+  }
+  .tracklist,
+  .playlists {
+    display: grid;
+    grid-gap: 0.75em;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $negative-background;
     }
   }
 }

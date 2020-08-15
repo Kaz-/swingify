@@ -1,16 +1,14 @@
-import { Injectable, Inject, OnDestroy } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
-import { Observable, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, EMPTY } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { AuthorizationToken, SpotifyConfiguration, AuthorizeQueryOptions } from 'src/app/spotify/models/spotify.models';
 
 @Injectable()
-export class AuthService implements OnDestroy {
-
-  private subscriptions: Subscription[] = [];
+export class AuthService {
 
   constructor(
     private http: HttpClient,
@@ -57,10 +55,6 @@ export class AuthService implements OnDestroy {
     return token && !AuthService.isTokenExpired(token);
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
     return this.http.get<SpotifyConfiguration>(`${environment.spotify.serverPath}/configuration`);
   }
@@ -84,36 +78,34 @@ export class AuthService implements OnDestroy {
       }));
   }
 
-  authorize(): void {
-    this.subscriptions.push(this._authorize());
+  authorize(): Observable<never> {
+    return this.getSpotifyConfiguration().pipe(
+      switchMap(config => {
+        const options: AuthorizeQueryOptions = {
+          responseType: 'code',
+          clientId: config.clientId,
+          redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fprocess',
+          scope: 'playlist-modify-public'
+        };
+        this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
+          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}&scope=${options.scope}`;
+        return EMPTY;
+      })
+    );
   }
 
-  refresh(token: AuthorizationToken): void {
-    this.subscriptions.push(this._refresh(token));
-  }
-
-  private _authorize(): Subscription {
-    return this.getSpotifyConfiguration().subscribe(config => {
-      const options: AuthorizeQueryOptions = {
-        responseType: 'code',
-        clientId: config.clientId,
-        redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fprocess',
-        scope: 'playlist-modify-public'
-      };
-      this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
-        `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}&scope=${options.scope}`;
-    });
-  }
-
-  private _refresh(token: AuthorizationToken): Subscription {
-    return this.verify(token.refresh_token, false)
-      .subscribe(refreshedToken => {
+  refresh(token: AuthorizationToken): Observable<never> {
+    return this.verify(token.refresh_token, false).pipe(
+      switchMap(refreshedToken => {
         token.created_at = Date.now() / 1000; // in seconds
         AuthService.setToken(refreshedToken);
-      }, () => {
+        return EMPTY;
+      }),
+      catchError(() => {
         AuthService.removeToken();
-        this.authorize();
-      });
+        return this.authorize();
+      })
+    );
   }
 
 }

@@ -18,11 +18,11 @@ export class HomeComponent {
   ) { }
 
   get spotifyUser$(): Observable<SpotifyUser> {
-    return this.spotifyService.user$;
+    return this.spotifyService.primaryUser$;
   }
 
   get spotifyPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
-    return this.spotifyService.playlists$;
+    return this.spotifyService.primaryPlaylists$;
   }
 
   redirect(playlistId: string): void {

@@ -1,6 +1,6 @@
 <div class="container">
   <div class="primary-nav">
-    <exp-playlist [playlist$]="primaryPlaylist$"></exp-playlist>
+    <exp-playlist [playlist$]="primaryPlaylist$" [playlists$]="primaryPlaylists$"></exp-playlist>
   </div>
   <div class="content" *ngIf="isLargeScreen()">
     <h1>Wanna see a magic trick?</h1>
@@ -9,7 +9,20 @@
   <div class="secondary-nav">
     <ng-container *ngIf="isSecondaryAuthenticated(); then playlist; else card"></ng-container>
     <ng-template #playlist>
-      <exp-playlist [playlist$]="secondaryPlaylist$"></exp-playlist>
+      <div class="header">
+        <h2>Playlists</h2>
+        <span class="profile">
+          <ng-container *ngIf="(secondaryUser$ | async)?.images.length > 0; then image; else default"></ng-container>
+          <ng-template #default>
+            <i class="icon user"></i>
+          </ng-template>
+          <ng-template #image>
+            <img src="(secondaryUser$ | async)?.images[0]?.url">
+          </ng-template>
+          <span class="display-name">{{ (secondaryUser$ | async)?.display_name }}</span>
+        </span>
+      </div>
+      <exp-playlist [playlists$]="secondaryPlaylists$"></exp-playlist>
     </ng-template>
     <ng-template #card>
       <exp-card platform="Spotify" description="Authenticate with your second account to import your favorite music"
