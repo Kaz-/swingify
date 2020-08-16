@@ -22,15 +22,17 @@
         </div>
         <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
       </div>
-      <button class="spotify-button"><i class="icon plus"></i></button>
+      <button class="{{ isSecondary ? 'red' : 'green' }}-button">
+        <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
+      </button>
     </li>
   </ul>
 </ng-template>
 <ng-template #selection>
   <ul class="playlists">
     <li *ngFor="let playlist of (playlists$ | async)?.items">
-      <a class="playlist-link">
-        <img [src]="playlist.images[0].url">
+      <a class="playlist-link" (click)="navigate(playlist.id)">
+        <img [src]="playlist.images[0]?.url">
         <div>{{ playlist.name }}</div>
       </a>
     </li>
