@@ -20,7 +20,6 @@ export class ExportComponent implements OnInit, OnDestroy {
   secondaryPlaylist: Subject<SpotifyPlaylist> = new Subject<SpotifyPlaylist>();
   secondaryPlaylist$: Observable<SpotifyPlaylist> = this.secondaryPlaylist.asObservable().pipe(shareReplay());
 
-  private primaryId: string;
   private secondaryId: string;
   private subscriptions: Subscription[] = [];
 
@@ -64,7 +63,6 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   private initPrimaryPlaylist(): Observable<SpotifyPlaylist> {
     return this.route.params.pipe(
-      tap(params => this.primaryId = params.id),
       flatMap(params => this.spotifyService.getPlaylist(params.id, false)),
       shareReplay()
     );
@@ -118,13 +116,13 @@ export class ExportComponent implements OnInit, OnDestroy {
   }
 
   private addTracks(action: PlaylistAction): Subscription {
-    return this.spotifyService.addTracks(this.secondaryId, [action.trackUri]).pipe(
+    return this.spotifyService.addTracks(this.secondaryId, action.trackUris).pipe(
       flatMap(() => this.getSecondaryPlaylist(this.secondaryId)),
     ).subscribe();
   }
 
   private removeTracks(action: PlaylistAction): Subscription {
-    return this.spotifyService.removeTracks(this.secondaryId, [action.trackUri]).pipe(
+    return this.spotifyService.removeTracks(this.secondaryId, action.trackUris).pipe(
       flatMap(() => this.getSecondaryPlaylist(this.secondaryId)),
     ).subscribe();
   }

@@ -19,16 +19,11 @@ export const NAV_LINKS: NavLink[] = [
     name: 'Search',
     link: '/search',
     icon: 'search'
-  },
-  {
-    name: 'Export',
-    link: '/spotify/export',
-    icon: 'magic'
   }
 ];
 
 export interface PlaylistAction {
-  trackUri: string;
+  trackUris: string[];
   action: ETrackAction;
 }
 

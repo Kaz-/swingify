@@ -54,6 +54,10 @@
       .banner {
         font-size: 30px;
         text-align: center;
+        i {
+          margin-right: 0.25em;
+          transform: rotate(180deg);
+        }
       }
       ul {
         list-style: none;
@@ -84,6 +88,7 @@
         }
         ul {
           list-style: none;
+          padding: 0;
           li {
             padding: 0 8px;
             .playlist-link {

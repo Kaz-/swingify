@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { SpotifyPlaylist, SpotifyPaging } from 'src/app/spotify/models/spotify.models';
+import { SpotifyPlaylist, SpotifyPaging, PlaylistTrack } from 'src/app/spotify/models/spotify.models';
 import { PlaylistAction, ETrackAction } from '../../models/shared.models';
 
 @Component({
@@ -32,9 +32,9 @@ export class PlaylistComponent {
     this.router.navigate([], { relativeTo: this.route, queryParams: { secondary: playlistId } });
   }
 
-  emit(track: string): void {
+  execute(tracks: PlaylistTrack[] | string): void {
     const action: any = {
-      trackUri: track,
+      trackUris: Array.isArray(tracks) ? tracks.map(t => t.track.uri) : [tracks],
       action: this.isSecondary ? ETrackAction.REMOVE : ETrackAction.ADD
     };
     this.action.emit(action);

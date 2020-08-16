@@ -8,12 +8,20 @@
         <small>By {{ (playlist$ | async)?.owner.display_name }}</small>
       </div>
     </a>
-    <span class="total">{{ (playlist$ | async)?.tracks.total }} tracks</span>
+    <div>
+      <span class="total">{{ (playlist$ | async)?.tracks.total }} tracks</span>
+      <ng-container *ngIf="{ tracks: (playlist$ | async)?.tracks.items } as current">
+        <button class="green-button" [title]="isSecondary ? 'Remove all' : 'Export all'"
+          (click)="execute(current.tracks)">
+          <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
+        </button>
+      </ng-container>
+    </div>
   </div>
   <ul class="tracklist">
     <li class="track" *ngFor="let item of (playlist$ | async)?.tracks.items">
       <i class="icon music"></i>
-      <div class="track-informations">
+      <a class="track-informations" [href]="item.track.external_urls.spotify" target="_blank">
         <div class="wrapper">
           <div class="name" [title]="item.track.name">{{ item.track.name }}</div>
           <div class="from" title="{{ item.track.artists[0]?.name }} · {{ item.track.album.name }}">
@@ -21,14 +29,16 @@
           </div>
         </div>
         <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
-      </div>
-      <button class="{{ isSecondary ? 'red' : 'green' }}-button" (click)="emit(item.track.uri)">
+      </a>
+      <button class="{{ isSecondary ? 'red' : 'green' }}-button" [title]="isSecondary ? 'Remove' : 'Export'"
+        (click)="execute(item.track.uri)">
         <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
       </button>
     </li>
   </ul>
 </ng-template>
 <ng-template #selection>
+  <h2>Playlists</h2>
   <ul class="playlists">
     <li *ngFor="let playlist of (playlists$ | async)?.items">
       <a class="playlist-link" (click)="navigate(playlist.id)">

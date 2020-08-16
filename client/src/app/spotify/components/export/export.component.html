@@ -1,16 +1,17 @@
 <div class="container">
   <div class="primary-nav">
-    <exp-playlist [playlist$]="primaryPlaylist$" [playlists$]="primaryPlaylists$" (action)="execute($event)"></exp-playlist>
+    <exp-playlist [playlist$]="primaryPlaylist$" [playlists$]="primaryPlaylists$"
+      (action)="execute($event)"></exp-playlist>
   </div>
   <div class="content" *ngIf="isLargeScreen()">
     <h1>Wanna see a magic trick?</h1>
-    <div>Make your wishlist and start exporting.</div>
+    <div>Start to add your favorite tracks!</div>
   </div>
   <div class="secondary-nav">
     <ng-container *ngIf="isSecondaryAuthenticated(); then playlist; else card"></ng-container>
     <ng-template #playlist>
       <div class="header">
-        <a class="back" (click)="navigateBack()">
+        <a class="back" title="Back to playlists" (click)="navigateBack()">
           <i class="icon long-arrow-left"></i>
         </a>
         <span class="profile">
