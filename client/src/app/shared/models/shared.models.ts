@@ -1,6 +1,6 @@
-export enum AUTH_PLATFORMS {
-  Spotify = 'Spotify',
-  YouTube = 'YouTube'
+export enum AuthPlatform {
+  SPOTIFY = 'Spotify',
+  YOUTUBE = 'YouTube'
 }
 
 export interface NavLink {
@@ -26,3 +26,13 @@ export const NAV_LINKS: NavLink[] = [
     icon: 'magic'
   }
 ];
+
+export interface PlaylistAction {
+  trackUri: string;
+  action: ETrackAction;
+}
+
+export enum ETrackAction {
+  ADD = 'add',
+  REMOVE = 'remove'
+}

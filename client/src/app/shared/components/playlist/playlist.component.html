@@ -2,7 +2,7 @@
 <ng-template #playlist>
   <div class="header">
     <a href="{{ (playlist$ | async)?.external_urls.spotify }}" target="_blank">
-      <img [src]="(playlist$ | async)?.images[0].url">
+      <img [src]="(playlist$ | async)?.images[0]?.url">
       <div>
         <h3>{{ (playlist$ | async)?.name }}</h3>
         <small>By {{ (playlist$ | async)?.owner.display_name }}</small>
@@ -22,7 +22,7 @@
         </div>
         <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
       </div>
-      <button class="{{ isSecondary ? 'red' : 'green' }}-button">
+      <button class="{{ isSecondary ? 'red' : 'green' }}-button" (click)="emit(item.track.uri)">
         <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
       </button>
     </li>

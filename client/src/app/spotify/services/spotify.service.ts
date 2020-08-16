@@ -6,7 +6,6 @@ import { shareReplay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation } from '../models/spotify.models';
-import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +70,20 @@ export class SpotifyService implements OnDestroy {
     return this.http.post<SpotifyPlaylist>(
       `${environment.spotify.serverPath}/users/${userId}/playlists`, playlist,
       { headers: this.setSecondaryHeader(isSecondary) }
+    );
+  }
+
+  addTracks(id: string, tracks: string[]): Observable<never> {
+    return this.http.post<never>(
+      `${environment.spotify.serverPath}/playlist/${id}`, tracks,
+      { headers: this.setSecondaryHeader(true) }
+    );
+  }
+
+  removeTracks(id: string, tracks: string[]): Observable<ArrayBuffer> {
+    return this.http.request<ArrayBuffer>('delete',
+      `${environment.spotify.serverPath}/playlist/${id}`,
+      { body: tracks, headers: this.setSecondaryHeader(true) }
     );
   }
 

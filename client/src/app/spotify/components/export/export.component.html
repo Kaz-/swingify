@@ -1,6 +1,6 @@
 <div class="container">
   <div class="primary-nav">
-    <exp-playlist [playlist$]="primaryPlaylist$" [playlists$]="primaryPlaylists$"></exp-playlist>
+    <exp-playlist [playlist$]="primaryPlaylist$" [playlists$]="primaryPlaylists$" (action)="execute($event)"></exp-playlist>
   </div>
   <div class="content" *ngIf="isLargeScreen()">
     <h1>Wanna see a magic trick?</h1>
@@ -24,7 +24,8 @@
           <span class="display-name">{{ (secondaryUser$ | async)?.display_name }}</span>
         </span>
       </div>
-      <exp-playlist [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$" [isSecondary]="true"></exp-playlist>
+      <exp-playlist [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$"
+        [isSecondary]="true" (action)="execute($event)"></exp-playlist>
     </ng-template>
     <ng-template #card>
       <exp-card platform="Spotify" description="Authenticate with your second account to import your favorite music"

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
-import { AUTH_PLATFORMS } from '../../models/shared.models';
+import { AuthPlatform } from '../../models/shared.models';
 
 @Component({
   selector: 'exp-login',
@@ -27,10 +27,10 @@ export class LoginComponent implements OnDestroy {
 
   redirect(platform: string): void {
     switch (platform) {
-      case AUTH_PLATFORMS.Spotify:
+      case AuthPlatform.SPOTIFY:
         this.authenticateWithSpotify();
         break;
-      case AUTH_PLATFORMS.YouTube:
+      case AuthPlatform.YOUTUBE:
         this.authenticateWithYoutube();
         break;
       default:

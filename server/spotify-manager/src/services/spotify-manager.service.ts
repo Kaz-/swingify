@@ -24,4 +24,8 @@ export class SpotifyManagerService {
         return this.client.send('spotifyConfiguration', '');
     }
 
+    formatTracksToRemove(tracks: string[]): { tracks: { uri: string }[] } {
+        return { tracks: tracks.map(track => ({ uri: track })) }
+    }
+
 }

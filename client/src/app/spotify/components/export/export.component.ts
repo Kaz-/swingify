@@ -7,6 +7,7 @@ import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 import { SpotifyPlaylist, SpotifyUser, SpotifyPaging } from '../../models/spotify.models';
+import { PlaylistAction, ETrackAction } from 'src/app/shared/models/shared.models';
 
 @Component({
   selector: 'exp-export',
@@ -19,7 +20,9 @@ export class ExportComponent implements OnInit, OnDestroy {
   secondaryPlaylist: Subject<SpotifyPlaylist> = new Subject<SpotifyPlaylist>();
   secondaryPlaylist$: Observable<SpotifyPlaylist> = this.secondaryPlaylist.asObservable().pipe(shareReplay());
 
-  subscriptions: Subscription[] = [];
+  private primaryId: string;
+  private secondaryId: string;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -61,6 +64,7 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   private initPrimaryPlaylist(): Observable<SpotifyPlaylist> {
     return this.route.params.pipe(
+      tap(params => this.primaryId = params.id),
       flatMap(params => this.spotifyService.getPlaylist(params.id, false)),
       shareReplay()
     );
@@ -68,6 +72,7 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   private initSecondaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
+      tap(params => this.secondaryId = params.secondary),
       flatMap(params => params.secondary ? this.getSecondaryPlaylist(params.secondary) : EMPTY)
     ).subscribe();
   }
@@ -97,6 +102,31 @@ export class ExportComponent implements OnInit, OnDestroy {
   navigateBack(): void {
     this.router.navigate([], { relativeTo: this.route, queryParams: {} });
     this.updateSecondaryPlaylist(null);
+  }
+
+  execute(action: PlaylistAction): void {
+    switch (action.action) {
+      case ETrackAction.ADD:
+        this.subscriptions.push(this.addTracks(action));
+        break;
+      case ETrackAction.REMOVE:
+        this.subscriptions.push(this.removeTracks(action));
+        break;
+      default:
+        break;
+    }
+  }
+
+  private addTracks(action: PlaylistAction): Subscription {
+    return this.spotifyService.addTracks(this.secondaryId, [action.trackUri]).pipe(
+      flatMap(() => this.getSecondaryPlaylist(this.secondaryId)),
+    ).subscribe();
+  }
+
+  private removeTracks(action: PlaylistAction): Subscription {
+    return this.spotifyService.removeTracks(this.secondaryId, [action.trackUri]).pipe(
+      flatMap(() => this.getSecondaryPlaylist(this.secondaryId)),
+    ).subscribe();
   }
 
 }
