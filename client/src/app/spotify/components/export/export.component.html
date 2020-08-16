@@ -10,6 +10,9 @@
     <ng-container *ngIf="isSecondaryAuthenticated(); then playlist; else card"></ng-container>
     <ng-template #playlist>
       <div class="header">
+        <a class="back" (click)="navigateBack()">
+          <i class="icon long-arrow-left"></i>
+        </a>
         <span class="profile">
           <ng-container *ngIf="(secondaryUser$ | async)?.images.length > 0; then image; else default"></ng-container>
           <ng-template #default>

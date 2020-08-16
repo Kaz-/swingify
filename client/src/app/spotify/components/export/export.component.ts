@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, Subscription, Subject, EMPTY } from 'rxjs';
 import { flatMap, shareReplay, tap } from 'rxjs/operators';
 
@@ -22,6 +22,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private spotifyService: SpotifyService,
     private authService: AuthService
@@ -67,14 +68,18 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   private initSecondaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
-      flatMap(params => params.secondary ? this.updateSecondaryPlaylist(params.secondary) : EMPTY)
+      flatMap(params => params.secondary ? this.getSecondaryPlaylist(params.secondary) : EMPTY)
     ).subscribe();
   }
 
-  updateSecondaryPlaylist(id: string): Observable<SpotifyPlaylist> {
+  getSecondaryPlaylist(id: string): Observable<SpotifyPlaylist> {
     return this.spotifyService.getPlaylist(id, true).pipe(
-      tap(playlist => this.secondaryPlaylist.next(playlist))
+      tap(playlist => this.updateSecondaryPlaylist(playlist))
     );
+  }
+
+  private updateSecondaryPlaylist(playlist: SpotifyPlaylist): void {
+    this.secondaryPlaylist.next(playlist);
   }
 
   isLargeScreen(): boolean {
@@ -87,6 +92,11 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   authenticate(): void {
     this.authService.authorize().subscribe();
+  }
+
+  navigateBack(): void {
+    this.router.navigate([], { relativeTo: this.route, queryParams: {} });
+    this.updateSecondaryPlaylist(null);
   }
 
 }

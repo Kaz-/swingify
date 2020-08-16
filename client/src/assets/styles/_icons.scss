@@ -10,6 +10,9 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   &.warning {
     @extend .fa-exclamation-triangle;
   }
+  &.long-arrow-left {
+    @extend .fa-long-arrow-alt-left;
+  }
   &.long-arrow-right {
     @extend .fa-long-arrow-alt-right;
   }
