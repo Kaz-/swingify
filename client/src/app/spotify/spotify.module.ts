@@ -16,7 +16,7 @@ import { SpotifyInterceptor } from './services/spotify.interceptor';
     CommonModule,
     HttpClientModule,
     RouterModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: SpotifyInterceptor, multi: true }

@@ -43,6 +43,7 @@ export interface SpotifyPaging<T> {
   readonly offset: number;
   readonly previous: string | null;
   readonly total: number;
+  parentId: string;
 }
 
 export interface SpotifyPlaylist {

@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation } from '../models/spotify.models';
+import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation, PlaylistTrack } from '../models/spotify.models';
 
 @Injectable({
   providedIn: 'root'
@@ -61,8 +61,15 @@ export class SpotifyService implements OnDestroy {
 
   getPlaylist(id: string, isSecondary: boolean): Observable<SpotifyPlaylist> {
     return this.http.get<SpotifyPlaylist>(
-      `${environment.spotify.serverPath}/playlist/${id}`,
+      `${environment.spotify.serverPath}/playlists/${id}`,
       { headers: this.setSecondaryHeader(isSecondary) }
+    );
+  }
+
+  getPlaylistTracks(id: string, isSecondary: boolean, next?: string): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.http.get<SpotifyPaging<PlaylistTrack>>(
+      `${environment.spotify.serverPath}/playlists/${id}/tracks`,
+      { params: next ? new HttpParams().set('next', btoa(next)) : null, headers: this.setSecondaryHeader(isSecondary) }
     );
   }
 
@@ -75,14 +82,14 @@ export class SpotifyService implements OnDestroy {
 
   addTracks(id: string, tracks: string[]): Observable<never> {
     return this.http.post<never>(
-      `${environment.spotify.serverPath}/playlist/${id}`, tracks,
+      `${environment.spotify.serverPath}/playlists/${id}`, tracks,
       { headers: this.setSecondaryHeader(true) }
     );
   }
 
   removeTracks(id: string, tracks: string[]): Observable<ArrayBuffer> {
     return this.http.request<ArrayBuffer>('delete',
-      `${environment.spotify.serverPath}/playlist/${id}`,
+      `${environment.spotify.serverPath}/playlists/${id}`,
       { body: tracks, headers: this.setSecondaryHeader(true) }
     );
   }

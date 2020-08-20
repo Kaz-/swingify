@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -10,17 +10,25 @@ import { PlaylistAction, ETrackAction } from '../../models/shared.models';
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss']
 })
-export class PlaylistComponent {
+export class PlaylistComponent implements OnInit {
 
   @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
   @Input() playlist$: Observable<SpotifyPlaylist>;
+  @Input() tracks$: Observable<SpotifyPaging<PlaylistTrack>>;
   @Input() isSecondary?: boolean;
   @Output() action: EventEmitter<PlaylistAction> = new EventEmitter<PlaylistAction>();
+  @Output() next: EventEmitter<string> = new EventEmitter<string>();
+
+  private offset = 0;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute
   ) { }
+
+  ngOnInit(): void {
+    // this.tracks$.subscribe(c => console.log(c));
+  }
 
   toDuration(durationInMs: number): string {
     const minutes: number = Math.floor(durationInMs / 60000);
@@ -38,6 +46,12 @@ export class PlaylistComponent {
       action: this.isSecondary ? ETrackAction.REMOVE : ETrackAction.ADD
     };
     this.action.emit(action);
+  }
+
+  onScroll(tracks: SpotifyPaging<PlaylistTrack>): void {
+    if (tracks.next) {
+      this.next.emit(tracks.next);
+    }
   }
 
 }
