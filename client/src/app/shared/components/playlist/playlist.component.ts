@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { PlaylistAction, ETrackAction } from '../../models/shared.models';
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss']
 })
-export class PlaylistComponent implements OnInit {
+export class PlaylistComponent {
 
   @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
   @Input() playlist$: Observable<SpotifyPlaylist>;
@@ -19,16 +19,10 @@ export class PlaylistComponent implements OnInit {
   @Output() action: EventEmitter<PlaylistAction> = new EventEmitter<PlaylistAction>();
   @Output() next: EventEmitter<string> = new EventEmitter<string>();
 
-  private offset = 0;
-
   constructor(
     private router: Router,
     private route: ActivatedRoute
   ) { }
-
-  ngOnInit(): void {
-    // this.tracks$.subscribe(c => console.log(c));
-  }
 
   toDuration(durationInMs: number): string {
     const minutes: number = Math.floor(durationInMs / 60000);

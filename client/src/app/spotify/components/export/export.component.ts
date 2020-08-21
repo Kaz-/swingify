@@ -81,16 +81,17 @@ export class ExportComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  private getPrimaryPlaylist(id: string): Observable<SpotifyPaging<PlaylistTrack>> {
+  private getPrimaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.spotifyService.getPlaylist(id, false).pipe(
       tap(playlist => this.updatePrimaryPlaylist(playlist)),
-      flatMap(playlist => this.getPrimaryPlaylistTracks(playlist.id))
+      flatMap(playlist => this.getPrimaryPlaylistTracks(playlist.id, fromNext))
     );
   }
 
-  private getPrimaryPlaylistTracks(id: string, next?: string): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.spotifyService.getPlaylistTracks(id, false, next).pipe(
+  private getPrimaryPlaylistTracks(id: string, fromNext?: boolean, toNext?: string): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.spotifyService.getPlaylistTracks(id, false, toNext).pipe(
       tap(tracks => tracks.parentId = id),
+      tap(tracks => tracks.fromNext = fromNext),
       tap(tracks => this.updatePrimaryPlaylistTracks(tracks))
     );
   }
@@ -110,16 +111,17 @@ export class ExportComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  private getSecondaryPlaylist(id: string): Observable<SpotifyPaging<PlaylistTrack>> {
+  private getSecondaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.spotifyService.getPlaylist(id, true).pipe(
       tap(playlist => this.updateSecondaryPlaylist(playlist)),
-      flatMap(playlist => playlist ? this.getSecondaryPlaylistTracks(playlist.id) : EMPTY)
+      flatMap(playlist => playlist ? this.getSecondaryPlaylistTracks(playlist.id, fromNext) : EMPTY)
     );
   }
 
-  private getSecondaryPlaylistTracks(id: string, next?: string): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.spotifyService.getPlaylistTracks(id, true, next).pipe(
+  private getSecondaryPlaylistTracks(id: string, fromNext?: boolean, toNext?: string): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.spotifyService.getPlaylistTracks(id, true, toNext).pipe(
       tap(tracks => tracks.parentId = id),
+      tap(tracks => tracks.fromNext = fromNext),
       tap(tracks => this.updateSecondaryPlaylistTracks(tracks))
     );
   }
@@ -134,8 +136,9 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   private handleEmittedTracks(
     prev: SpotifyPaging<PlaylistTrack>,
-    next: SpotifyPaging<PlaylistTrack>): SpotifyPaging<PlaylistTrack> {
-    return prev.parentId === next.parentId && next.items.length > 0
+    next: SpotifyPaging<PlaylistTrack>
+  ): SpotifyPaging<PlaylistTrack> {
+    return prev.parentId === next.parentId && next.items.length > 0 && next.fromNext
       ? { ...next, items: [...prev.items, ...next.items] } : next;
   }
 
@@ -158,11 +161,13 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   execute(action: PlaylistAction): void {
     const chunks$: Observable<string[]> = this.chunkTracks(action.trackUris);
-    forkJoin([chunks$.pipe(
-      flatMap(tracks => this.performOnTracks(action, tracks))
-    )]).pipe(
-      flatMap(() => this.getSecondaryPlaylist(this.secondaryId))
-    ).subscribe();
+    this.subscriptions.push(
+      forkJoin([chunks$.pipe(
+        flatMap(tracks => this.performOnTracks(action, tracks))
+      )]).pipe(
+        flatMap(() => this.getSecondaryPlaylist(this.secondaryId))
+      ).subscribe()
+    );
   }
 
   performOnTracks(action: PlaylistAction, tracks: string[]): Observable<ArrayBuffer | never> {
@@ -186,8 +191,8 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   onNext(next: string, isSecondary: boolean): void {
     isSecondary
-      ? this.subscriptions.push(this.getSecondaryPlaylistTracks(this.secondaryId, next).subscribe())
-      : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, next).subscribe());
+      ? this.subscriptions.push(this.getSecondaryPlaylistTracks(this.secondaryId, true, next).subscribe())
+      : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, true, next).subscribe());
   }
 
 }

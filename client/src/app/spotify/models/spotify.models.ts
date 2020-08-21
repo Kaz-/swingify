@@ -35,6 +35,11 @@ export interface SpotifyUser {
   readonly uri: string;
 }
 
+/**
+ * @field (Optional) parentId: is the parent ID of T (eg. can be: playlist_id, user_id... according to T).
+ * @field (Optional) fromNext: is issued from a "next" request (eg. request has "tracks?next=").
+ * @see handleEmittedTracks(): fromNext is mostly used to check if items arrays should be concatened when receiving new values.
+ */
 export interface SpotifyPaging<T> {
   readonly href: string;
   readonly items: T[];
@@ -43,7 +48,8 @@ export interface SpotifyPaging<T> {
   readonly offset: number;
   readonly previous: string | null;
   readonly total: number;
-  parentId: string;
+  parentId?: string;
+  fromNext?: boolean;
 }
 
 export interface SpotifyPlaylist {
