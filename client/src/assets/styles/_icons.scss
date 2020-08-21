@@ -37,6 +37,12 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   &.question {
     @extend .fa-question;
   }
+  &.chevron-up {
+    @extend .fa-chevron-up;
+  }
+  &.chevron-down {
+    @extend .fa-chevron-down;
+  }
 }
 .brand {
   @extend .fab;

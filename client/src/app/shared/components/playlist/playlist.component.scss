@@ -20,11 +20,10 @@
         }
       }
       exp-playlist-image::ng-deep {
-        img,
-        .default {
-          margin-right: 0.5em;
+        .container {
           width: 50px;
           height: 50px;
+          margin-right: 0.5em;
           i {
             font-size: 12px;
           }
@@ -99,11 +98,10 @@
         opacity: 0.7;
         transition: opacity 0.2s linear;
         exp-playlist-image::ng-deep {
-          img,
-          .default {
-            margin-right: 0.5em;
+          .container {
             width: 60px;
             height: 60px;
+            margin-right: 0.5em;
             i {
               font-size: 12px;
             }

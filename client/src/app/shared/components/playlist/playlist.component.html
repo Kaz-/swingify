@@ -10,16 +10,16 @@
     </a>
     <div>
       <span class="total">{{ (tracks$ | async)?.items.length }} of {{ (tracks$ | async)?.total }} tracks</span>
-      <ng-container *ngIf="{ tracks: (tracks$ | async)?.items } as items">
+      <ng-container *ngIf="(tracks$ | async) as tracks">
         <button class="green-button" [title]="isSecondary ? 'Remove loaded tracks' : 'Export loaded tracks'"
-          (click)="execute(items.tracks)">
+          (click)="execute(tracks.items)">
           <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
         </button>
       </ng-container>
     </div>
   </div>
-  <ng-container *ngIf="{ tracks: (tracks$ | async) } as list">
-    <ul class="tracklist" infiniteScroll [scrollWindow]="false" (scrolled)="onScroll(list.tracks)">
+  <ng-container *ngIf="(tracks$ | async) as tracks">
+    <ul class="tracklist" infiniteScroll [scrollWindow]="false" (scrolled)="onScroll(tracks)">
       <li class="track" *ngFor="let item of (tracks$ | async)?.items">
         <i class="icon music"></i>
         <a class="track-informations" [href]="item.track.external_urls.spotify" target="_blank">

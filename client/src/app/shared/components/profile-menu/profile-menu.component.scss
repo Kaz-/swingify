@@ -1,0 +1,16 @@
+@import "../../../../assets/styles/icons";
+:host {
+  .profile {
+    outline: none;
+    cursor: pointer;
+    .display-name {
+      > i {
+        font-size: 10px;
+      }
+    }
+    i,
+    img {
+      margin: 0 0.5em;
+    }
+  }
+}

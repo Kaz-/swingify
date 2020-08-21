@@ -8,16 +8,7 @@
         <i class="fab fa-twitter"></i>
       </a>
     </div>
-    <div class="profile">
-      <ng-container *ngIf="(spotifyUser$ | async)?.images.length > 0; then image; else default"></ng-container>
-      <ng-template #default>
-        <i class="icon user"></i>
-      </ng-template>
-      <ng-template #image>
-        <img src="(spotifyUser$ | async)?.images[0]?.url">
-      </ng-template>
-      <span class="display-name">{{ (spotifyUser$ | async)?.display_name }}</span>
-    </div>
+    <exp-profile-menu [user$]="spotifyUser$"></exp-profile-menu>
   </div>
   <div class="nav-bar">
     <nav>

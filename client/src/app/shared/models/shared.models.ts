@@ -6,7 +6,8 @@ export enum AuthPlatform {
 export interface NavLink {
   name: string;
   link: string;
-  icon: string;
+  icon?: string;
+  action?: () => void;
 }
 
 export const NAV_LINKS: NavLink[] = [

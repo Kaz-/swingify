@@ -1,0 +1,7 @@
+<div class="menu-dropdown">
+  <div class="menu-list">
+    <ng-container *ngFor="let item of items">
+      <a class="menu-link" [href]="item.link" (click)="item.action ? item.action() : null">{{ item.name }}</a>
+    </ng-container>
+  </div>
+</div>

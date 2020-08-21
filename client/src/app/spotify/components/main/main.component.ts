@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { NavLink, NAV_LINKS } from '../../../shared/models/shared.models';
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 
@@ -11,8 +10,6 @@ import { SpotifyService } from 'src/app/spotify/services/spotify.service';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
-
-  navLinks: NavLink[] = NAV_LINKS;
 
   constructor(private spotifyService: SpotifyService) { }
 

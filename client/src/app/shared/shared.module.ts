@@ -12,6 +12,8 @@ import { HomeComponent } from './components/home/home.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
 import { CardComponent } from './components/card/card.component';
 import { PlaylistImageComponent } from './components/playlist-image/playlist-image.component';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { PlaylistImageComponent } from './components/playlist-image/playlist-ima
     HomeComponent,
     PlaylistComponent,
     CardComponent,
-    PlaylistImageComponent
+    PlaylistImageComponent,
+    DropdownComponent,
+    ProfileMenuComponent
   ],
   imports: [
     CommonModule,
@@ -28,6 +32,12 @@ import { PlaylistImageComponent } from './components/playlist-image/playlist-ima
     InfiniteScrollModule
   ],
   providers: [AuthService, AuthGuard],
-  exports: [PlaylistComponent, CardComponent, PlaylistImageComponent]
+  exports: [
+    PlaylistComponent,
+    CardComponent,
+    PlaylistImageComponent,
+    DropdownComponent,
+    ProfileMenuComponent
+  ]
 })
 export class SharedModule { }
