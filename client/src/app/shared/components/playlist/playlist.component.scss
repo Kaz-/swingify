@@ -19,10 +19,16 @@
           color: $white;
         }
       }
-      img {
-        margin-right: 0.5em;
-        width: 50px;
-        height: 50px;
+      exp-playlist-image::ng-deep {
+        img,
+        .default {
+          margin-right: 0.5em;
+          width: 50px;
+          height: 50px;
+          i {
+            font-size: 12px;
+          }
+        }
       }
       h3 {
         font-weight: normal;
@@ -31,7 +37,7 @@
         color: $alt;
       }
     }
-    >div {
+    > div {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -92,11 +98,16 @@
         cursor: pointer;
         opacity: 0.7;
         transition: opacity 0.2s linear;
-        i,
-        img {
-          margin-right: 0.5em;
-          width: 60px;
-          height: 60px;
+        exp-playlist-image::ng-deep {
+          img,
+          .default {
+            margin-right: 0.5em;
+            width: 60px;
+            height: 60px;
+            i {
+              font-size: 12px;
+            }
+          }
         }
       }
       .playlist-link.is-active,
@@ -113,7 +124,7 @@
     overflow-y: scroll;
     @include scrollbar;
   }
-  >h2 {
+  > h2 {
     margin-bottom: 0.5em;
     font-weight: 100;
   }

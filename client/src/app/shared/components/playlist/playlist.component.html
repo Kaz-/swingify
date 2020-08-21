@@ -2,7 +2,7 @@
 <ng-template #playlist>
   <div class="header">
     <a href="{{ (playlist$ | async)?.external_urls.spotify }}" target="_blank">
-      <img [src]="(playlist$ | async)?.images[0]?.url">
+      <exp-playlist-image [playlist]="playlist$ | async"></exp-playlist-image>
       <div>
         <h3>{{ (playlist$ | async)?.name }}</h3>
         <small>By {{ (playlist$ | async)?.owner.display_name }}</small>
@@ -44,7 +44,7 @@
   <ul class="playlists">
     <li *ngFor="let playlist of (playlists$ | async)?.items">
       <a class="playlist-link" (click)="navigate(playlist.id)">
-        <img [src]="playlist.images[0]?.url">
+        <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
         <div>{{ playlist.name }}</div>
       </a>
     </li>

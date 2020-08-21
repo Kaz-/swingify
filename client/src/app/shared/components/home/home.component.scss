@@ -35,9 +35,11 @@
         &:hover {
           cursor: pointer;
           .box {
-            img {
-              background: rgba(0, 0, 0, 0.8);
-              z-index: 3;
+            exp-playlist-image::ng-deep {
+              img,
+              .default {
+                z-index: 3;
+              }
             }
           }
         }
@@ -47,12 +49,18 @@
           max-height: 250px;
           background: $background;
           box-shadow: 1px 1px 16px -2px rgba(0, 0, 0, 0.3);
-          img {
-            opacity: 1;
-            width: 250px;
-            height: 250px;
-            transition: all 0.2s ease-in-out;
-            backface-visibility: hidden;
+          exp-playlist-image::ng-deep {
+            img {
+              opacity: 1;
+              width: 250px;
+              height: 250px;
+              transition: all 0.2s ease-in-out;
+              backface-visibility: hidden;
+            }
+            .default {
+              width: 248px;
+              height: 248px;
+            }
           }
           .overlay {
             transition: 0.5s ease;
@@ -68,8 +76,11 @@
             }
           }
           &:hover {
-            img {
-              opacity: 0.3;
+            exp-playlist-image::ng-deep {
+              img,
+              .default {
+                opacity: 0.3;
+              }
             }
             .overlay {
               opacity: 1;

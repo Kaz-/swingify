@@ -9,12 +9,12 @@
     <div class="from-to">
       <div class="box">
         <div class="name">{{ (primaryPlaylist$ | async)?.name }}</div>
-        <img [src]="(primaryPlaylist$ | async)?.images[0]?.url">
+        <exp-playlist-image [playlist]="primaryPlaylist$ | async"></exp-playlist-image>
       </div>
       <i class="icon long-arrow-right"></i>
       <div class="box">
         <div class="name">{{ (secondaryPlaylist$ | async)?.name }}</div>
-        <img [src]="(secondaryPlaylist$ | async)?.images[0]?.url">
+        <exp-playlist-image [playlist]="secondaryPlaylist$ | async"></exp-playlist-image>
       </div>
     </div>
   </div>

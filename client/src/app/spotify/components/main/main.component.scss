@@ -1,5 +1,6 @@
 @import "../../../../assets/styles/icons";
 @import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/mixins";
 :host {
   min-height: 100%;
   width: 100%;
@@ -60,7 +61,7 @@
         }
       }
       .nav {
-        >ul {
+        > ul {
           list-style: none;
           padding: 1em 0;
           li {
@@ -109,11 +110,16 @@
               cursor: pointer;
               opacity: 0.7;
               transition: opacity 0.2s linear;
-              i,
-              img {
-                margin-right: 0.5em;
-                width: 30px;
-                height: 30px;
+              exp-playlist-image::ng-deep {
+                img,
+                .default {
+                  margin-right: 0.5em;
+                  width: 30px;
+                  height: 30px;
+                  i {
+                    font-size: 10px;
+                  }
+                }
               }
             }
             .playlist-link.is-active,

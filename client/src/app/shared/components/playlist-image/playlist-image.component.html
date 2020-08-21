@@ -1,0 +1,15 @@
+<div class="container">
+  <ng-container *ngIf="playlist?.images.length > 0; then image; else default"></ng-container>
+  <ng-template #image>
+    <img [src]="playlist?.images[0]?.url" />
+  </ng-template>
+  <ng-template #default>
+    <div class="default">
+      <i class="icon question"></i>
+    </div>
+  </ng-template>
+</div>
+
+
+
+

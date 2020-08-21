@@ -11,6 +11,7 @@ import { ProcessComponent } from './components/process/process.component';
 import { HomeComponent } from './components/home/home.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
 import { CardComponent } from './components/card/card.component';
+import { PlaylistImageComponent } from './components/playlist-image/playlist-image.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CardComponent } from './components/card/card.component';
     ProcessComponent,
     HomeComponent,
     PlaylistComponent,
-    CardComponent
+    CardComponent,
+    PlaylistImageComponent
   ],
   imports: [
     CommonModule,
@@ -26,6 +28,6 @@ import { CardComponent } from './components/card/card.component';
     InfiniteScrollModule
   ],
   providers: [AuthService, AuthGuard],
-  exports: [PlaylistComponent, CardComponent]
+  exports: [PlaylistComponent, CardComponent, PlaylistImageComponent]
 })
 export class SharedModule { }
