@@ -17,13 +17,31 @@
     .content {
       grid-area: content;
       display: flex;
-      justify-content: center;
       align-items: center;
       flex-grow: 1;
       flex-direction: column;
       background-image: linear-gradient(90deg, #31b7a4, #7d1e76);
+      padding: 2em;
       > div {
-        margin-bottom: 1em;
+        margin-bottom: 3em;
+      }
+      .from-to {
+        display: grid;
+        column-gap: 1.5em;
+        grid-auto-flow: column;
+        align-items: center;
+        .box {
+          display: flex;
+          flex-direction: column;
+          img {
+            width: 150px;
+            height: 150px;
+            box-shadow: 1px 1px 16px -2px rgba(0, 0, 0, 0.3);
+          }
+        }
+        i {
+          font-size: 40px;
+        }
       }
     }
     .secondary-nav {

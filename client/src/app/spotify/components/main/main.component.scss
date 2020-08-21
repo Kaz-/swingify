@@ -21,7 +21,7 @@
     padding: 1em 2em;
     .shares {
       display: grid;
-      grid-gap: 1.5em;
+      column-gap: 1.5em;
       grid-auto-flow: column;
       .share-link {
         display: flex;
@@ -59,29 +59,35 @@
           transform: rotate(180deg);
         }
       }
-      ul {
-        list-style: none;
-        padding: 1em 0;
-        li {
-          padding: 0 8px;
-          .nav-link {
-            border-radius: 4px;
-            padding: 0 16px;
-            display: flex;
-            align-items: center;
-            height: 40px;
-            cursor: pointer;
-            i {
-              margin-right: 1em;
+      .nav {
+        >ul {
+          list-style: none;
+          padding: 1em 0;
+          li {
+            padding: 0 8px;
+            .nav-link {
+              border-radius: 4px;
+              padding: 0 16px;
+              display: flex;
+              align-items: center;
+              height: 40px;
+              cursor: pointer;
+              transition: opacity 0.2s linear;
+              i {
+                margin-right: 1em;
+              }
             }
-          }
-          .nav-link.is-active,
-          .nav-link:hover {
-            background-color: $second-background;
+            .nav-link.is-active,
+            .nav-link:hover {
+              background-color: $second-background;
+            }
           }
         }
       }
       .playlists {
+        max-height: calc(100vh - 180px);
+        display: flex;
+        flex-direction: column;
         h3 {
           padding: 0 0.75em;
           font-weight: 100;
@@ -89,10 +95,14 @@
         ul {
           list-style: none;
           padding: 0;
+          display: grid;
+          row-gap: 0.3em;
+          overflow-x: hidden;
+          overflow-y: scroll;
+          @include scrollbar;
           li {
-            padding: 0 8px;
             .playlist-link {
-              padding: 5px 16px;
+              padding: 0 1em;
               display: flex;
               align-items: center;
               height: 40px;

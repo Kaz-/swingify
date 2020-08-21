@@ -1,5 +1,6 @@
 @import "../../../../assets/styles/icons";
 @import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/mixins";
 :host {
   display: flex;
   flex-grow: 1;
@@ -107,16 +108,10 @@
   .tracklist,
   .playlists {
     display: grid;
-    grid-gap: 0.75em;
+    row-gap: 0.75em;
     overflow-x: hidden;
     overflow-y: scroll;
-    &::-webkit-scrollbar {
-      width: 10px;
-      background-color: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: $negative-background;
-    }
+    @include scrollbar;
   }
   >h2 {
     margin-bottom: 0.5em;
