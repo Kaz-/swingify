@@ -8,7 +8,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class CardComponent {
 
   @Input() platform: string;
-  @Input() description: string;
   @Output() auth: EventEmitter<string> = new EventEmitter<string>();
 
   authenticate(): void {

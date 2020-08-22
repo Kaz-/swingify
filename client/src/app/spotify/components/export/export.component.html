@@ -31,21 +31,24 @@
         [isSecondary]="true" (action)="execute($event)" (next)="onNext($event, true)" (search)="onSearch($event, true)"></exp-playlist>
     </ng-template>
     <ng-template #card>
-      <ul class="tips">
-        <li>
-          <h2>Log in with your Spotify account</h2>
-          <p>This is the account you want to update.</p>
-        </li>
-        <li>
-          <h2>Select a playlist to modify</h2>
-          <p>The playlist you chose will be modified by tracks you will add or remove.</p>
-        </li>
-        <li>
-          <h2>Export your tracks</h2>
-          <p>You can add or remove tracks one by one or simply all in one.</p>
-        </li>
-      </ul>
-      <exp-card platform="Spotify" (auth)="authenticate($event)"></exp-card>
+      <div class="card-wrapper">
+        <exp-card platform="Spotify" (auth)="authenticate($event)">
+          <ul class="tips">
+            <li>
+              <h2>Log in with your Spotify account</h2>
+              <p>This is the account you want to update.</p>
+            </li>
+            <li>
+              <h2>Select a playlist to modify</h2>
+              <p>The playlist you chose will be modified by tracks you will add or remove.</p>
+            </li>
+            <li>
+              <h2>Export your tracks</h2>
+              <p>You can add or remove tracks one by one or simply all in one.</p>
+            </li>
+          </ul>
+        </exp-card>
+      </div>
     </ng-template>
   </div>
 </div>

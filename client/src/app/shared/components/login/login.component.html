@@ -1,9 +1,32 @@
 <header>
-  <h1>Welcome to Exportify</h1>
-  <p>You can start exporting your playlists from one to another Spotify account !</p>
+  <i class="brand spotify"></i>
+  <h1>Exportify</h1>
 </header>
+<p>Start exporting your playlists!</p>
 <section>
-  <exp-card platform="Spotify" description="Authenticate with Spotify" (auth)="redirect($event)"></exp-card>
-  <exp-card platform="YouTube" description="Authenticate with YouTube" (auth)="redirect($event)"></exp-card>
+  <exp-card platform="Spotify" (auth)="redirect($event)">
+    <ul class="tips">
+      <li>
+        <h2>Log in with your Spotify account</h2>
+        <p>This is the account you will use to export your tracks.</p>
+      </li>
+      <li>
+        <h2>Select a playlist and export your tracks</h2>
+        <p>You can export tracks one by one or simply all in one.</p>
+      </li>
+    </ul>
+  </exp-card>
+  <exp-card platform="YouTube" (auth)="redirect($event)">
+    <ul class="tips">
+      <li>
+        <h2>Log in with your YouTube account</h2>
+        <p>This is the account you will use to export your tracks.</p>
+      </li>
+      <li>
+        <h2>Select a playlist and export your tracks</h2>
+        <p>You can export tracks one by one or simply all in one.</p>
+      </li>
+    </ul>
+  </exp-card>
 </section>
 

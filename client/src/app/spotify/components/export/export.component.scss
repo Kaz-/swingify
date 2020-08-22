@@ -11,7 +11,7 @@
       grid-area: primary-nav;
       background-color: $second-background;
       exp-playlist::ng-deep {
-        max-height: calc(100vh - 110px);
+        max-height: calc(100vh - 100px);
       }
     }
     .content {
@@ -53,10 +53,6 @@
       exp-playlist::ng-deep {
         max-height: calc(100vh - 140px);
       }
-      exp-card {
-        max-width: 250px;
-        margin: auto;
-      }
       .header {
         display: flex;
         align-items: center;
@@ -66,16 +62,26 @@
           cursor: pointer;
         }
       }
-      .tips {
-        display: grid;
-        row-gap: 2em;
+      .card-wrapper {
+        display: flex;
+        align-items: center;
         justify-content: center;
-        margin: 2em;
-        h2 {
-          font-weight: 600;
+        height: 100%;
+        exp-card {
+          max-width: 250px;
+          margin: auto;
         }
-        p {
-          color: $alt;
+        .tips {
+          display: grid;
+          row-gap: 2em;
+          justify-content: center;
+          margin: 2em;
+          h2 {
+            font-weight: 600;
+          }
+          p {
+            color: $alt;
+          }
         }
       }
     }

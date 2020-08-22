@@ -1,4 +1,5 @@
 @import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/icons";
 :host {
   display: flex;
   flex-grow: 1;
@@ -8,17 +9,36 @@
   height: 100%;
   background-image: linear-gradient(90deg, #bf6eb1, #12253c);
   header {
-    margin-bottom: 5em;
-    text-align: center;
-    h1 {
-      font-weight: 800;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i {
+      margin: 0 0.25em 0.25em 0;
+      transform: rotate(180deg);
+      font-size: 35px;
     }
-    p {
-      color: $grey;
-    }
+  }
+  > p {
+    display: flex;
+    align-self: center;
+    color: $grey;
+    margin-bottom: 2em;
   }
   section {
     display: flex;
     justify-content: center;
+    .tips {
+      display: grid;
+      row-gap: 2em;
+      justify-content: center;
+      margin: 2em;
+      h2 {
+        font-weight: 600;
+      }
+      p {
+        color: $alt;
+      }
+    }
   }
 }

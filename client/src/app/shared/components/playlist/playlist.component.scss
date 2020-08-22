@@ -57,6 +57,9 @@
     text-overflow: ellipsis;
     outline: none;
     margin-bottom: 1em;
+    &::placeholder {
+      color: $alt;
+    }
   }
   .tracklist {
     .track {

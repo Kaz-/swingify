@@ -2,5 +2,5 @@
   <i class="brand {{ platform.toLowerCase() }}"></i>
   <span>{{ platform }}</span>
 </h1>
-<p *ngIf="description">{{ description }}</p>
+<ng-content #description></ng-content>
 <button class="{{ platform.toLowerCase() }}-button" (click)="authenticate()">Log In</button>
