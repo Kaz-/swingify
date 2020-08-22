@@ -66,11 +66,22 @@ export class SpotifyService implements OnDestroy {
     );
   }
 
-  getPlaylistTracks(id: string, isSecondary: boolean, next?: string): Observable<SpotifyPaging<PlaylistTrack>> {
+  getPlaylistTracks(id: string, isSecondary: boolean, next?: string, query?: string): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.http.get<SpotifyPaging<PlaylistTrack>>(
       `${environment.spotify.serverPath}/playlists/${id}/tracks`,
-      { params: next ? new HttpParams().set('next', btoa(next)) : null, headers: this.setSecondaryHeader(isSecondary) }
+      { params: this.createParams(next, query), headers: this.setSecondaryHeader(isSecondary) }
     );
+  }
+
+  private createParams(next?: string, query?: string): HttpParams {
+    let params: HttpParams = new HttpParams();
+    if (next) {
+      params = params.append('next', btoa(next));
+    }
+    if (query) {
+      params = params.append('search', query);
+    }
+    return params;
   }
 
   createPlaylist(userId: string, playlist: PlaylistCreation, isSecondary: boolean): Observable<SpotifyPlaylist> {

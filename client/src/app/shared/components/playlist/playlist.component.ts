@@ -1,16 +1,18 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, from } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
 
 import { SpotifyPlaylist, SpotifyPaging, PlaylistTrack } from 'src/app/spotify/models/spotify.models';
 import { PlaylistAction, ETrackAction } from '../../models/shared.models';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'exp-playlist',
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss']
 })
-export class PlaylistComponent {
+export class PlaylistComponent implements OnInit, OnDestroy {
 
   @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
   @Input() playlist$: Observable<SpotifyPlaylist>;
@@ -18,11 +20,28 @@ export class PlaylistComponent {
   @Input() isSecondary?: boolean;
   @Output() action: EventEmitter<PlaylistAction> = new EventEmitter<PlaylistAction>();
   @Output() next: EventEmitter<string> = new EventEmitter<string>();
+  @Output() search: EventEmitter<string> = new EventEmitter<string>();
+
+  searchControl: FormControl = new FormControl('');
+  subscription: Subscription;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute
   ) { }
+
+  ngOnInit(): void {
+    this.subscription = this.searchControl.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe(next => this.search.emit(next));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   toDuration(durationInMs: number): string {
     const minutes: number = Math.floor(durationInMs / 60000);

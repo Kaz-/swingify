@@ -88,8 +88,13 @@ export class ExportComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getPrimaryPlaylistTracks(id: string, fromNext?: boolean, toNext?: string): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.spotifyService.getPlaylistTracks(id, false, toNext).pipe(
+  private getPrimaryPlaylistTracks(
+    id: string,
+    fromNext?: boolean,
+    toNext?: string,
+    query?: string
+  ): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.spotifyService.getPlaylistTracks(id, false, toNext, query).pipe(
       tap(tracks => tracks.parentId = id),
       tap(tracks => tracks.fromNext = fromNext),
       tap(tracks => this.updatePrimaryPlaylistTracks(tracks))
@@ -118,8 +123,13 @@ export class ExportComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getSecondaryPlaylistTracks(id: string, fromNext?: boolean, toNext?: string): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.spotifyService.getPlaylistTracks(id, true, toNext).pipe(
+  private getSecondaryPlaylistTracks(
+    id: string,
+    fromNext?: boolean,
+    toNext?: string,
+    query?: string
+  ): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.spotifyService.getPlaylistTracks(id, true, toNext, query).pipe(
       tap(tracks => tracks.parentId = id),
       tap(tracks => tracks.fromNext = fromNext),
       tap(tracks => this.updateSecondaryPlaylistTracks(tracks))
@@ -193,6 +203,12 @@ export class ExportComponent implements OnInit, OnDestroy {
     isSecondary
       ? this.subscriptions.push(this.getSecondaryPlaylistTracks(this.secondaryId, true, next).subscribe())
       : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, true, next).subscribe());
+  }
+
+  onSearch(next: string, isSecondary: boolean): void {
+    isSecondary
+      ? this.subscriptions.push(this.getSecondaryPlaylistTracks(this.secondaryId, false, null, next).subscribe())
+      : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, false, null, next).subscribe());
   }
 
 }

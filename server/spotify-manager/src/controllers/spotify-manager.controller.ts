@@ -1,11 +1,11 @@
 import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, query } from 'express';
 import { Observable, EMPTY } from 'rxjs';
-import { map, flatMap } from 'rxjs/operators';
+import { map, flatMap, filter } from 'rxjs/operators';
 
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
 
-import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistTrack } from 'src/models/spotify.models';
+import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistTrack, SimplifiedArtist } from 'src/models/spotify.models';
 
 @Controller('spotify')
 export class SpotifyManagerController {
@@ -67,7 +67,23 @@ export class SpotifyManagerController {
                 ? Buffer.from(request.query.next.toString(), 'base64').toString()
                 : `${this.baseApiUrl}/playlists/${request.params.id}/tracks?offset=0&limit=100`,
             { headers: this.getAuthorizationHeader(request) }
-        ).pipe(map(response => response.data));
+        ).pipe(
+            map(response => response.data),
+            map(tracks => request.query.search
+                ? ({ ...tracks, items: tracks.items.filter(item => 
+                    this.findMatchInTrack(item, request.query.search.toString().toLowerCase().trim())
+                ), next: null }) : tracks)
+        );
+    }
+
+    private findMatchInTrack(item: PlaylistTrack, query: string): boolean {
+        return item.track.name.toLowerCase().trim().includes(query)
+            || item.track.album.name.toLowerCase().trim().includes(query)
+            || this.findMatchInArtists(item, query);
+    }
+
+    private findMatchInArtists(item: PlaylistTrack, query: string): boolean {
+        return item.track.artists.some(artist => artist.name.toLowerCase().trim().includes(query));
     }
 
     @Post('users/:id/playlists')

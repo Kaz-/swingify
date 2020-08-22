@@ -43,8 +43,12 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   &.chevron-down {
     @extend .fa-chevron-down;
   }
+  &.search {
+    @extend .fa-search;
+  }
 }
 .brand {
+  font-family: 'Font Awesome 5 brands';
   @extend .fab;
   &.github {
     @extend .fa-github;

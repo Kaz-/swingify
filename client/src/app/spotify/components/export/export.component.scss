@@ -9,7 +9,7 @@
     height: 100%;
     .primary-nav {
       grid-area: primary-nav;
-      background-color: $background;
+      background-color: $second-background;
       exp-playlist::ng-deep {
         max-height: calc(100vh - 110px);
       }
@@ -50,7 +50,7 @@
     }
     .secondary-nav {
       grid-area: secondary-nav;
-      background-color: $background;
+      background-color: $second-background;
       exp-playlist::ng-deep {
         max-height: calc(100vh - 140px);
       }

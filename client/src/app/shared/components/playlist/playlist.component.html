@@ -19,6 +19,7 @@
     </div>
   </div>
   <ng-container *ngIf="(tracks$ | async) as tracks">
+    <input class="search" type="text" [formControl]="searchControl" placeholder="Search for artists, tracks, albums...">
     <ul class="tracklist" infiniteScroll [scrollWindow]="false" (scrolled)="onScroll(tracks)">
       <li class="track" *ngFor="let item of (tracks$ | async)?.items">
         <i class="icon music"></i>

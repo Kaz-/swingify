@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { AuthService } from './services/auth.service';
@@ -29,6 +30,7 @@ import { ProfileMenuComponent } from './components/profile-menu/profile-menu.com
   imports: [
     CommonModule,
     RouterModule,
+    ReactiveFormsModule,
     InfiniteScrollModule
   ],
   providers: [AuthService, AuthGuard],

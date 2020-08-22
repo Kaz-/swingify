@@ -46,6 +46,25 @@
       }
     }
   }
+  .search {
+    color: $white;
+    background-color: $background;
+    padding: 6px 48px;
+    max-height: 30px;
+    border: 0;
+    border-radius: 500px;
+    text-overflow: ellipsis;
+    outline: none;
+    margin-bottom: 1em;
+    &::before {
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      content: "\f002";
+      display: inline-block;
+      padding-right: 3px;
+      vertical-align: middle;
+    }
+  }
   .tracklist {
     .track {
       display: flex;
