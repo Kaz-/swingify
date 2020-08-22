@@ -1,6 +1,6 @@
 import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, EMPTY, of } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import { map, flatMap, expand, takeWhile, scan } from 'rxjs/operators';
 
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
