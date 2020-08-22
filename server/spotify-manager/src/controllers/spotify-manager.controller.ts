@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, EMPTY } from 'rxjs';
-import { map, flatMap } from 'rxjs/operators';
+import { Observable, EMPTY, of } from 'rxjs';
+import { map, flatMap, expand, takeWhile, scan } from 'rxjs/operators';
 
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
 
@@ -62,20 +62,30 @@ export class SpotifyManagerController {
     @Get('playlists/:id/tracks')
     getPlaylistTracks(@Req() request: Request): Observable<SpotifyPaging<PlaylistTrack>> {
         this.logger.log(`Requesting tracks from playlist: ${request.params.id}`);
-        return this.http.get<SpotifyPaging<PlaylistTrack>>(
-            request.query.next
-                ? Buffer.from(request.query.next.toString(), 'base64').toString()
-                : `${this.baseApiUrl}/playlists/${request.params.id}/tracks?offset=0&limit=100`,
-            { headers: this.getAuthorizationHeader(request) }
-        ).pipe(
-            map(response => response.data),
+        return this.getTracksByRequest(request).pipe(
+            expand(tracks => this.getTracksByNext(tracks.next, this.getAuthorizationHeader(request))),
+            takeWhile(tracks => request.query.search && tracks.next ? true : false, true),
+            scan((prev, next) => ({ ...next, items: [...prev.items, ...next.items] })),
             map(tracks => request.query.search
                 ? ({
                     ...tracks,
                     items: tracks.items.filter(item => this.findMatchInTrack(item, request.query.search.toString().toLowerCase().trim())),
                     next: null
-                }) : tracks)
-        );
+                }) : tracks
+            ));
+    }
+
+    private getTracksByRequest(request: Request): Observable<SpotifyPaging<PlaylistTrack>> {
+        return this.http.get<SpotifyPaging<PlaylistTrack>>(
+            request.query.next
+                ? Buffer.from(request.query.next.toString(), 'base64').toString()
+                : `${this.baseApiUrl}/playlists/${request.params.id}/tracks?offset=0&limit=100`,
+            { headers: this.getAuthorizationHeader(request) }).pipe(map(response => response.data));
+    }
+
+    private getTracksByNext(next: string, authorization: string): Observable<SpotifyPaging<PlaylistTrack>> {
+        return this.http.get<SpotifyPaging<PlaylistTrack>>(next, { headers: authorization })
+            .pipe(map(response => response.data));
     }
 
     private findMatchInTrack(item: PlaylistTrack, query: string): boolean {
