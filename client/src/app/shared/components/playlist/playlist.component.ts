@@ -31,12 +31,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.subscription = this.searchControl.valueChanges
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
-      .subscribe(next => this.search.emit(next));
+    this.subscription = this.searchControl.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(next => this.search.emit(next));
   }
 
   ngOnDestroy(): void {

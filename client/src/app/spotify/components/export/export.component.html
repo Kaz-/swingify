@@ -4,21 +4,10 @@
       (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></exp-playlist>
   </div>
   <div class="content" *ngIf="isLargeScreen()">
-    <h1>Wanna see a magic trick?</h1>
-    <ul class="tips">
-      <li>
-        <h2>Log in with your Spotify account</h2>
-        <p>This is the account you want to update.</p>
-      </li>
-      <li>
-        <h2>Select a playlist to modify</h2>
-        <p>The playlist you chose will be modified by tracks you will add or remove.</p>
-      </li>
-      <li>
-        <h2>Export your tracks</h2>
-        <p>You can add or remove tracks one by one or simply all in one.</p>
-      </li>
-    </ul>
+    <header>
+      <h1>Wanna see a magic trick?</h1>
+      <p>Export your favorite tracks!</p>
+    </header>
     <div class="from-to">
       <div class="box" [title]="(primaryPlaylist$ | async)?.name ? (primaryPlaylist$ | async)?.name : 'Unknown'">
         <exp-playlist-image [playlist]="primaryPlaylist$ | async"></exp-playlist-image>
@@ -42,8 +31,21 @@
         [isSecondary]="true" (action)="execute($event)" (next)="onNext($event, true)" (search)="onSearch($event, true)"></exp-playlist>
     </ng-template>
     <ng-template #card>
-      <exp-card platform="Spotify" description="Authenticate with your second account to import your favorite music"
-        (auth)="authenticate($event)"></exp-card>
+      <ul class="tips">
+        <li>
+          <h2>Log in with your Spotify account</h2>
+          <p>This is the account you want to update.</p>
+        </li>
+        <li>
+          <h2>Select a playlist to modify</h2>
+          <p>The playlist you chose will be modified by tracks you will add or remove.</p>
+        </li>
+        <li>
+          <h2>Export your tracks</h2>
+          <p>You can add or remove tracks one by one or simply all in one.</p>
+        </li>
+      </ul>
+      <exp-card platform="Spotify" (auth)="authenticate($event)"></exp-card>
     </ng-template>
   </div>
 </div>

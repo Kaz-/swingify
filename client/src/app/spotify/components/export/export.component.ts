@@ -205,10 +205,10 @@ export class ExportComponent implements OnInit, OnDestroy {
       : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, true, next).subscribe());
   }
 
-  onSearch(next: string, isSecondary: boolean): void {
+  onSearch(query: string, isSecondary: boolean): void {
     isSecondary
-      ? this.subscriptions.push(this.getSecondaryPlaylistTracks(this.secondaryId, false, null, next).subscribe())
-      : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, false, null, next).subscribe());
+      ? this.subscriptions.push(this.getSecondaryPlaylistTracks(this.secondaryId, false, null, query).subscribe())
+      : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, false, null, query).subscribe());
   }
 
 }

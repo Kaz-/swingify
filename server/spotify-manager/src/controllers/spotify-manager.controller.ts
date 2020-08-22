@@ -1,11 +1,11 @@
 import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
-import { Request, query } from 'express';
+import { Request } from 'express';
 import { Observable, EMPTY } from 'rxjs';
-import { map, flatMap, filter } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
 
-import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistTrack, SimplifiedArtist } from 'src/models/spotify.models';
+import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistTrack } from 'src/models/spotify.models';
 
 @Controller('spotify')
 export class SpotifyManagerController {
@@ -70,9 +70,11 @@ export class SpotifyManagerController {
         ).pipe(
             map(response => response.data),
             map(tracks => request.query.search
-                ? ({ ...tracks, items: tracks.items.filter(item => 
-                    this.findMatchInTrack(item, request.query.search.toString().toLowerCase().trim())
-                ), next: null }) : tracks)
+                ? ({
+                    ...tracks,
+                    items: tracks.items.filter(item => this.findMatchInTrack(item, request.query.search.toString().toLowerCase().trim())),
+                    next: null
+                }) : tracks)
         );
     }
 

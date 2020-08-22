@@ -40,6 +40,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-width: 140px;
       button {
         background-color: rgb(123 32 117);
         color: $white;
@@ -56,14 +57,6 @@
     text-overflow: ellipsis;
     outline: none;
     margin-bottom: 1em;
-    &::before {
-      font-family: "Font Awesome 5 Free";
-      font-weight: 900;
-      content: "\f002";
-      display: inline-block;
-      padding-right: 3px;
-      vertical-align: middle;
-    }
   }
   .tracklist {
     .track {

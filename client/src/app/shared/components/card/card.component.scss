@@ -7,7 +7,7 @@
   position: relative;
   margin: 1em;
   padding: 2em;
-  background: rgb(18 18 18 / 60%);
+  background: $background;
   border-radius: 8px;
   isolation: isolate;
   h1 {
@@ -22,5 +22,8 @@
     font-size: 13px;
     margin: 0.5em 0;
     color: #c3c3c3;
+  }
+  button {
+    margin-top: 1em;
   }
 }
