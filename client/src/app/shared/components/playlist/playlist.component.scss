@@ -57,6 +57,12 @@
     text-overflow: ellipsis;
     outline: none;
     margin-bottom: 1em;
+    border: 1px solid transparent;
+    transition: 0.3s ease;
+    &:focus,
+    &:active {
+      border-color: $alt;
+    }
     &::placeholder {
       color: $alt;
     }

@@ -11,8 +11,8 @@
     <div>
       <span class="total">{{ (tracks$ | async)?.items.length }} of {{ (tracks$ | async)?.total }} tracks</span>
       <ng-container *ngIf="(tracks$ | async) as tracks">
-        <button class="green-button" [title]="isSecondary ? 'Remove loaded tracks' : 'Export loaded tracks'"
-          (click)="execute(tracks.items)">
+        <button class="green-button" [title]="isSecondary ? 'Remove all tracks' : 'Export all tracks'"
+          (click)="execute(true)">
           <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
         </button>
       </ng-container>
@@ -33,7 +33,7 @@
           <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
         </a>
         <button class="{{ isSecondary ? 'red' : 'green' }}-button" [title]="isSecondary ? 'Remove' : 'Export'"
-          (click)="execute(item.track.uri)">
+          (click)="execute(false, item.track.uri)">
           <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
         </button>
       </li>

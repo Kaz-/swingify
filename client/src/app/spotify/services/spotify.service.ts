@@ -91,14 +91,14 @@ export class SpotifyService implements OnDestroy {
     );
   }
 
-  addTracks(id: string, tracks: string[]): Observable<never> {
+  addTracks(id: string, track: string, from?: string): Observable<never> {
     return this.http.post<never>(
-      `${environment.spotify.serverPath}/playlists/${id}`, tracks,
-      { headers: this.setSecondaryHeader(true) }
+      `${environment.spotify.serverPath}/playlists/${id}`, track,
+      { params: from ? new HttpParams().set('from', from) : null, headers: this.setSecondaryHeader(true) }
     );
   }
 
-  removeTracks(id: string, tracks: string[]): Observable<ArrayBuffer> {
+  removeTracks(id: string, tracks: string): Observable<ArrayBuffer> {
     return this.http.request<ArrayBuffer>('delete',
       `${environment.spotify.serverPath}/playlists/${id}`,
       { body: tracks, headers: this.setSecondaryHeader(true) }

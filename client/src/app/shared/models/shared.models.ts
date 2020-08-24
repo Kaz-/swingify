@@ -24,8 +24,9 @@ export const NAV_LINKS: NavLink[] = [
 ];
 
 export interface PlaylistAction {
-  trackUris: string[];
+  trackUri: string;
   action: ETrackAction;
+  complete?: boolean;
 }
 
 export enum ETrackAction {

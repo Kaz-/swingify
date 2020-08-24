@@ -64,7 +64,7 @@ export class SpotifyManagerController {
         this.logger.log(`Requesting tracks from playlist: ${request.params.id}`);
         return this.getTracksByRequest(request).pipe(
             expand(tracks => this.getTracksByNext(tracks.next, this.getAuthorizationHeader(request))),
-            takeWhile(tracks => request.query.search && tracks.next ? true : false, true),
+            takeWhile(tracks => Boolean(request.query.search) && Boolean(tracks.next), true),
             scan((prev, next) => ({ ...next, items: [...prev.items, ...next.items] })),
             map(tracks => request.query.search
                 ? ({
@@ -110,10 +110,31 @@ export class SpotifyManagerController {
     @Post('/playlists/:id')
     addTracks(@Req() request: Request): Observable<never> {
         this.logger.log(`Adding new tracks in: ${request.params.id}`);
+        return request.query.from
+            ? this.getCompleteTracklistAsUris(request, request.query.from.toString())
+                .pipe(flatMap(tracklist => this.addTracksByRequest(request, true, tracklist)))
+            : this.addTracksByRequest(request);
+    }
+
+    private addTracksByRequest(request: Request, complete?: boolean, tracklist?: { uris: string[] }): Observable<never> {
         return this.http.post<never>(
-            `${this.baseApiUrl}/playlists/${request.params.id}/tracks`, JSON.stringify(request.body),
+            `${this.baseApiUrl}/playlists/${request.params.id}/tracks`,
+            complete ? JSON.stringify(tracklist) : JSON.stringify(request.body),
             { headers: this.getAuthorizationHeader(request) }
         ).pipe(flatMap(() => EMPTY));
+    }
+
+    private getCompleteTracklistAsUris(request: Request, playlist: string): Observable<{ uris: string[] }> {
+        return this.http.get<SpotifyPaging<PlaylistTrack>>(
+            `${this.baseApiUrl}/playlists/${playlist}/tracks?offset=0&limit=100`,
+            { headers: this.getAuthorizationHeader(request) }
+        ).pipe(
+            map(response => response.data),
+            expand(tracks => this.getTracksByNext(tracks.next, this.getAuthorizationHeader(request))),
+            takeWhile(tracks => Boolean(tracks.next), true),
+            map(tracks => tracks.items.map(item => item.track.uri)),
+            map(uris => ({ uris: [...uris] }))
+        );
     }
 
     @Delete('/playlists/:id')

@@ -51,10 +51,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this.router.navigate([], { relativeTo: this.route, queryParams: { secondary: playlistId } });
   }
 
-  execute(tracks: PlaylistTrack[] | string): void {
+  execute(onAll: boolean, track?: string): void {
     const action: any = {
-      trackUris: Array.isArray(tracks) ? tracks.map(t => t.track.uri) : [tracks],
-      action: this.isSecondary ? ETrackAction.REMOVE : ETrackAction.ADD
+      trackUri: track ? [track] : [],
+      action: this.isSecondary ? ETrackAction.REMOVE : ETrackAction.ADD,
+      complete: onAll
     };
     this.action.emit(action);
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, Subject, EMPTY, from, forkJoin } from 'rxjs';
+import { Observable, Subscription, Subject, EMPTY } from 'rxjs';
 import { flatMap, shareReplay, tap, scan } from 'rxjs/operators';
 
 import { SpotifyService } from '../../services/spotify.service';
@@ -170,33 +170,22 @@ export class ExportComponent implements OnInit, OnDestroy {
   }
 
   execute(action: PlaylistAction): void {
-    const chunks$: Observable<string[]> = this.chunkTracks(action.trackUris);
-    this.subscriptions.push(
-      forkJoin([chunks$.pipe(
-        flatMap(tracks => this.performOnTracks(action, tracks))
-      )]).pipe(
-        flatMap(() => this.getSecondaryPlaylist(this.secondaryId))
-      ).subscribe()
-    );
+    this.subscriptions.push(this.performOnTracks(action).pipe(
+      flatMap(() => this.getSecondaryPlaylist(this.secondaryId))
+    ).subscribe());
   }
 
-  performOnTracks(action: PlaylistAction, tracks: string[]): Observable<ArrayBuffer | never> {
+  performOnTracks(action: PlaylistAction): Observable<ArrayBuffer | never> {
     switch (action.action) {
       case ETrackAction.ADD:
-        return this.spotifyService.addTracks(this.secondaryId, tracks);
+        return action.complete
+          ? this.spotifyService.addTracks(this.secondaryId, action.trackUri, this.primaryId)
+          : this.spotifyService.addTracks(this.secondaryId, action.trackUri);
       case ETrackAction.REMOVE:
-        return this.spotifyService.removeTracks(this.secondaryId, tracks);
+        return this.spotifyService.removeTracks(this.secondaryId, action.trackUri);
       default:
         break;
     }
-  }
-
-  private chunkTracks(tracks: string[]): Observable<string[]> {
-    // maximum 100 items per request
-    const max = 100;
-    return from(Array(Math.ceil(tracks.length / max))
-      .fill(null)
-      .map(() => tracks.splice(0, max), tracks.slice()));
   }
 
   onNext(next: string, isSecondary: boolean): void {
