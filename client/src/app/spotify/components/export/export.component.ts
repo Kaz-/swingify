@@ -182,7 +182,9 @@ export class ExportComponent implements OnInit, OnDestroy {
           ? this.spotifyService.addTracks(this.secondaryId, action.trackUri, this.primaryId)
           : this.spotifyService.addTracks(this.secondaryId, action.trackUri);
       case ETrackAction.REMOVE:
-        return this.spotifyService.removeTracks(this.secondaryId, action.trackUri);
+        return action.complete
+          ? this.spotifyService.removeTracks(this.secondaryId, action.trackUri, this.secondaryId)
+          : this.spotifyService.removeTracks(this.secondaryId, action.trackUri);
       default:
         break;
     }

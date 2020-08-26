@@ -1,7 +1,7 @@
-import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
+import { Controller, Get, Logger, HttpService, Req, Post, Delete, flatten } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, EMPTY } from 'rxjs';
-import { map, flatMap, expand, takeWhile, scan } from 'rxjs/operators';
+import { Observable, EMPTY, Subject } from 'rxjs';
+import { map, flatMap, expand, takeWhile, scan, tap, bufferWhen } from 'rxjs/operators';
 
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
 
@@ -69,7 +69,8 @@ export class SpotifyManagerController {
             map(tracks => request.query.search
                 ? ({
                     ...tracks,
-                    items: tracks.items.filter(item => this.findMatchInTrack(item, request.query.search.toString().toLowerCase().trim())),
+                    items: tracks.items.filter(item => this.spotifyService
+                        .findMatchInTrack(item, request.query.search.toString().toLowerCase().trim())),
                     next: null
                 }) : tracks
             ));
@@ -88,16 +89,6 @@ export class SpotifyManagerController {
             .pipe(map(response => response.data));
     }
 
-    private findMatchInTrack(item: PlaylistTrack, query: string): boolean {
-        return item.track.name.toLowerCase().trim().includes(query)
-            || item.track.album.name.toLowerCase().trim().includes(query)
-            || this.findMatchInArtists(item, query);
-    }
-
-    private findMatchInArtists(item: PlaylistTrack, query: string): boolean {
-        return item.track.artists.some(artist => artist.name.toLowerCase().trim().includes(query));
-    }
-
     @Post('users/:id/playlists')
     createPlaylist(@Req() request: Request): Observable<SpotifyPlaylist> {
         this.logger.log(`Creating a new playlist for user: ${request.params.id}`);
@@ -111,9 +102,24 @@ export class SpotifyManagerController {
     addTracks(@Req() request: Request): Observable<never> {
         this.logger.log(`Adding new tracks in: ${request.params.id}`);
         return request.query.from
-            ? this.getCompleteTracklistAsUris(request, request.query.from.toString())
-                .pipe(flatMap(tracklist => this.addTracksByRequest(request, true, tracklist)))
+            ? this.getTracksToAdd(request, request.query.from.toString())
             : this.addTracksByRequest(request);
+    }
+
+    @Delete('/playlists/:id')
+    removeTracks(@Req() request: Request): Observable<never> {
+        this.logger.log(`Removing tracks from: ${request.params.id}`);
+        return request.query.from
+            ? this.getTracksToRemove(request, request.query.from.toString())
+            : this.removeTracksByRequest(request);
+    }
+
+    private getTracksToAdd(request: Request, playlist: string): Observable<never> {
+        return this.getCompleteTracklist(request, playlist).pipe(
+            map(tracks => tracks.items.map(item => item.track.uri)),
+            map(uris => ({ uris: [...uris] })),
+            flatMap(tracklist => this.addTracksByRequest(request, true, tracklist))
+        )
     }
 
     private addTracksByRequest(request: Request, complete?: boolean, tracklist?: { uris: string[] }): Observable<never> {
@@ -124,7 +130,37 @@ export class SpotifyManagerController {
         ).pipe(flatMap(() => EMPTY));
     }
 
-    private getCompleteTracklistAsUris(request: Request, playlist: string): Observable<{ uris: string[] }> {
+    private getTracksToRemove(request: Request, playlist: string): Observable<never> {
+        const closingEvent: Subject<boolean> = new Subject<boolean>();
+        return this.getCompleteTracklist(request, playlist).pipe(
+            tap(tracks => this.toggleClosingBuffer(tracks, closingEvent)),
+            map(tracks => tracks.items.map(item => item.track.uri)),
+            bufferWhen(() => closingEvent.asObservable()),
+            map(buffer => flatten(buffer)),
+            map(uris => this.spotifyService.formatTracksToRemove(uris)),
+            flatMap(tracklist => tracklist.pipe(
+                flatMap(list => this.removeTracksByRequest(request, true, list))
+            ))
+        )
+    }
+
+    private removeTracksByRequest(
+        request: Request,
+        complete?: boolean,
+        tracklist?: { tracks: { uri: string }[] }
+    ): Observable<never> {
+        return this.http.delete<never>(
+            `${this.baseApiUrl}/playlists/${request.params.id}/tracks`,
+            {
+                data: complete
+                    ? JSON.stringify(tracklist)
+                    : JSON.stringify(this.spotifyService.formatTracksToRemove(request.body)),
+                headers: this.getAuthorizationHeader(request)
+            }
+        ).pipe(flatMap(() => EMPTY));
+    }
+
+    private getCompleteTracklist(request: Request, playlist: string): Observable<SpotifyPaging<PlaylistTrack>> {
         return this.http.get<SpotifyPaging<PlaylistTrack>>(
             `${this.baseApiUrl}/playlists/${playlist}/tracks?offset=0&limit=100`,
             { headers: this.getAuthorizationHeader(request) }
@@ -132,18 +168,13 @@ export class SpotifyManagerController {
             map(response => response.data),
             expand(tracks => this.getTracksByNext(tracks.next, this.getAuthorizationHeader(request))),
             takeWhile(tracks => Boolean(tracks.next), true),
-            map(tracks => tracks.items.map(item => item.track.uri)),
-            map(uris => ({ uris: [...uris] }))
         );
     }
 
-    @Delete('/playlists/:id')
-    removeTracks(@Req() request: Request): Observable<never> {
-        this.logger.log(`Removing tracks in: ${request.params.id}`);
-        return this.http.delete<never>(
-            `${this.baseApiUrl}/playlists/${request.params.id}/tracks`,
-            { data: JSON.stringify(this.spotifyService.formatTracksToRemove(request.body)), headers: this.getAuthorizationHeader(request) }
-        ).pipe(flatMap(() => EMPTY));
+    private toggleClosingBuffer(tracks: SpotifyPaging<PlaylistTrack>, closingEvent: Subject<boolean>): void {
+        if (!tracks.next && !tracks.previous) {
+            closingEvent.next(true);
+        }
     }
 
 }

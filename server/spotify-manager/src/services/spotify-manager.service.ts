@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 
-import { SpotifyConfiguration } from 'src/models/spotify.models';
+import { SpotifyConfiguration, PlaylistTrack } from 'src/models/spotify.models';
 
 @Injectable()
 export class SpotifyManagerService {
@@ -24,8 +24,22 @@ export class SpotifyManagerService {
         return this.client.send('spotifyConfiguration', '');
     }
 
-    formatTracksToRemove(tracks: string[]): { tracks: { uri: string }[] } {
-        return { tracks: tracks.map(track => ({ uri: track })) }
+    formatTracksToRemove(tracks: string[]): Observable<{ tracks: { uri: string }[] }> {
+        const max = 100;
+        return from(Array(Math.ceil(tracks.length / max))
+            .fill(null)
+            .map(() => tracks.splice(0, max), tracks.slice())
+            .map(tracks => ({ tracks: tracks.map(track => ({ uri: track })) })));
+    }
+
+    findMatchInTrack(item: PlaylistTrack, query: string): boolean {
+        return item.track.name.toLowerCase().trim().includes(query)
+            || item.track.album.name.toLowerCase().trim().includes(query)
+            || this.findMatchInArtists(item, query);
+    }
+
+    private findMatchInArtists(item: PlaylistTrack, query: string): boolean {
+        return item.track.artists.some(artist => artist.name.toLowerCase().trim().includes(query));
     }
 
 }
