@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { map, flatMap, scan } from 'rxjs/operators';
+import { map, flatMap, scan, expand, takeWhile } from 'rxjs/operators';
 
 import { environment } from 'environment';
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
@@ -36,7 +36,6 @@ export class SpotifyManagerController {
         return this.getUserProfile(request)
             .pipe(flatMap(user => {
                 this.logger.log(`Requesting playlists for user: ${user.id}`);
-                console.log('DQOPZJFOIQZJDIOZQJFJOQZJDFOPQZOP');
                 return this.http.get<SpotifyPaging<SpotifyPlaylist>>(
                     `${this.baseApiUrl}/users/${user.id}/playlists`,
                     { headers: this.spotifyService.getAuthorizationHeader(request) }
@@ -56,7 +55,9 @@ export class SpotifyManagerController {
     @Get('playlists/:id/tracks')
     getPlaylistTracks(@Req() request: Request): Observable<SpotifyPaging<PlaylistTrack>> {
         this.logger.log(`Requesting tracks from playlist: ${request.params.id}`);
-        return this.spotifyService.getCompleteTracklist(request).pipe(
+        return this.spotifyService.getTracksByRequest(request).pipe(
+            expand(tracks => this.spotifyService.getTracksByNext(tracks.next, this.spotifyService.getAuthorizationHeader(request))),
+            takeWhile(tracks => Boolean(request.query.search) && Boolean(tracks.next), true),
             scan((prev, next) => ({ ...next, items: [...prev.items, ...next.items] })),
             map(tracks => request.query.search
                 ? ({

@@ -35,11 +35,11 @@ export class SpotifyManagerService {
         };
     }
 
-    getTracksByRequest(request: Request): Observable<SpotifyPaging<PlaylistTrack>> {
+    getTracksByRequest(request: Request, from?: string): Observable<SpotifyPaging<PlaylistTrack>> {
         return this.http.get<SpotifyPaging<PlaylistTrack>>(
             request.query.next
                 ? Buffer.from(request.query.next.toString(), 'base64').toString()
-                : `${this.baseApiUrl}/playlists/${request.params.id}/tracks?offset=0&limit=100`,
+                : `${this.baseApiUrl}/playlists/${from ? from : request.params.id}/tracks?offset=0&limit=100`,
             { headers: this.getAuthorizationHeader(request) }).pipe(map(response => response.data));
     }
 
@@ -49,7 +49,7 @@ export class SpotifyManagerService {
     }
 
     getTracksToAdd(request: Request, playlist: string): Observable<never> {
-        return this.getCompleteTracklist(request).pipe(
+        return this.getCompleteTracklist(request, playlist).pipe(
             map(tracks => tracks.items.map(item => item.track.uri)),
             map(uris => ({ uris: [...uris] })),
             flatMap(tracklist => this.addTracksByRequest(request, true, tracklist))
@@ -66,7 +66,7 @@ export class SpotifyManagerService {
 
     getTracksToRemove(request: Request, playlist: string): Observable<never> {
         const closingEvent: Subject<boolean> = new Subject<boolean>();
-        return this.getCompleteTracklist(request).pipe(
+        return this.getCompleteTracklist(request, playlist).pipe(
             tap(tracks => this.toggleClosingBuffer(tracks, closingEvent)),
             map(tracks => tracks.items.map(item => item.track.uri)),
             bufferWhen(() => closingEvent.asObservable()),
@@ -94,12 +94,10 @@ export class SpotifyManagerService {
         ).pipe(flatMap(() => EMPTY));
     }
 
-    getCompleteTracklist(request: Request): Observable<SpotifyPaging<PlaylistTrack>> {
-        return this.getTracksByRequest(request).pipe(
+    getCompleteTracklist(request: Request, from?: string): Observable<SpotifyPaging<PlaylistTrack>> {
+        return this.getTracksByRequest(request, from).pipe(
             expand(tracks => this.getTracksByNext(tracks.next, this.getAuthorizationHeader(request))),
-            takeWhile(tracks => request.query.search
-                ? Boolean(request.query.search) && Boolean(tracks.next)
-                : Boolean(tracks.next), true)
+            takeWhile(tracks => Boolean(tracks.next), true)
         );
     }
 
