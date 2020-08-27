@@ -24,6 +24,12 @@
               <span>{{ navLink.name }}</span>
             </a>
           </li>
+          <li>
+            <a class="nav-link" (click)="isSearching = true">
+              <i class="icon search"></i>
+              <span>Search</span>
+            </a>
+          </li>
         </ul>
       </div>
       <exp-playlists [user$]="spotifyUser$" [playlists$]="spotifyPlaylists$"></exp-playlists>
@@ -33,3 +39,5 @@
 <div class="main-view">
   <router-outlet #spotify></router-outlet>
 </div>
+<exp-dialog *ngIf="isSearching" [entry]="dialog" (cancel)="isSearching = false"
+    (action)="onSearch($event)"></exp-dialog>

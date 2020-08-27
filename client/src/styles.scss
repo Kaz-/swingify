@@ -33,6 +33,9 @@ li {
 button {
   outline: none;
   cursor: pointer;
+  &:hover {
+    transform: scale(1.06);
+  }
 }
 .default-button {
   color: $white;

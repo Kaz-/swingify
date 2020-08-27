@@ -1,11 +1,11 @@
 <div class="dialog">
   <div class="wrapper">
-    <h1>{{ entry.title }}</h1>
+    <h1 *ngIf="entry.title">{{ entry.title }}</h1>
     <div class="input">
       <div class="input-box">
         <div class="content">
-          <label for="name">{{ entry.label }}</label>
-          <input type="text" #input [formControl]="inputControl" [placeholder]="entry.placeholder">
+          <label *ngIf="entry.label">{{ entry.label }}</label>
+          <input type="text" #input [formControl]="inputControl" [placeholder]="entry.placeholder" (keyup.enter)="onAction()">
         </div>
       </div>
     </div>

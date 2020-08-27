@@ -1,10 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, filter } from 'rxjs/operators';
 
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
-import { NavLink, NAV_LINKS } from 'src/app/shared/models/shared.models';
+import { NavLink, DialogInput } from 'src/app/shared/models/shared.models';
 
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 
@@ -13,10 +13,12 @@ import { SpotifyService } from 'src/app/spotify/services/spotify.service';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnDestroy {
+export class MainComponent implements OnInit, OnDestroy {
 
-  navLinks: NavLink[] = NAV_LINKS;
-  subscription: Subscription;
+  navLinks: NavLink[];
+  subscriptions: Subscription[] = [];
+  isSearching: boolean;
+  dialog: DialogInput;
 
   constructor(
     private router: Router,
@@ -24,8 +26,24 @@ export class MainComponent implements OnDestroy {
     private spotifyService: SpotifyService
   ) { }
 
+  ngOnInit(): void {
+    this.navLinks = [
+      {
+        name: 'Home',
+        link: '/spotify/home',
+        icon: 'home'
+      }
+    ];
+    this.dialog = {
+      title: 'Search a playlist to export',
+      label: `Playlist's name`,
+      placeholder: 'Search in playlists',
+      action: 'Search'
+    };
+  }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   get spotifyUser$(): Observable<SpotifyUser> {
@@ -37,12 +55,22 @@ export class MainComponent implements OnDestroy {
   }
 
   navigate(playlistId: string): void {
-    this.subscription = this.route.queryParams.pipe(
+    this.subscriptions.push(this.route.queryParams.pipe(
       flatMap(params => this.router.navigate(
         ['/spotify/export', playlistId],
         { queryParams: { secondary: params.secondary } })
       )
-    ).subscribe();
+    ).subscribe());
+  }
+
+  onSearch(playlistName: string): void {
+    this.subscriptions.push(this.spotifyPlaylists$.pipe(
+      flatMap(paging => paging.items),
+      filter(playlist => playlist.name.toLowerCase().trim().includes(playlistName))
+    ).subscribe(playlist => {
+      this.navigate(playlist.id);
+      this.isSearching = false;
+    }));
   }
 
 }

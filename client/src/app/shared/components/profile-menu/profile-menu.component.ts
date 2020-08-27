@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { SpotifyUser } from 'src/app/spotify/models/spotify.models';
-import { NavLink, NAV_LINKS } from '../../models/shared.models';
+import { NavLink } from '../../models/shared.models';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -16,7 +16,6 @@ export class ProfileMenuComponent {
   @Input() user$: Observable<SpotifyUser>;
   @Input() isSecondary?: boolean;
 
-  navLinks: NavLink[] = NAV_LINKS;
   isMenuActive: boolean;
 
   generateUserLinks(user: SpotifyUser): NavLink[] {
