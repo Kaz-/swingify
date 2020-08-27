@@ -34,6 +34,15 @@ button {
   outline: none;
   cursor: pointer;
 }
+.default-button {
+  color: $white;
+  background-color: transparent;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 500px;
+  padding: 11px 32px 9px;
+  border: 1px solid $alt;
+}
 .spotify-button,
 .green-button {
   color: $white;

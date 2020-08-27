@@ -1,6 +1,6 @@
 <div class="container">
   <div class="primary-nav">
-    <exp-playlist [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$" [tracks$]="primaryPlaylistTracks$"
+    <exp-playlist [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$" [tracks$]="primaryPlaylistTracks$"
       (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></exp-playlist>
   </div>
   <div class="content" *ngIf="isLargeScreen()">
@@ -27,7 +27,7 @@
         </a>
         <exp-profile-menu [user$]="secondaryUser$" [isSecondary]="true"></exp-profile-menu>
       </div>
-      <exp-playlist [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$" [tracks$]="secondaryPlaylistTracks$"
+      <exp-playlist [user$]="secondaryUser$" [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$" [tracks$]="secondaryPlaylistTracks$"
         [isSecondary]="true" (action)="execute($event)" (next)="onNext($event, true)" (search)="onSearch($event, true)"></exp-playlist>
     </ng-template>
     <ng-template #card>

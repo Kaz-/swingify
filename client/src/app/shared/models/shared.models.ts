@@ -33,3 +33,10 @@ export enum ETrackAction {
   ADD = 'add',
   REMOVE = 'remove'
 }
+
+export interface DialogInput {
+  title: string;
+  label: string;
+  placeholder: string;
+  action: string;
+}

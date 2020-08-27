@@ -22,7 +22,13 @@
     <input class="search" type="text" [formControl]="searchControl" placeholder="Search for artists, tracks, albums...">
     <ul class="tracklist" infiniteScroll [scrollWindow]="false" (scrolled)="onScroll(tracks)">
       <li class="track" *ngFor="let item of (tracks$ | async)?.items">
-        <i class="icon music"></i>
+        <ng-container *ngIf="item.track.album.images.length > 0; then image; else icon"></ng-container>
+        <ng-template #image>
+          <img class="track-image" [src]="item.track.album.images[0].url">
+        </ng-template>
+        <ng-template #icon>
+          <i class="icon music"></i>
+        </ng-template>
         <a class="track-informations" [href]="item.track.external_urls.spotify" target="_blank">
           <div class="wrapper">
             <div class="name" [title]="item.track.name">{{ item.track.name }}</div>
@@ -41,13 +47,5 @@
   </ng-container>
 </ng-template>
 <ng-template #selection>
-  <h2>Playlists</h2>
-  <ul class="playlists">
-    <li *ngFor="let playlist of (playlists$ | async)?.items">
-      <a class="playlist-link" (click)="navigate(playlist.id)">
-        <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
-        <div>{{ playlist.name }}</div>
-      </a>
-    </li>
-  </ul>
+  <exp-playlists [user$]="user$" [playlists$]="playlists$" [isSecondary]="true"></exp-playlists>
 </ng-template>

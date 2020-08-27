@@ -26,17 +26,7 @@
           </li>
         </ul>
       </div>
-      <div class="playlists">
-        <h3>Playlists</h3>
-        <ul>
-          <li *ngFor="let playlist of (spotifyPlaylists$ | async)?.items">
-            <a class="playlist-link" (click)="navigate(playlist.id)">
-              <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
-              <div>{{ playlist.name }}</div>
-            </a>
-          </li>
-        </ul>
-      </div>
+      <exp-playlists [user$]="spotifyUser$" [playlists$]="spotifyPlaylists$"></exp-playlists>
     </nav>
   </div>
 </ng-container>

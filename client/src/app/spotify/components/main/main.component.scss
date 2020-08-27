@@ -45,6 +45,9 @@
     flex-direction: column;
     min-height: 0;
     nav {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
       padding-top: 1em;
       .banner {
         font-size: 30px;
@@ -79,45 +82,26 @@
           }
         }
       }
-      .playlists {
+      exp-playlists::ng-deep {
         max-height: calc(100vh - 180px);
-        display: flex;
-        flex-direction: column;
-        h3 {
-          padding: 0.75em;
-          font-weight: 100;
-        }
-        ul {
-          list-style: none;
-          padding: 0;
-          display: grid;
-          row-gap: 0.3em;
-          overflow-x: hidden;
-          overflow-y: scroll;
-          @include scrollbar;
-          li {
-            .playlist-link {
-              padding: 0 1em;
-              display: flex;
-              align-items: center;
-              height: 40px;
-              cursor: pointer;
-              opacity: 0.7;
-              transition: opacity 0.2s linear;
-              exp-playlist-image::ng-deep {
-                .container {
-                  width: 30px;
-                  height: 30px;
-                  margin-right: 0.5em;
-                  i {
-                    font-size: 10px;
-                  }
-                }
-              }
+        padding: 1em;
+        .create {
+          .default {
+            width: 40px;
+            height: 40px;
+            i {
+              font-size: 10px;
             }
-            .playlist-link.is-active,
-            .playlist-link:hover {
-              opacity: 1;
+          }
+        }
+        .playlist-link {
+          exp-playlist-image::ng-deep {
+            .container {
+              width: 40px !important;
+              height: 40px !important;
+              i {
+                font-size: 10px;
+              }
             }
           }
         }

@@ -1,0 +1,17 @@
+<div class="dialog">
+  <div class="wrapper">
+    <h1>{{ entry.title }}</h1>
+    <div class="input">
+      <div class="input-box">
+        <div class="content">
+          <label for="name">{{ entry.label }}</label>
+          <input type="text" #input [formControl]="inputControl" [placeholder]="entry.placeholder">
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="default-button" (click)="onCancel()">Cancel</button>
+      <button class="green-button" (click)="onAction()">{{ entry.action }}</button>
+    </div>
+  </div>
+</div>

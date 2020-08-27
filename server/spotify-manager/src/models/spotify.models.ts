@@ -25,6 +25,7 @@ export interface SpotifyPaging<T> {
   readonly offset: number;
   readonly previous: string | null;
   readonly total: number;
+  owner: string;
 }
 
 export interface SpotifyPlaylist {

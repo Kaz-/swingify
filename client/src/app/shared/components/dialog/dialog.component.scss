@@ -1,0 +1,66 @@
+@import "../../../../assets/styles/colors";
+:host {
+  .dialog {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 99;
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      h1 {
+        font-weight: 900;
+        font-size: 48px;
+      }
+      .input {
+        width: 100%;
+        background-color: $background;
+        &-box {
+          position: relative;
+          background-color: $background;
+          padding: 2em 20%;
+          .content {
+            padding: 0 2em;
+            margin: 0;
+            label {
+              font-size: 15px;
+              line-height: 20px;
+              letter-spacing: 0.015em;
+              font-weight: 900;
+              color: $white;
+              text-transform: none;
+              margin-bottom: 0.5em;
+            }
+            input {
+              font-size: 48px;
+              line-height: 56px;
+              letter-spacing: -0.005em;
+              font-weight: 900;
+              color: $white;
+              text-transform: none;
+              caret-color: $primary;
+              -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+              width: 100%;
+              background-color: transparent;
+              border: none;
+              outline: none;
+            }
+          }
+        }
+      }
+      .actions {
+        padding: 2em 0;
+        button {
+          margin: 0 1em;
+        }
+      }
+    }
+  }
+}

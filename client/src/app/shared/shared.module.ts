@@ -15,6 +15,8 @@ import { CardComponent } from './components/card/card.component';
 import { PlaylistImageComponent } from './components/playlist-image/playlist-image.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
+import { PlaylistsComponent } from './components/playlists/playlists.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { ProfileMenuComponent } from './components/profile-menu/profile-menu.com
     CardComponent,
     PlaylistImageComponent,
     DropdownComponent,
-    ProfileMenuComponent
+    ProfileMenuComponent,
+    PlaylistsComponent,
+    DialogComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +43,9 @@ import { ProfileMenuComponent } from './components/profile-menu/profile-menu.com
     CardComponent,
     PlaylistImageComponent,
     DropdownComponent,
-    ProfileMenuComponent
+    ProfileMenuComponent,
+    PlaylistsComponent,
+    DialogComponent
   ]
 })
 export class SharedModule { }
