@@ -27,13 +27,7 @@ export class MainComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.navLinks = [
-      {
-        name: 'Home',
-        link: '/spotify/home',
-        icon: 'home'
-      }
-    ];
+    this.generateLinks();
     this.dialog = {
       title: 'Search a playlist to export',
       label: `Playlist's name`,
@@ -44,6 +38,21 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  private generateLinks(): void {
+    this.navLinks = [
+      {
+        name: 'Home',
+        link: '/spotify/home',
+        icon: 'home'
+      },
+      {
+        name: 'Export',
+        link: '/spotify/export',
+        icon: 'magic'
+      }
+    ];
   }
 
   get spotifyUser$(): Observable<SpotifyUser> {
@@ -57,8 +66,8 @@ export class MainComponent implements OnInit, OnDestroy {
   navigate(playlistId: string): void {
     this.subscriptions.push(this.route.queryParams.pipe(
       flatMap(params => this.router.navigate(
-        ['/spotify/export', playlistId],
-        { queryParams: { secondary: params.secondary } })
+        ['/spotify/export'],
+        { queryParams: { p: playlistId, s: params.secondary } })
       )
     ).subscribe());
   }

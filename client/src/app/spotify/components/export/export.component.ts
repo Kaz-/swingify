@@ -75,9 +75,9 @@ export class ExportComponent implements OnInit, OnDestroy {
   }
 
   private initPrimaryPlaylist(): Subscription {
-    return this.route.params.pipe(
-      tap(params => this.primaryId = params.id),
-      flatMap(params => this.getPrimaryPlaylist(params.id))
+    return this.route.queryParams.pipe(
+      tap(params => this.primaryId = params.p),
+      flatMap(params => params.p ? this.getPrimaryPlaylist(params.p) : EMPTY)
     ).subscribe();
   }
 
@@ -111,8 +111,8 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   private initSecondaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
-      tap(params => this.secondaryId = params.secondary),
-      flatMap(params => params.secondary ? this.getSecondaryPlaylist(params.secondary) : EMPTY)
+      tap(params => this.secondaryId = params.s),
+      flatMap(params => params.s ? this.getSecondaryPlaylist(params.s) : EMPTY)
     ).subscribe();
   }
 
@@ -164,9 +164,14 @@ export class ExportComponent implements OnInit, OnDestroy {
     this.authService.authorize().subscribe();
   }
 
-  navigateBack(): void {
-    this.router.navigate([], { relativeTo: this.route, queryParams: {} });
-    this.updateSecondaryPlaylist(null);
+  navigateBack(isSecondary?: boolean): void {
+    if (isSecondary) {
+      this.router.navigate([], { queryParams: { p: this.primaryId } });
+      this.updateSecondaryPlaylist(null);
+    } else {
+      this.router.navigate([], { queryParams: { s: this.secondaryId } });
+      this.updatePrimaryPlaylist(null);
+    }
   }
 
   execute(action: PlaylistAction): void {

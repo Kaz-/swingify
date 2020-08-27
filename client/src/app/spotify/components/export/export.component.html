@@ -1,5 +1,20 @@
 <div class="container">
   <div class="primary-nav">
+    <div class="header">
+      <a class="back" title="Back to playlists" (click)="navigateBack()">
+        <i class="icon long-arrow-left"></i>
+      </a>
+      <div class="primary-user">
+        <ng-container *ngIf="(user$ | async)?.images.length > 0; then image; else default"></ng-container>
+        <ng-template #default>
+          <i class="icon user"></i>
+        </ng-template>
+        <ng-template #image>
+          <img src="(user$ | async)?.images[0]?.url">
+        </ng-template>
+        <div>{{ (primaryUser$ | async)?.display_name }}</div>
+      </div>
+    </div>
     <exp-playlist [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$" [tracks$]="primaryPlaylistTracks$"
       (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></exp-playlist>
   </div>
@@ -22,7 +37,7 @@
     <ng-container *ngIf="isSecondaryAuthenticated(); then playlist; else card"></ng-container>
     <ng-template #playlist>
       <div class="header">
-        <a class="back" title="Back to playlists" (click)="navigateBack()">
+        <a class="back" title="Back to playlists" (click)="navigateBack(true)">
           <i class="icon long-arrow-left"></i>
         </a>
         <exp-profile-menu [user$]="secondaryUser$" [isSecondary]="true"></exp-profile-menu>

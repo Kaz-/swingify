@@ -41,7 +41,7 @@ const routes: Routes = [
         component: HomeComponent
       },
       {
-        path: 'export/:id',
+        path: 'export',
         component: ExportComponent
       }
     ]

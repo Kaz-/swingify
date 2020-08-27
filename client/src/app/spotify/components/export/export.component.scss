@@ -7,6 +7,23 @@
     grid-template-columns: 500px auto 500px;
     grid-template-areas: "primary-nav content secondary-nav";
     height: 100%;
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1em 1em 0 1em;
+      .back {
+        cursor: pointer;
+      }
+      .primary-user {
+        display: flex;
+        align-items: center;
+        i,
+        img {
+          margin: 0 0.5em 0.3em 0;
+        }
+      }
+    }
     .primary-nav {
       grid-area: primary-nav;
       background-color: $second-background;
@@ -52,15 +69,6 @@
       background-color: $second-background;
       exp-playlist::ng-deep {
         max-height: calc(100vh - 140px);
-      }
-      .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1em 1em 0 1em;
-        .back {
-          cursor: pointer;
-        }
       }
       .card-wrapper {
         display: flex;

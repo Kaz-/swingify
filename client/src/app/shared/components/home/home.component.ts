@@ -26,7 +26,7 @@ export class HomeComponent {
   }
 
   redirect(playlistId: string): void {
-    this.router.navigate(['/spotify/export', playlistId]);
+    this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId } });
   }
 
 }

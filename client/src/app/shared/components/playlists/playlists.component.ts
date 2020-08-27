@@ -49,15 +49,14 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
 
   primaryNavigate(playlistId: string): void {
     this.subscriptions.push(this.route.queryParams.pipe(
-      flatMap(params => this.router.navigate(
-        ['/spotify/export', playlistId],
-        { queryParams: { secondary: params.secondary } })
-      )
+      flatMap(params => this.router.navigate([], { queryParams: { p: playlistId, s: params.s } }))
     ).subscribe());
   }
 
   secondaryNavigate(playlistId: string): void {
-    this.router.navigate([], { relativeTo: this.route, queryParams: { secondary: playlistId } });
+    this.subscriptions.push(this.route.queryParams.pipe(
+      flatMap(params => this.router.navigate([], { queryParams: { p: params.p, s: playlistId } }))
+    ).subscribe());
   }
 
   onCreate(name: string, user: string): void {
