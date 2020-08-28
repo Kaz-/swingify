@@ -28,7 +28,7 @@
       grid-area: primary-nav;
       background-color: $second-background;
       exp-playlist::ng-deep {
-        max-height: calc(100vh - 100px);
+        max-height: calc(100vh - 140px);
       }
     }
     .content {

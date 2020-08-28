@@ -27,3 +27,7 @@ export interface DialogInput {
   placeholder: string;
   action: string;
 }
+
+export const SUPPORTED_ERRORS: string[] = [
+  '404', '500', '504'
+];

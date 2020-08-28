@@ -9,6 +9,7 @@ import { MainComponent } from './spotify/components/main/main.component';
 import { ExportComponent } from './spotify/components/export/export.component';
 
 import { AuthGuard } from './shared/guards/auth.guard';
+import { ErrorComponent } from './shared/components/error/error.component';
 
 
 const routes: Routes = [
@@ -45,6 +46,14 @@ const routes: Routes = [
         component: ExportComponent
       }
     ]
+  },
+  {
+    path: 'error/:status',
+    component: ErrorComponent
+  },
+  {
+    path: '**',
+    redirectTo: 'error/404'
   }
 ];
 

@@ -17,6 +17,10 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
 import { PlaylistsComponent } from './components/playlists/playlists.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { ErrorComponent } from './components/error/error.component';
+
+import { FormatStatusPipe } from './pipes/status.pipe';
+import { FormatErrorPipe } from './pipes/error.pipe';
 
 @NgModule({
   declarations: [
@@ -29,7 +33,10 @@ import { DialogComponent } from './components/dialog/dialog.component';
     DropdownComponent,
     ProfileMenuComponent,
     PlaylistsComponent,
-    DialogComponent
+    DialogComponent,
+    ErrorComponent,
+    FormatErrorPipe,
+    FormatStatusPipe
   ],
   imports: [
     CommonModule,

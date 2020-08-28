@@ -1,0 +1,14 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  h1 {
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid #5a5a5a;
+  }
+  .error {
+    margin: 1em;
+  }
+}

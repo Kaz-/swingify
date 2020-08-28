@@ -166,10 +166,10 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   navigateBack(isSecondary?: boolean): void {
     if (isSecondary) {
-      this.router.navigate([], { queryParams: { p: this.primaryId } });
+      this.router.navigate(['/spotify/export'], { queryParams: { p: this.primaryId } });
       this.updateSecondaryPlaylist(null);
     } else {
-      this.router.navigate([], { queryParams: { s: this.secondaryId } });
+      this.router.navigate(['/spotify/export'], { queryParams: { s: this.secondaryId } });
       this.updatePrimaryPlaylist(null);
     }
   }

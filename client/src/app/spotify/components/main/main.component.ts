@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { flatMap, filter } from 'rxjs/operators';
 
@@ -64,22 +64,22 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   navigate(playlistId: string): void {
-    this.subscriptions.push(this.route.queryParams.pipe(
-      flatMap(params => this.router.navigate(
-        ['/spotify/export'],
-        { queryParams: { p: playlistId, s: params.secondary } })
-      )
-    ).subscribe());
+    const tree: UrlTree = this.router.parseUrl(this.router.url);
+    tree.queryParams
+      ? this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId, s: tree.queryParams.s } })
+      : this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId } });
   }
 
   onSearch(playlistName: string): void {
-    this.subscriptions.push(this.spotifyPlaylists$.pipe(
-      flatMap(paging => paging.items),
-      filter(playlist => playlist.name.toLowerCase().trim().includes(playlistName))
-    ).subscribe(playlist => {
-      this.navigate(playlist.id);
-      this.isSearching = false;
-    }));
+    this.subscriptions.push(
+      this.spotifyPlaylists$.pipe(
+        flatMap(paging => paging.items),
+        filter(playlist => playlist.name.toLowerCase().trim().includes(playlistName))
+      ).subscribe(playlist => {
+        this.navigate(playlist.id);
+        this.isSearching = false;
+      })
+    );
   }
 
 }

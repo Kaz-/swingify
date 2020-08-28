@@ -5,12 +5,12 @@
         <i class="icon long-arrow-left"></i>
       </a>
       <div class="primary-user">
-        <ng-container *ngIf="(user$ | async)?.images.length > 0; then image; else default"></ng-container>
+        <ng-container *ngIf="(primaryUser$ | async)?.images.length > 0; then image; else default"></ng-container>
         <ng-template #default>
           <i class="icon user"></i>
         </ng-template>
         <ng-template #image>
-          <img src="(user$ | async)?.images[0]?.url">
+          <img src="(primaryUser$ | async)?.images[0]?.url">
         </ng-template>
         <div>{{ (primaryUser$ | async)?.display_name }}</div>
       </div>

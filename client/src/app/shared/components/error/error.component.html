@@ -1,0 +1,5 @@
+<div class="error error" *ngIf="status$ | async as status">
+  <h1>{{ status | formatStatus }}</h1>
+  <h2>{{ status | formatError }}</h2>
+</div>
+<button class="green-button" routerLink="/">Back to home</button>

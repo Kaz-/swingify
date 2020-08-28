@@ -1,7 +1,7 @@
 import { Injectable, HttpService, flatten } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { Request } from 'express';
-import { Observable, from, EMPTY, Subject } from 'rxjs';
+import { Observable, from, EMPTY, Subject, of } from 'rxjs';
 import { map, flatMap, tap, bufferWhen, expand, takeWhile } from 'rxjs/operators';
 
 import { environment } from 'environment';
@@ -71,7 +71,7 @@ export class SpotifyManagerService {
             map(tracks => tracks.items.map(item => item.track.uri)),
             bufferWhen(() => closingEvent.asObservable()),
             map(buffer => flatten(buffer)),
-            map(uris => this.formatTracksToRemove(uris)),
+            map(uris => this.formatTracksToRemoveAsChunks(uris)),
             flatMap(tracklist => tracklist.pipe(
                 flatMap(list => this.removeTracksByRequest(request, true, list))
             ))
@@ -107,12 +107,16 @@ export class SpotifyManagerService {
         }
     }
 
-    formatTracksToRemove(tracks: string[]): Observable<{ tracks: { uri: string }[] }> {
+    formatTracksToRemoveAsChunks(tracks: string[]): Observable<{ tracks: { uri: string }[] }> {
         const max = 100;
         return from(Array(Math.ceil(tracks.length / max))
             .fill(null)
             .map(() => tracks.splice(0, max), tracks.slice())
             .map(tracks => ({ tracks: tracks.map(track => ({ uri: track })) })));
+    }
+
+    formatTracksToRemove(tracks: string[]): { tracks: { uri: string }[] } {
+        return { tracks: tracks.map(track => ({ uri: track })) };
     }
 
     findMatchInTrack(item: PlaylistTrack, query: string): boolean {

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, UrlTree } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
 
 import { SpotifyPaging, SpotifyPlaylist, PlaylistCreation, SpotifyUser } from 'src/app/spotify/models/spotify.models';
 import { DialogInput } from '../../models/shared.models';
@@ -48,15 +47,17 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
   }
 
   primaryNavigate(playlistId: string): void {
-    this.subscriptions.push(this.route.queryParams.pipe(
-      flatMap(params => this.router.navigate([], { queryParams: { p: playlistId, s: params.s } }))
-    ).subscribe());
+    const tree: UrlTree = this.router.parseUrl(this.router.url);
+    tree.queryParams
+      ? this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId, s: tree.queryParams.s } })
+      : this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId } });
   }
 
   secondaryNavigate(playlistId: string): void {
-    this.subscriptions.push(this.route.queryParams.pipe(
-      flatMap(params => this.router.navigate([], { queryParams: { p: params.p, s: playlistId } }))
-    ).subscribe());
+    const tree: UrlTree = this.router.parseUrl(this.router.url);
+    tree.queryParams
+      ? this.router.navigate(['/spotify/export'], { queryParams: { p: tree.queryParams.p, s: playlistId } })
+      : this.router.navigate(['/spotify/export'], { queryParams: { s: playlistId } });
   }
 
   onCreate(name: string, user: string): void {
