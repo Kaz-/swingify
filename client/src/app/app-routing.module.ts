@@ -15,7 +15,7 @@ import { ErrorComponent } from './shared/components/error/error.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'spotify',
     pathMatch: 'full',
   },
   {
