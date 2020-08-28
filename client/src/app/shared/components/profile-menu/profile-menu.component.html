@@ -4,13 +4,14 @@
     <i class="icon user"></i>
   </ng-template>
   <ng-template #image>
-    <img src="(user$ | async)?.images[0]?.url">
+    <img [src]="(user$ | async)?.images[0].url">
   </ng-template>
   <span class="display-name">
     {{ (user$ | async)?.display_name }}
     <i class="icon {{ isMenuActive ? 'chevron-up' : 'chevron-down' }}"></i>
+    <ng-container *ngIf="(user$ | async) as user">
+      <exp-dropdown [items]="generateUserLinks(user)" *ngIf="isMenuActive"></exp-dropdown>
+    </ng-container>
   </span>
-  <ng-container *ngIf="(user$ | async) as user">
-    <exp-dropdown [items]="generateUserLinks(user)" *ngIf="isMenuActive"></exp-dropdown>
-  </ng-container>
 </div>
+

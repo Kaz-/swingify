@@ -10,7 +10,7 @@
           <i class="icon user"></i>
         </ng-template>
         <ng-template #image>
-          <img src="(primaryUser$ | async)?.images[0]?.url">
+          <img [src]="(primaryUser$ | async)?.images[0]?.url">
         </ng-template>
         <div>{{ (primaryUser$ | async)?.display_name }}</div>
       </div>
