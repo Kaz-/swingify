@@ -4,15 +4,15 @@
       <a class="back" title="Back to playlists" (click)="navigateBack()">
         <i class="icon long-arrow-left"></i>
       </a>
-      <div class="primary-user">
-        <ng-container *ngIf="(primaryUser$ | async)?.images.length > 0; then image; else default"></ng-container>
+      <div class="primary-user" *ngIf="primaryUser$ | async as primaryUser">
+        <ng-container *ngIf="primaryUser?.images.length > 0; then image; else default"></ng-container>
         <ng-template #default>
           <i class="icon user"></i>
         </ng-template>
         <ng-template #image>
-          <img [src]="(primaryUser$ | async)?.images[0]?.url">
+          <img [src]="primaryUser?.images[0]?.url">
         </ng-template>
-        <div>{{ (primaryUser$ | async)?.display_name }}</div>
+        <div>{{ primaryUser?.display_name }}</div>
       </div>
     </div>
     <exp-playlist [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$" [tracks$]="primaryPlaylistTracks$"

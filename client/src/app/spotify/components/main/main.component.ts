@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, UrlTree } from '@angular/router';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Router, UrlTree, RouterEvent } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { flatMap, filter } from 'rxjs/operators';
 
@@ -7,13 +7,16 @@ import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/mod
 import { NavLink, DialogInput } from 'src/app/shared/models/shared.models';
 
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 
 @Component({
   selector: 'exp-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit, OnDestroy {
+export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @ViewChild('loader') loader: ElementRef;
 
   navLinks: NavLink[];
   subscriptions: Subscription[] = [];
@@ -22,8 +25,8 @@ export class MainComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private loaderService: LoaderService
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +41,11 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  ngAfterViewInit(): void {
+    this.router.events.subscribe((event: RouterEvent) =>
+    this.loaderService.navigationInterceptor(event, this.loader));
   }
 
   private generateLinks(): void {

@@ -1,5 +1,5 @@
 <h2>Playlists</h2>
-<ul class="playlists">
+<ul class="playlists" *ngIf="playlists$ | async as playlists">
   <li class="create" (click)="isCreating = true">
     <div class="playlist-link">
       <div class="default">
@@ -8,7 +8,7 @@
       <div>Create a playlist</div>
     </div>
   </li>
-  <li *ngFor="let playlist of (playlists$ | async)?.items">
+  <li *ngFor="let playlist of playlists?.items">
     <a class="playlist-link" (click)="navigate(playlist.id)">
       <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
       <div>{{ playlist.name }}</div>

@@ -1,24 +1,22 @@
 <ng-container *ngIf="(playlist$ | async); then playlist; else selection"></ng-container>
 <ng-template #playlist>
-  <div class="header">
-    <a href="{{ (playlist$ | async)?.external_urls.spotify }}" target="_blank">
-      <exp-playlist-image [playlist]="playlist$ | async"></exp-playlist-image>
+  <div class="header" *ngIf="playlist$ | async as playlist">
+    <a href="{{ playlist?.external_urls.spotify }}" target="_blank">
+      <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
       <div>
-        <h3>{{ (playlist$ | async)?.name }}</h3>
-        <small>By {{ (playlist$ | async)?.owner.display_name }}</small>
+        <h3>{{ playlist?.name }}</h3>
+        <small>By {{ playlist?.owner.display_name }}</small>
       </div>
     </a>
-    <div>
-      <span class="total">{{ (tracks$ | async)?.items.length }} of {{ (tracks$ | async)?.total }} tracks</span>
-      <ng-container *ngIf="(tracks$ | async) as tracks">
-        <button class="green-button" [title]="isSecondary ? 'Remove all tracks' : 'Export all tracks'"
-          (click)="execute(true)">
-          <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
-        </button>
-      </ng-container>
+    <div *ngIf="tracks$ | async as tracks">
+      <span class="total">{{ tracks?.items.length }} of {{ tracks?.total }} tracks</span>
+      <button class="green-button" [title]="isSecondary ? 'Remove all tracks' : 'Export all tracks'"
+        (click)="execute(true)">
+        <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
+      </button>
     </div>
   </div>
-  <ng-container *ngIf="(tracks$ | async) as tracks">
+  <ng-container *ngIf="tracks$ | async as tracks">
     <input class="search" type="text" [formControl]="searchControl" placeholder="Search for artists, tracks, albums...">
     <div class="tracklist-wrapper" infiniteScroll [scrollWindow]="false" (scrolled)="onScroll(tracks)">
       <ul class="tracklist">
