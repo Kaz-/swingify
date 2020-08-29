@@ -8,7 +8,9 @@ import {
     UnauthorizedException,
     HttpException,
     Logger,
-    BadRequestException
+    BadRequestException,
+    InternalServerErrorException,
+    BadGatewayException
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -36,10 +38,14 @@ export class SpotifyInterceptor implements NestInterceptor {
                 return new UnauthorizedException(error.message);
             case 403:
                 return new ForbiddenException(error.message);
+            case 500:
+                return new InternalServerErrorException(error.message);
+            case 504:
+                return new BadGatewayException(error.message);
             case 404:
             default:
                 return new NotFoundException(error.message);
-            
+
         }
     }
 
