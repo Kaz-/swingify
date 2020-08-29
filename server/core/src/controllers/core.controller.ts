@@ -2,8 +2,8 @@ import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
-import { CoreService } from 'src/services/core.service';
-import { SpotifyConfiguration } from 'src/schemas/spotify-configuration.schema';
+import { CoreService } from '../services/core.service';
+import { SpotifyConfiguration } from '../schemas/spotify-configuration.schema';
 
 @Controller('core')
 export class CoreController {
