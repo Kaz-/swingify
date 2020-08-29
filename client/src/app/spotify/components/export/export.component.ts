@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, Subscription, Subject, EMPTY } from 'rxjs';
-import { flatMap, shareReplay, tap, scan } from 'rxjs/operators';
+import { flatMap, shareReplay, tap, scan, catchError } from 'rxjs/operators';
 
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from 'src/app/shared/services/auth.service';

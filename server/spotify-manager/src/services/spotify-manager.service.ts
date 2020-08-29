@@ -1,7 +1,7 @@
 import { Injectable, HttpService, flatten } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { Request } from 'express';
-import { Observable, from, EMPTY, Subject, of } from 'rxjs';
+import { Observable, from, EMPTY, Subject } from 'rxjs';
 import { map, flatMap, tap, bufferWhen, expand, takeWhile } from 'rxjs/operators';
 
 import { environment } from 'environment';

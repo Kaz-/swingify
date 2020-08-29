@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
-import { map, flatMap, scan, expand, takeWhile } from 'rxjs/operators';
+import { Observable, EMPTY } from 'rxjs';
+import { map, flatMap, scan, expand, takeWhile, catchError } from 'rxjs/operators';
 
 import { environment } from 'environment';
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
@@ -66,7 +66,8 @@ export class SpotifyManagerController {
                         .findMatchInTrack(item, request.query.search.toString().toLowerCase().trim())),
                     next: null
                 }) : tracks
-            ));
+            )
+        );
     }
 
     @Post('users/:id/playlists')

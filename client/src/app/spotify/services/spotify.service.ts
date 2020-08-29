@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { shareReplay, catchError } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
 import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation, PlaylistTrack } from '../models/spotify.models';
+import { ErrorService } from 'src/app/shared/services/error.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,10 @@ export class SpotifyService implements OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private errorService: ErrorService
+  ) {
     this.subscriptions.push(
       this.updateUser(false),
       this.updatePlaylists(false)
@@ -39,14 +43,14 @@ export class SpotifyService implements OnDestroy {
     return this.http.get<SpotifyUser>(
       `${environment.spotify.serverPath}/me`,
       { headers: this.setSecondaryHeader(isSecondary) }
-    );
+    ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
   getPlaylists(isSecondary: boolean): Observable<SpotifyPaging<SpotifyPlaylist>> {
     return this.http.get<SpotifyPaging<SpotifyPlaylist>>(
       `${environment.spotify.serverPath}/playlists`,
       { headers: this.setSecondaryHeader(isSecondary) }
-    );
+    ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
   updateUser(isSecondary: boolean): Subscription {
@@ -63,14 +67,14 @@ export class SpotifyService implements OnDestroy {
     return this.http.get<SpotifyPlaylist>(
       `${environment.spotify.serverPath}/playlists/${id}`,
       { headers: this.setSecondaryHeader(isSecondary) }
-    );
+    ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
   getPlaylistTracks(id: string, isSecondary: boolean, next?: string, query?: string): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.http.get<SpotifyPaging<PlaylistTrack>>(
       `${environment.spotify.serverPath}/playlists/${id}/tracks`,
       { params: this.createParams(next, query), headers: this.setSecondaryHeader(isSecondary) }
-    );
+    ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
   private createParams(next?: string, query?: string): HttpParams {
@@ -88,14 +92,14 @@ export class SpotifyService implements OnDestroy {
     return this.http.post<SpotifyPlaylist>(
       `${environment.spotify.serverPath}/users/${userId}/playlists`, playlist,
       { headers: this.setSecondaryHeader(isSecondary) }
-    );
+    ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
   addTracks(id: string, track: string, from?: string): Observable<never> {
     return this.http.post<never>(
       `${environment.spotify.serverPath}/playlists/${id}`, track,
       { params: from ? new HttpParams().set('from', from) : null, headers: this.setSecondaryHeader(true) }
-    );
+    ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
   removeTracks(id: string, tracks: string, from?: string): Observable<ArrayBuffer> {
@@ -106,7 +110,7 @@ export class SpotifyService implements OnDestroy {
         params: from ? new HttpParams().set('from', from) : null,
         headers: this.setSecondaryHeader(true)
       }
-    );
+    ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
   private setSecondaryHeader(isSecondary: boolean): HttpHeaders {

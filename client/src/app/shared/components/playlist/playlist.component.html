@@ -20,30 +20,32 @@
   </div>
   <ng-container *ngIf="(tracks$ | async) as tracks">
     <input class="search" type="text" [formControl]="searchControl" placeholder="Search for artists, tracks, albums...">
-    <ul class="tracklist" infiniteScroll [scrollWindow]="false" (scrolled)="onScroll(tracks)">
-      <li class="track" *ngFor="let item of (tracks$ | async)?.items">
-        <ng-container *ngIf="item.track.album.images.length > 0; then image; else icon"></ng-container>
-        <ng-template #image>
-          <img class="track-image" [src]="item.track.album.images[0].url">
-        </ng-template>
-        <ng-template #icon>
-          <i class="icon music"></i>
-        </ng-template>
-        <a class="track-informations" [href]="item.track.external_urls.spotify" target="_blank">
-          <div class="wrapper">
-            <div class="name" [title]="item.track.name">{{ item.track.name }}</div>
-            <div class="from" title="{{ item.track.artists[0]?.name }} · {{ item.track.album.name }}">
-              {{ item.track.artists[0]?.name }} ·	{{ item.track.album.name }}
+    <div class="tracklist-wrapper" infiniteScroll [scrollWindow]="false" (scrolled)="onScroll(tracks)">
+      <ul class="tracklist">
+        <li class="track" *ngFor="let item of (tracks$ | async)?.items">
+          <ng-container *ngIf="item.track.album.images.length > 0; then image; else icon"></ng-container>
+          <ng-template #image>
+            <img class="track-image" [src]="item.track.album.images[0].url">
+          </ng-template>
+          <ng-template #icon>
+            <i class="icon music"></i>
+          </ng-template>
+          <a class="track-informations" [href]="item.track.external_urls.spotify" target="_blank">
+            <div class="wrapper">
+              <div class="name" [title]="item.track.name">{{ item.track.name }}</div>
+              <div class="from" title="{{ item.track.artists[0]?.name }} · {{ item.track.album.name }}">
+                {{ item.track.artists[0]?.name }} ·	{{ item.track.album.name }}
+              </div>
             </div>
-          </div>
-          <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
-        </a>
-        <button class="{{ isSecondary ? 'red' : 'green' }}-button" [title]="isSecondary ? 'Remove' : 'Export'"
-          (click)="execute(false, item.track.uri)">
-          <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
-        </button>
-      </li>
-    </ul>
+            <span class="track-duration">{{ toDuration(item.track.duration_ms) }}</span>
+          </a>
+          <button class="{{ isSecondary ? 'red' : 'green' }}-button" [title]="isSecondary ? 'Remove' : 'Export'"
+            (click)="execute(false, item.track.uri)">
+            <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
   </ng-container>
 </ng-template>
 <ng-template #selection>

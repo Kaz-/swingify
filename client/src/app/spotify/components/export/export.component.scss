@@ -33,7 +33,7 @@
       grid-area: primary-nav;
       background-color: $second-background;
       exp-playlist::ng-deep {
-        max-height: calc(100vh - 140px);
+        max-height: calc(100vh - 145px);
       }
     }
     .content {
@@ -73,7 +73,7 @@
       grid-area: secondary-nav;
       background-color: $second-background;
       exp-playlist::ng-deep {
-        max-height: calc(100vh - 140px);
+        max-height: calc(100vh - 145px);
       }
       .card-wrapper {
         display: flex;

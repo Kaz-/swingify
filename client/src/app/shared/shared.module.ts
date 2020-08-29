@@ -6,6 +6,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { ErrorService } from './services/error.service';
 
 import { LoginComponent } from './components/login/login.component';
 import { ProcessComponent } from './components/process/process.component';
@@ -44,7 +45,7 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     ReactiveFormsModule,
     InfiniteScrollModule
   ],
-  providers: [AuthService, AuthGuard],
+  providers: [AuthService, AuthGuard, ErrorService],
   exports: [
     PlaylistComponent,
     CardComponent,

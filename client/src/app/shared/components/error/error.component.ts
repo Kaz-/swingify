@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { SUPPORTED_ERRORS } from '../../models/shared.models';
 
 @Component({
   selector: 'exp-error',
@@ -12,17 +10,13 @@ import { SUPPORTED_ERRORS } from '../../models/shared.models';
 })
 export class ErrorComponent implements OnInit {
 
-  status$: Observable<string>;
+  status$: Observable<number>;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.status$ = this.route.params.pipe(
-      map(params => params.status),
-      map(status => SUPPORTED_ERRORS.includes(status) ? status : this.router.navigate(['error', '404']))
+      map(params => parseInt(params.status, 10))
     );
   }
 

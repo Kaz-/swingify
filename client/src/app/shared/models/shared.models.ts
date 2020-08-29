@@ -28,6 +28,12 @@ export interface DialogInput {
   action: string;
 }
 
-export const SUPPORTED_ERRORS: string[] = [
-  '404', '500', '504'
+export interface HttpError {
+  error: string;
+  message: string;
+  statusCode: number;
+}
+
+export const SUPPORTED_ERRORS: number[] = [
+  400, 401, 403, 404, 500, 504
 ];
