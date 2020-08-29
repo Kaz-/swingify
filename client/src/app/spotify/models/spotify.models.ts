@@ -35,6 +35,11 @@ export interface SpotifyUser {
   readonly uri: string;
 }
 
+export interface SpotifyFeaturedPlaylists {
+  readonly message: string;
+  readonly playlists: SpotifyPaging<SpotifyPlaylist>;
+}
+
 /**
  * @field (Optional) parentId: is the parent ID of T (eg. can be: playlist_id, user_id... according to T).
  * @field (Optional) fromNext: is issued from a "next" request (eg. request has "tracks?next=").

@@ -1,6 +1,6 @@
-<h2>Playlists</h2>
+<h2>{{ title }}</h2>
 <ul class="playlists" *ngIf="playlists$ | async as playlists">
-  <li class="create" (click)="isCreating = true">
+  <li class="create" *ngIf="allowCreation" (click)="isCreating = true">
     <div class="playlist-link">
       <div class="default">
         <i class="icon plus"></i>
@@ -16,6 +16,6 @@
   </li>
 </ul>
 <ng-container *ngIf="(user$ | async)?.id as user">
-  <exp-dialog *ngIf="isCreating" [entry]="dialog" (cancel)="isCreating = false"
+  <exp-dialog *ngIf="allowCreation && isCreating" [entry]="dialog" (cancel)="isCreating = false"
     (action)="onCreate($event, user)"></exp-dialog>
 </ng-container>

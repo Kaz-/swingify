@@ -13,6 +13,8 @@ import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 })
 export class PlaylistsComponent implements OnInit, OnDestroy {
 
+  @Input() title: string;
+  @Input() allowCreation?: boolean;
   @Input() user$: Observable<SpotifyUser>;
   @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
   @Input() isSecondary?: boolean;

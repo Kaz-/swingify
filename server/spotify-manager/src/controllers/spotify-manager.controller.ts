@@ -1,11 +1,11 @@
 import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, EMPTY } from 'rxjs';
-import { map, flatMap, scan, expand, takeWhile, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, flatMap, scan, expand, takeWhile } from 'rxjs/operators';
 
 import { environment } from 'environment';
 import { SpotifyManagerService } from 'src/services/spotify-manager.service';
-import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistTrack } from 'src/models/spotify.models';
+import { SpotifyConfiguration, SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistTrack, SpotifyFeaturedPlaylists } from 'src/models/spotify.models';
 
 @Controller('spotify')
 export class SpotifyManagerController {
@@ -93,6 +93,15 @@ export class SpotifyManagerController {
         return request.query.from
             ? this.spotifyService.getTracksToRemove(request, request.query.from.toString())
             : this.spotifyService.removeTracksByRequest(request);
+    }
+
+    @Get('/featured')
+    getFeaturedPlaylists(@Req() request: Request): Observable<SpotifyFeaturedPlaylists> {
+        this.logger.log(`Requesting featured playlists with default locale`);
+        return this.http.get<SpotifyFeaturedPlaylists>(
+            `${this.baseApiUrl}/browse/featured-playlists`,
+            { headers: this.spotifyService.getAuthorizationHeader(request) }
+        ).pipe(map(response => response.data));
     }
 
 }

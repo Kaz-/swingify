@@ -35,7 +35,10 @@
           </li>
         </ul>
       </div>
-      <exp-playlists [user$]="spotifyUser$" [playlists$]="spotifyPlaylists$"></exp-playlists>
+      <div class="playlists">
+        <exp-playlists title="Playlists" [allowCreation]="true" [user$]="spotifyUser$" [playlists$]="spotifyPlaylists$"></exp-playlists>
+        <exp-playlists title="Featured" [user$]="spotifyUser$" [playlists$]="featuredPlaylists$"></exp-playlists>
+      </div>
     </nav>
   </div>
 </ng-container>

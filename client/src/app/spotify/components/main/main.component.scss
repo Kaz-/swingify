@@ -32,8 +32,12 @@
       animation: spin 1s ease-in-out infinite;
     }
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
   }
   .top-bar {
@@ -106,25 +110,32 @@
           }
         }
       }
-      exp-playlists::ng-deep {
-        max-height: calc(100vh - 180px);
-        padding: 1em;
-        .create {
-          .default {
-            width: 40px;
-            height: 40px;
-            i {
-              font-size: 10px;
-            }
-          }
-        }
-        .playlist-link {
-          exp-playlist-image::ng-deep {
-            .container {
-              width: 40px !important;
-              height: 40px !important;
+      .playlists {
+        display: grid;
+        grid-row-gap: 1em;
+        max-height: calc(100vh - 215px);
+        padding: 0 1em;
+        overflow-y: scroll;
+        @include scrollbar;
+        exp-playlists::ng-deep {
+          // max-height: calc(100vh - 180px);
+          .create {
+            .default {
+              width: 40px;
+              height: 40px;
               i {
                 font-size: 10px;
+              }
+            }
+          }
+          .playlist-link {
+            exp-playlist-image::ng-deep {
+              .container {
+                width: 40px !important;
+                height: 40px !important;
+                i {
+                  font-size: 10px;
+                }
               }
             }
           }

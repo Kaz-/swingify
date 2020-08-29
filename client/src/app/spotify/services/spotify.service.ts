@@ -1,11 +1,11 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Inject, LOCALE_ID } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { shareReplay, catchError } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation, PlaylistTrack } from '../models/spotify.models';
+import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation, PlaylistTrack, SpotifyFeaturedPlaylists } from '../models/spotify.models';
 import { ErrorService } from 'src/app/shared/services/error.service';
 
 @Injectable({
@@ -27,7 +27,8 @@ export class SpotifyService implements OnDestroy {
 
   constructor(
     private http: HttpClient,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    @Inject(LOCALE_ID) public locale: string
   ) {
     this.subscriptions.push(
       this.updateUser(false),
@@ -113,8 +114,18 @@ export class SpotifyService implements OnDestroy {
     ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
+  getFeaturedPlaylists(): Observable<SpotifyFeaturedPlaylists> {
+    return this.http.get<SpotifyFeaturedPlaylists>(
+      `${environment.spotify.serverPath}/featured`,
+      { params: new HttpParams().set('locale', this.locale), headers: this.setSecondaryHeader(false) }
+    ).pipe(
+      shareReplay(),
+      catchError(err => this.errorService.handleError(err))
+    );
+  }
+
   private setSecondaryHeader(isSecondary: boolean): HttpHeaders {
-    return new HttpHeaders({ Secondary: isSecondary ? 'true' : 'false' });
+    return new HttpHeaders({ Secondary: isSecondary.toString() });
   }
 
 }

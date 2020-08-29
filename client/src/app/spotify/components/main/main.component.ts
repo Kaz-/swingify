@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, UrlTree, RouterEvent } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { flatMap, filter } from 'rxjs/operators';
+import { flatMap, filter, map } from 'rxjs/operators';
 
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 import { NavLink, DialogInput } from 'src/app/shared/models/shared.models';
@@ -22,6 +22,7 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
   subscriptions: Subscription[] = [];
   isSearching: boolean;
   dialog: DialogInput;
+  featuredPlaylists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
 
   constructor(
     private router: Router,
@@ -30,13 +31,10 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    this.generateLinks();
-    this.dialog = {
-      title: 'Search a playlist to export',
-      label: `Playlist's name`,
-      placeholder: 'Search in playlists',
-      action: 'Search'
-    };
+    this.initializeLinks();
+    this.initializeDialog();
+    this.featuredPlaylists$ = this.spotifyService.getFeaturedPlaylists()
+      .pipe(map(featured => featured.playlists));
   }
 
   ngOnDestroy(): void {
@@ -45,10 +43,10 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.router.events.subscribe((event: RouterEvent) =>
-    this.loaderService.navigationInterceptor(event, this.loader));
+      this.loaderService.navigationInterceptor(event, this.loader));
   }
 
-  private generateLinks(): void {
+  private initializeLinks(): void {
     this.navLinks = [
       {
         name: 'Home',
@@ -61,6 +59,15 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
         icon: 'magic'
       }
     ];
+  }
+
+  private initializeDialog(): void {
+    this.dialog = {
+      title: 'Search a playlist to export',
+      label: `Playlist's name`,
+      placeholder: 'Search in playlists',
+      action: 'Search'
+    };
   }
 
   get spotifyUser$(): Observable<SpotifyUser> {

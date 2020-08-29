@@ -17,6 +17,11 @@ export interface SpotifyUser {
   readonly uri: string;
 }
 
+export interface SpotifyFeaturedPlaylists {
+  readonly message: string;
+  readonly playlists: SpotifyPaging<SpotifyPlaylist>;
+}
+
 export interface SpotifyPaging<T> {
   readonly href: string;
   readonly items: T[];
