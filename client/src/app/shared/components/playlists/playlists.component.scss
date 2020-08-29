@@ -2,6 +2,9 @@
 @import "../../../../assets/styles/colors";
 @import "../../../../assets/styles/mixins";
 :host {
+  h2 {
+    font-weight: 600;
+  }
   .playlists {
     display: grid;
     row-gap: 0.5em;

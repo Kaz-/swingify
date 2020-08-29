@@ -118,7 +118,6 @@
         overflow-y: scroll;
         @include scrollbar;
         exp-playlists::ng-deep {
-          // max-height: calc(100vh - 180px);
           .create {
             .default {
               width: 40px;
