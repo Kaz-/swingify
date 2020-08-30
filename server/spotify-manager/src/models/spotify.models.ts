@@ -7,7 +7,7 @@ export interface SpotifyUser {
   readonly country?: string;
   readonly display_name: string | null;
   readonly email?: string;
-  readonly external_urls: ExternalUrl;
+  readonly external_urls: ExternalUrl | ExternalUrl[];
   readonly followers: Followers;
   readonly href: string;
   readonly id: string;
@@ -36,7 +36,7 @@ export interface SpotifyPaging<T> {
 export interface SpotifyPlaylist {
   collaborative: boolean;
   description: string | null;
-  external_urls: ExternalUrl;
+  external_urls: ExternalUrl | ExternalUrl[];
   href: string;
   readonly id: string;
   images: Image[];
@@ -53,9 +53,10 @@ export interface ExternalUrl {
   readonly [key: string]: string;
 }
 
-export interface ExternalId {
-  readonly key: 'isrc' | 'ean' | 'upc';
-  readonly value: string;
+type SupportedExternalIds = 'isrc' | 'ean' | 'upc';
+
+export type ExternalId = {
+  readonly [K in SupportedExternalIds]?: string;
 }
 
 export interface Followers {
@@ -83,13 +84,13 @@ export interface Track {
   readonly disc_number: number;
   readonly duration_ms: number;
   readonly explicit: boolean;
-  readonly external_ids: ExternalId[];
-  readonly external_urls: ExternalUrl[];
+  readonly external_ids: ExternalId | ExternalId[];
+  readonly external_urls: ExternalUrl | ExternalUrl[];
   readonly href: string;
   readonly id: string;
-  readonly is_playable: boolean;
-  readonly linked_from: any;
-  readonly restrictions: any;
+  readonly is_playable?: boolean;
+  readonly linked_from?: any;
+  readonly restrictions?: any;
   readonly name: string;
   readonly popularity: number;
   readonly preview_url: string;
@@ -97,27 +98,30 @@ export interface Track {
   readonly type: string;
   readonly uri: string;
   readonly is_local: boolean;
+  readonly episode?: boolean;
+  readonly track?: boolean;
 }
 
 export interface SimplifiedAlbum {
   readonly album_group?: string;
   readonly album_type: string;
   readonly artists: SimplifiedArtist[];
-  readonly available_markets: string[];
-  readonly external_urls: ExternalUrl[];
+  readonly available_markets?: string[];
+  readonly external_urls: ExternalUrl | ExternalUrl[];
   readonly href: string;
   readonly id: string;
   readonly images: Image[];
   readonly name: string;
   readonly release_date: string;
   readonly release_date_precision: string;
-  readonly restrictions: any;
+  readonly restrictions?: any;
   readonly type: string;
   readonly uri: string;
+  readonly total_tracks: number;
 }
 
 export interface SimplifiedArtist {
-  readonly external_urls: ExternalUrl[];
+  readonly external_urls: ExternalUrl | ExternalUrl[];
   readonly href: string;
   readonly id: string;
   readonly name: string;
