@@ -1,19 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, DocumentQuery } from 'mongoose';
+import { Subscription } from 'rxjs';
 
 import { CoreController } from './core.controller';
 import { CoreService } from '../services/core.service';
-import { SpotifyConfiguration } from 'src/schemas/spotify-configuration.schema';
+import { SpotifyConfiguration } from '../schemas/spotify-configuration.schema';
+import { createMock } from '../../test/mocks';
 
 describe('Core Controller', () => {
   let controller: CoreController;
   let service: CoreService;
   let model: Model<SpotifyConfiguration>;
+  let subscriptions: Subscription[] = [];
 
   const config = { clientId: 'testClient', clientSecret: 'testSecret' };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CoreController],
       providers: [
@@ -35,7 +38,25 @@ describe('Core Controller', () => {
     model = module.get<Model<SpotifyConfiguration>>(getModelToken('SpotifyConfiguration'));
   });
 
+  afterAll(async () => {
+    jest.resetAllMocks();
+    subscriptions.forEach(subscription => subscription.unsubscribe());
+  });
+
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  describe('getSpotifyConfiguration', () => {
+    it('should return the current spotify configuration', () => {
+      jest.spyOn(model, 'findOne').mockReturnValueOnce(
+        createMock<DocumentQuery<SpotifyConfiguration, SpotifyConfiguration, unknown>>({
+          exec: jest.fn().mockResolvedValueOnce(config)
+        })
+      );
+      const subscription = service.getSpotifyConfiguration()
+        .subscribe(result => expect(result).toEqual(config));
+      subscriptions.push(subscription);
+    });
   });
 });

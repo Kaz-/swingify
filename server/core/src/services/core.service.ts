@@ -8,10 +8,10 @@ import { SpotifyConfiguration } from '../schemas/spotify-configuration.schema';
 @Injectable()
 export class CoreService {
 
-    constructor(@InjectModel(SpotifyConfiguration.name) private spotifyConfigurationModel: Model<SpotifyConfiguration>) { }
+  constructor(@InjectModel(SpotifyConfiguration.name) private spotifyConfigurationModel: Model<SpotifyConfiguration>) { }
 
-    getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
-        return from(this.spotifyConfigurationModel.findOne().exec());
-    }
+  getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
+    return from(this.spotifyConfigurationModel.findOne().exec());
+  }
 
 }

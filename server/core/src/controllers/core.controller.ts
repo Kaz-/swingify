@@ -8,14 +8,14 @@ import { SpotifyConfiguration } from '../schemas/spotify-configuration.schema';
 @Controller('core')
 export class CoreController {
 
-    private logger = new Logger('Core Controller');
+  private logger = new Logger('Core Controller');
 
-    constructor(private coreService: CoreService) { }
+  constructor(private coreService: CoreService) { }
 
-    @MessagePattern('spotifyConfiguration')
-    getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
-        this.logger.log(`Received request for Spotify configuration`);
-        return this.coreService.getSpotifyConfiguration();
-    }
+  @MessagePattern('spotifyConfiguration')
+  getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
+    this.logger.log(`Received request for Spotify configuration`);
+    return this.coreService.getSpotifyConfiguration();
+  }
 
 }

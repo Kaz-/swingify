@@ -50,8 +50,7 @@ export interface SpotifyPlaylist {
 }
 
 export interface ExternalUrl {
-  readonly key: string;
-  readonly value: string;
+  readonly [key: string]: string;
 }
 
 export interface ExternalId {
