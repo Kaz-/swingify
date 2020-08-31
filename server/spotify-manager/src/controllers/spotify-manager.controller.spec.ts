@@ -1,8 +1,10 @@
 import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpModule } from '@nestjs/common';
-import { of, Subscription } from 'rxjs';
 import { Request } from 'express';
+import { of, EMPTY } from 'rxjs';
+import { takeLast } from 'rxjs/operators';
+import { createMock } from '@golevelup/ts-jest';
 
 import { SpotifyManagerController } from './spotify-manager.controller';
 import { SpotifyManagerService } from '../services/spotify-manager.service';
@@ -14,18 +16,17 @@ import {
   tracksWithoutNext,
   authorizationHeader,
   playlist,
-  mergedTracks
+  mergedTracks,
+  featuredPlaylists
 } from '../../test/models/spotify.models.spec';
-import { createMock } from '../../test/mocks';
-import { takeLast } from 'rxjs/operators';
+
 
 describe('SpotifyManager Controller', () => {
   let controller: SpotifyManagerController;
   let app: INestApplication;
   let service: SpotifyManagerService;
-  let subscriptions: Subscription[] = [];
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule],
       controllers: [SpotifyManagerController],
@@ -37,6 +38,9 @@ describe('SpotifyManager Controller', () => {
             getAuthorizationHeader: jest.fn().mockReturnValue(authorizationHeader),
             getTracksByRequest: jest.fn().mockReturnValueOnce(of(tracksWithNext)),
             getTracksByNext: jest.fn().mockReturnValue(of(tracksWithoutNext)),
+            getTracksToAdd: jest.fn().mockReturnValue(EMPTY),
+            getTracksToRemove: jest.fn().mockReturnValue(EMPTY),
+            getCompleteTracklist: jest.fn().mockReturnValue(of(mergedTracks)),
             findMatchInTrack: jest.fn().mockReturnValue(true),
             findMatchInArtists: jest.fn().mockReturnValue(true)
           }
@@ -51,9 +55,8 @@ describe('SpotifyManager Controller', () => {
     await app.init();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     jest.resetAllMocks();
-    subscriptions.forEach(subscription => subscription.unsubscribe());
     await app.close();
   });
 
@@ -71,46 +74,79 @@ describe('SpotifyManager Controller', () => {
   });
 
   describe('/GET current user', () => {
-    it('should get the current user', () => {
+    it('should get the current user', done => {
       const req: Request = createMock<Request>();
       jest.spyOn(controller, 'getUserProfile').mockReturnValue(of(user));
-      const subscription = controller.getUserProfile(req)
-        .subscribe(res => expect(res).toEqual(user));
-      subscriptions.push(subscription);
+      controller.getUserProfile(req)
+        .subscribe(res => {
+          expect(res).toEqual(user);
+          done();
+        });
     });
   });
 
   describe(`/GET user's playlists`, () => {
-    it(`should get the current user's playlists`, () => {
+    it(`should get the current user's playlists`, done => {
       const req: Request = createMock<Request>();
       jest.spyOn(controller, 'getPlaylists').mockReturnValue(of(playlists));
-      const subscription = controller.getPlaylists(req)
-        .subscribe(res => expect(res).toEqual(playlists));
-      subscriptions.push(subscription);
+      controller.getPlaylists(req)
+        .subscribe(res => {
+          expect(res).toEqual(playlists);
+          done();
+        });
     });
   });
 
   describe(`/GET user's playlist by ID`, () => {
-    it(`should get the current user's playlist by ID`, () => {
+    it(`should get the current user's playlist by ID`, done => {
       const req: Request = createMock<Request>();
       jest.spyOn(controller, 'getPlaylist').mockReturnValue(of(playlist));
-      const subscription = controller.getPlaylist(req)
-        .subscribe(res => expect(res).toEqual(playlist));
-      subscriptions.push(subscription);
+      controller.getPlaylist(req)
+        .subscribe(res => {
+          expect(res).toEqual(playlist);
+          done();
+        });
     });
   });
 
   describe(`/GET tracks with search query`, () => {
-    it(`should get tracks according to the current query and merge all tracks`, () => {
+    it(`should get tracks according to the current query and merge all tracks`, done => {
       const req: Request = createMock<Request>({ query: { search: 'testQuery' } });
-      // mock values with next to test expand and scan
       jest.spyOn(service, 'getTracksByNext')
         .mockReturnValueOnce(of(tracksWithNext))
         .mockReturnValueOnce(of(tracksWithoutNext));
-      const subscription = controller.getPlaylistTracks(req)
-        .pipe(takeLast(1)) // should have 7 tracks (2 + 2 + 4)
-        .subscribe(res => expect(res).toEqual(mergedTracks));
-      subscriptions.push(subscription);
+      controller.getPlaylistTracks(req)
+        .pipe(takeLast(1))
+        .subscribe(res => {
+          expect(service.getTracksByRequest).toHaveBeenCalledTimes(1);
+          expect(service.getTracksByNext).toHaveBeenCalledTimes(2);
+          expect(res).toEqual(mergedTracks);
+          done();
+        });
+    });
+  });
+
+  describe(`/POST new playlist`, () => {
+    it(`should create a new playlist`, done => {
+      const req: Request = createMock<Request>();
+      jest.spyOn(controller, 'createPlaylist').mockReturnValue(of(playlist));
+      controller.createPlaylist(req)
+        .subscribe(res => {
+          expect(res).toEqual(playlist);
+          done();
+        });
+    });
+  });
+
+  describe(`/GET featured playlists`, () => {
+    it(`should get featured playlists from current locale`, done => {
+      const req: Request = createMock<Request>();
+      jest.spyOn(controller, 'getFeaturedPlaylists').mockReturnValue(of(featuredPlaylists));
+      controller.getFeaturedPlaylists(req)
+        .subscribe(res => {
+          expect(res).toEqual(featuredPlaylists);
+          done();
+        });
     });
   });
 

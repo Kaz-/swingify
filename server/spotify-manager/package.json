@@ -30,6 +30,7 @@
     "rxjs": "^6.5.4"
   },
   "devDependencies": {
+    "@golevelup/ts-jest": "^0.3.0",
     "@nestjs/cli": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
@@ -44,6 +45,7 @@
     "eslint-plugin-import": "^2.20.1",
     "jest": "26.0.1",
     "prettier": "^1.19.1",
+    "rxjs-marbles": "^6.0.1",
     "supertest": "^4.0.2",
     "ts-jest": "26.1.0",
     "ts-loader": "^6.2.1",

@@ -53,7 +53,7 @@ export class SpotifyManagerService {
       map(tracks => tracks.items.map(item => item.track.uri)),
       map(uris => ({ uris: [...uris] })),
       flatMap(tracklist => this.addTracksByRequest(request, true, tracklist))
-    )
+    );
   }
 
   addTracksByRequest(request: Request, complete?: boolean, tracklist?: { uris: string[] }): Observable<never> {
@@ -75,7 +75,7 @@ export class SpotifyManagerService {
       flatMap(tracklist => tracklist.pipe(
         flatMap(list => this.removeTracksByRequest(request, true, list))
       ))
-    )
+    );
   }
 
   removeTracksByRequest(

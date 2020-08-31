@@ -1,4 +1,12 @@
-import { SpotifyConfiguration, SpotifyPaging, SpotifyPlaylist, PlaylistTrack, SpotifyUser, Track } from '../../src/models/spotify.models';
+import {
+  SpotifyConfiguration,
+  SpotifyPaging,
+  SpotifyPlaylist,
+  PlaylistTrack,
+  SpotifyUser,
+  Track,
+  SpotifyFeaturedPlaylists
+} from '../../src/models/spotify.models';
 
 export const spotifyConfiguration: SpotifyConfiguration = {
   clientId: 'testClient',
@@ -182,4 +190,9 @@ export const playlist: SpotifyPlaylist = {
   tracks: mergedTracks,
   type: 'testType',
   uri: 'testUri'
+}
+
+export const featuredPlaylists: SpotifyFeaturedPlaylists = {
+  message: 'testMessage',
+  playlists: playlists
 }
