@@ -42,8 +42,10 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.router.events.subscribe((event: RouterEvent) =>
-      this.loaderService.navigationInterceptor(event, this.loader));
+    this.subscriptions.push(
+      this.router.events.subscribe((event: RouterEvent) =>
+        this.loaderService.navigationInterceptor(event, this.loader))
+    );
   }
 
   private initializeLinks(): void {

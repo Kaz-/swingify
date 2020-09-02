@@ -1,17 +1,21 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
 import { Observable, EMPTY } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { AuthorizationToken, SpotifyConfiguration, AuthorizeQueryOptions } from 'src/app/spotify/models/spotify.models';
+import { ErrorService } from './error.service';
 
 @Injectable()
 export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private errorService: ErrorService,
+    private router: Router,
     @Inject(DOCUMENT) private document: Document,
   ) { }
 
@@ -60,8 +64,8 @@ export class AuthService {
   }
 
   verify(authorizationCode: string, isSecondary: boolean): Observable<AuthorizationToken> {
-    return this.getSpotifyConfiguration()
-      .pipe(switchMap(config => {
+    return this.getSpotifyConfiguration().pipe(
+      switchMap(config => {
         const options = {
           headers: {
             Secondary: isSecondary ? 'true' : 'false',
@@ -75,7 +79,18 @@ export class AuthService {
           }
         };
         return this.http.post<AuthorizationToken>(`${environment.spotify.accountsPath}/api/token`, null, options);
-      }));
+      }),
+      catchError(() => {
+        if (isSecondary) {
+          AuthService.removeSecondaryToken();
+          this.router.navigateByUrl('/spotify/export');
+        } else {
+          AuthService.removeToken();
+          this.router.navigateByUrl('/login');
+        }
+        return EMPTY;
+      })
+    );
   }
 
   authorize(): Observable<never> {
@@ -85,12 +100,14 @@ export class AuthService {
           responseType: 'code',
           clientId: config.clientId,
           redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fprocess',
-          scope: 'playlist-modify-public'
+          scope: 'playlist-modify-public',
+          showDialog: true
         };
         this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
-          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}&scope=${options.scope}`;
+          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}&scope=${options.scope}&show_dialog=${options.showDialog}`;
         return EMPTY;
-      })
+      }),
+      catchError(err => this.errorService.handleError(err))
     );
   }
 

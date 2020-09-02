@@ -21,7 +21,7 @@ import {
 } from '../../test/models/spotify.models.spec';
 
 
-describe('SpotifyManager Controller', () => {
+describe('SpotifyManager Controller e2e tests', () => {
   let controller: SpotifyManagerController;
   let app: INestApplication;
   let service: SpotifyManagerService;
