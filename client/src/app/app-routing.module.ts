@@ -3,12 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './shared/components/login/login.component';
 import { ProcessComponent } from './shared/components/process/process.component';
-import { HomeComponent } from './shared/components/home/home.component';
 
-import { MainComponent } from './spotify/components/main/main.component';
-import { ExportComponent } from './spotify/components/export/export.component';
-
-import { AuthGuard } from './shared/guards/auth.guard';
 import { ErrorComponent } from './shared/components/error/error.component';
 
 
@@ -28,24 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'spotify',
-    component: MainComponent,
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
-    children: [
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full'
-      },
-      {
-        path: 'home',
-        component: HomeComponent
-      },
-      {
-        path: 'export',
-        component: ExportComponent
-      }
-    ]
+    loadChildren: () => import('./spotify/spotify.module').then(m => m.SpotifyModule)
   },
   {
     path: 'error/:status',
