@@ -2,10 +2,26 @@
 @import "../../../../assets/styles/icons";
 :host {
   flex-grow: 1;
+  @media screen and (min-width: 1750px) {
+    .container {
+      grid-template-columns: 500px auto 500px;
+      grid-template-areas: "primary-nav content secondary-nav";
+      .content {
+        display: flex;
+      }
+    }
+  }
+  @media screen and (max-width: 1750px) {
+    .container {
+      grid-template-columns: minmax(200px, 750px) minmax(200px, 750px);
+      grid-template-areas: "primary-nav secondary-nav";
+      .content {
+        display: none;
+      }
+    }
+  }
   .container {
     display: grid;
-    grid-template-columns: 500px auto 500px;
-    grid-template-areas: "primary-nav content secondary-nav";
     height: 100%;
     .header {
       display: flex;
@@ -33,6 +49,7 @@
     .primary-nav {
       grid-area: primary-nav;
       background-color: $second-background;
+      border: 1px solid $background;
       exp-playlist::ng-deep {
         max-height: calc(100vh - 145px);
         .primary-button {
@@ -42,7 +59,6 @@
     }
     .content {
       grid-area: content;
-      display: flex;
       align-items: center;
       flex-grow: 1;
       flex-direction: column;
@@ -76,6 +92,7 @@
     .secondary-nav {
       grid-area: secondary-nav;
       background-color: $second-background;
+      border: 1px solid $background;
       exp-profile-menu::ng-deep {
         margin: 0 1em;
       }

@@ -156,7 +156,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   }
 
   isLargeScreen(): boolean {
-    return window.screen.width > 1280;
+    return window.screen.width > 1750;
   }
 
   isSecondaryAuthenticated(): boolean {
