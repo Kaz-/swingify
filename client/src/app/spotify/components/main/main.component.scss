@@ -112,7 +112,7 @@
       .playlists {
         display: grid;
         grid-row-gap: 1em;
-        max-height: calc(100vh - 215px);
+        max-height: calc(100vh - 235px);
         padding: 0 1em;
         overflow-y: scroll;
         @include scrollbar;

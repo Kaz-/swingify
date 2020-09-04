@@ -20,10 +20,10 @@
       }
       .input {
         width: 100%;
-        background-color: $background;
+        background-color: $primary;
         &-box {
           position: relative;
-          background-color: $background;
+          background-color: $primary;
           padding: 2em 20%;
           .content {
             padding: 0 2em;
@@ -44,12 +44,15 @@
               font-weight: 900;
               color: $white;
               text-transform: none;
-              caret-color: $primary;
+              caret-color: $spotify;
               box-sizing: border-box;
               width: 100%;
               background-color: transparent;
               border: none;
               outline: none;
+              &::placeholder {
+                color: $alt;
+              }
             }
           }
         }

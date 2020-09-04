@@ -10,7 +10,7 @@
     </a>
     <div *ngIf="tracks$ | async as tracks">
       <span class="total">{{ tracks?.items.length }} of {{ tracks?.total }} tracks</span>
-      <button class="green-button" [title]="isSecondary ? 'Remove all tracks' : 'Export all tracks'"
+      <button class="primary-button" [title]="isSecondary ? 'Remove all tracks' : 'Export all tracks'"
         (click)="execute(true)">
         <i class="icon {{ isSecondary ? 'minus' : 'plus' }}"></i>
       </button>

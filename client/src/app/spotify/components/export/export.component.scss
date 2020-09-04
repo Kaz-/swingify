@@ -35,6 +35,9 @@
       background-color: $second-background;
       exp-playlist::ng-deep {
         max-height: calc(100vh - 145px);
+        .primary-button {
+          background-color: $green;
+        }
       }
     }
     .content {
@@ -78,6 +81,9 @@
       }
       exp-playlist::ng-deep {
         max-height: calc(100vh - 145px);
+        .primary-button {
+          background-color: $red;
+        }
       }
       .card-wrapper {
         display: flex;

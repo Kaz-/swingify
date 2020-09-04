@@ -33,44 +33,37 @@ li {
 button {
   outline: none;
   cursor: pointer;
+  color: $white;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 500px;
+  padding: 11px 32px 9px;
   &:hover {
     transform: scale(1.06);
   }
 }
 .default-button {
-  color: $white;
   background-color: transparent;
-  font-size: 12px;
-  line-height: 1;
-  border-radius: 500px;
-  padding: 11px 32px 9px;
   border: 1px solid $alt;
 }
-.spotify-button,
-.green-button {
-  color: $white;
+.primary-button {
   background-color: $primary;
-  font-size: 12px;
-  line-height: 1;
-  border-radius: 500px;
-  padding: 11px 32px 9px;
+}
+.spotify-button {
+  background-color: $spotify;
   &:hover {
-    background-color: $primary;
+    background-color: $spotify;
+  }
+}
+.green-button {
+  background-color: $green;
+  &:hover {
+    background-color: $green;
   }
 }
 .red-button {
-  color: $white;
   background-color: $red;
-  font-size: 12px;
-  line-height: 1;
-  border-radius: 500px;
-  padding: 11px 32px 9px;
 }
 .youtube-button {
-  color: $white;
   background-color: $youtube;
-  font-size: 12px;
-  line-height: 1;
-  border-radius: 3px;
-  padding: 11px 32px 9px;
 }
