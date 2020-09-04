@@ -1,7 +1,7 @@
 import { version } from '../../package.json';
 
 export const environment = {
-  production: false,
+  production: true,
   baseUrl: 'http://localhost:4200',
   productVersion: version,
   spotify: {
