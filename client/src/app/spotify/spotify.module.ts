@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
+import { SpotifyRoutingModule } from './spotify-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 import { MainComponent } from './components/main/main.component';
@@ -16,6 +17,7 @@ import { SpotifyInterceptor } from './services/spotify.interceptor';
     CommonModule,
     HttpClientModule,
     RouterModule,
+    SpotifyRoutingModule,
     SharedModule,
   ],
   providers: [
