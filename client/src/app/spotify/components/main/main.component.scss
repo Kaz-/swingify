@@ -80,8 +80,10 @@
       .banner {
         font-size: 30px;
         text-align: center;
-        >div {
-          font-size: 12px;
+        > a {
+          > div {
+            font-size: 12px;
+          }
         }
       }
       .nav {

@@ -16,8 +16,10 @@
   <div class="nav-bar">
     <nav>
       <div class="banner">
-        <a routerLink="/spotify/home">Exportify</a>
-        <div>v.{{ version }}</div>
+        <a routerLink="/spotify/home">
+          <span>Exportify</span>
+          <div>v.{{ version }}</div>
+        </a>
       </div>
       <div class="nav" *ngIf="navLinks">
         <ul>

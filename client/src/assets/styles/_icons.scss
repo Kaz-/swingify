@@ -59,7 +59,7 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   }
   &.spotify {
     @extend .fa-spotify;
-    color: $primary;
+    color: $spotify;
   }
   &.youtube {
     @extend .fa-youtube;
