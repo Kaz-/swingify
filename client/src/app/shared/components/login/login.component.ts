@@ -2,6 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import { environment } from '../../../../environments/environment';
+
 import { AuthService } from '../../services/auth.service';
 
 import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
@@ -14,6 +16,7 @@ import { AuthPlatform } from '../../models/shared.models';
 })
 export class LoginComponent implements OnDestroy {
 
+  version: string = environment.productVersion;
   private subscriptions: Subscription[] = [];
 
   constructor(

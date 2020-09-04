@@ -47,24 +47,38 @@
       }
     }
   }
-  .search {
-    color: $white;
-    background-color: $background;
-    padding: 6px 48px;
-    max-height: 30px;
-    border: 0;
-    border-radius: 500px;
-    text-overflow: ellipsis;
-    outline: none;
+  .field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 1em;
-    border: 1px solid transparent;
-    transition: 0.3s ease;
-    &:focus,
-    &:active {
-      border-color: $alt;
-    }
-    &::placeholder {
+    svg {
+      position: relative;
+      left: 2.5em;
+      right: auto;
+      top: auto;
+      bottom: auto;
       color: $alt;
+    }
+    .search {
+      color: $white;
+      background-color: $background;
+      padding: 6px 48px;
+      max-height: 30px;
+      border: 0;
+      border-radius: 500px;
+      text-overflow: ellipsis;
+      outline: none;
+      width: 100%;
+      border: 1px solid transparent;
+      transition: 0.3s ease;
+      &:focus,
+      &:active {
+        border-color: $alt;
+      }
+      &::placeholder {
+        color: $alt;
+      }
     }
   }
   .tracklist {

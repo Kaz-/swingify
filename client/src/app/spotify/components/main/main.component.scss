@@ -80,9 +80,8 @@
       .banner {
         font-size: 30px;
         text-align: center;
-        i {
-          margin-right: 0.25em;
-          transform: rotate(180deg);
+        >div {
+          font-size: 12px;
         }
       }
       .nav {

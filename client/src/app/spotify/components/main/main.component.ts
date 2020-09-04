@@ -3,6 +3,8 @@ import { Router, UrlTree, RouterEvent } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { flatMap, filter, map } from 'rxjs/operators';
 
+import { environment } from '../../../../environments/environment';
+
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 import { NavLink, DialogInput } from 'src/app/shared/models/shared.models';
 
@@ -18,6 +20,7 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('loader') loader: ElementRef;
 
+  version: string = environment.productVersion;
   navLinks: NavLink[];
   subscriptions: Subscription[] = [];
   isSearching: boolean;

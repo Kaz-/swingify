@@ -1,8 +1,7 @@
 <header>
-  <i class="brand spotify"></i>
   <h1>Exportify</h1>
+  <div>v.{{ version }}</div>
 </header>
-<p>Start exporting your playlists!</p>
 <section>
   <exp-card platform="Spotify" (auth)="redirect($event)">
     <ul class="tips">
