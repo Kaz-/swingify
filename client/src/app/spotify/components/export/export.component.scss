@@ -18,6 +18,7 @@
       .primary-user {
         display: flex;
         align-items: center;
+        margin: 0 1em;
         i {
           margin: 0 0.5em 0.3em 0;
         }
@@ -72,6 +73,9 @@
     .secondary-nav {
       grid-area: secondary-nav;
       background-color: $second-background;
+      exp-profile-menu::ng-deep {
+        margin: 0 1em;
+      }
       exp-playlist::ng-deep {
         max-height: calc(100vh - 145px);
       }
@@ -95,6 +99,13 @@
           p {
             color: $alt;
           }
+        }
+      }
+    }
+    exp-playlist::ng-deep {
+      exp-playlists::ng-deep {
+        ul {
+          max-height: calc(100vh - 180px);
         }
       }
     }

@@ -20,68 +20,70 @@
         font-size: 35px;
       }
     }
-    ul {
-      display: grid;
-      row-gap: 1.5em;
-      column-gap: 1.5em;
-      grid-template-columns: repeat(3, minmax(250px, 1fr));
+    .wrapper {
       overflow-y: scroll;
       max-height: calc(100vh - 175px);
+      padding: 0 0.5em;
       @include scrollbar;
-      .playlist {
-        visibility: visible;
-        opacity: 1;
-        transition: opacity 0.5s cubic-bezier(0.5, 0, 0, 1) 0s;
-        &:hover {
-          cursor: pointer;
+      ul {
+        display: grid;
+        row-gap: 1.5em;
+        column-gap: 1.5em;
+        grid-template-columns: repeat(3, minmax(250px, 1fr));
+        .playlist {
+          visibility: visible;
+          opacity: 1;
+          transition: opacity 0.5s cubic-bezier(0.5, 0, 0, 1) 0s;
+          &:hover {
+            cursor: pointer;
+            .box {
+              exp-playlist-image::ng-deep {
+                .container {
+                  z-index: 3;
+                }
+              }
+            }
+          }
           .box {
+            position: relative;
+            max-width: 250px;
+            max-height: 250px;
+            background: $background;
+            box-shadow: 1px 1px 16px -2px rgba(0, 0, 0, 0.3);
             exp-playlist-image::ng-deep {
               .container {
-                z-index: 3;
-              }
-            }
-          }
-        }
-        .box {
-          position: relative;
-          max-width: 250px;
-          max-height: 250px;
-          background: $background;
-          box-shadow: 1px 1px 16px -2px rgba(0, 0, 0, 0.3);
-          exp-playlist-image::ng-deep {
-            .container {
-              width: 250px;
-              height: 250px;
-              img {
-                opacity: 1;
-                transition: all 0.2s ease-in-out;
-                backface-visibility: hidden;
-              }
-            }
-
-          }
-          .overlay {
-            transition: 0.5s ease;
-            opacity: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            font-weight: 900;
-            i {
-              margin-right: 0.5em;
-            }
-          }
-          &:hover {
-            exp-playlist-image::ng-deep {
-              img,
-              .default {
-                opacity: 0.3;
+                width: 250px;
+                height: 250px;
+                img {
+                  opacity: 1;
+                  transition: all 0.2s ease-in-out;
+                  backface-visibility: hidden;
+                }
               }
             }
             .overlay {
-              opacity: 1;
+              transition: 0.5s ease;
+              opacity: 0;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              text-align: center;
+              font-weight: 900;
+              i {
+                margin-right: 0.5em;
+              }
+            }
+            &:hover {
+              exp-playlist-image::ng-deep {
+                img,
+                .default {
+                  opacity: 0.3;
+                }
+              }
+              .overlay {
+                opacity: 1;
+              }
             }
           }
         }

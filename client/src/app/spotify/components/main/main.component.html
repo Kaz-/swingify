@@ -36,8 +36,9 @@
         </ul>
       </div>
       <div class="playlists">
-        <exp-playlists title="Playlists" [allowCreation]="true" [user$]="spotifyUser$" [playlists$]="spotifyPlaylists$"></exp-playlists>
-        <exp-playlists title="Featured" [user$]="spotifyUser$" [playlists$]="featuredPlaylists$"></exp-playlists>
+        <exp-playlists title="Playlists" [allowCreation]="true" [user$]="spotifyUser$"
+          [playlists$]="spotifyPlaylists$" [isSecondary]="false"></exp-playlists>
+        <exp-playlists title="Featured" [user$]="spotifyUser$" [playlists$]="featuredPlaylists$" [isSecondary]="false"></exp-playlists>
       </div>
     </nav>
   </div>

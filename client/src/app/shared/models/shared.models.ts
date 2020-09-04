@@ -35,5 +35,5 @@ export interface HttpError {
 }
 
 export const SUPPORTED_ERRORS: number[] = [
-  400, 401, 403, 404, 500, 504
+  400, 401, 403, 404, 504
 ];

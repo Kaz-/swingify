@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, UrlTree } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+
+import { ToastrService } from 'ngx-toastr';
 
 import { SpotifyPaging, SpotifyPlaylist, PlaylistCreation, SpotifyUser } from 'src/app/spotify/models/spotify.models';
 import { DialogInput } from '../../models/shared.models';
@@ -17,7 +19,7 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
   @Input() allowCreation?: boolean;
   @Input() user$: Observable<SpotifyUser>;
   @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
-  @Input() isSecondary?: boolean;
+  @Input() isSecondary: boolean;
 
   subscriptions: Subscription[] = [];
   dialog: DialogInput;
@@ -25,7 +27,7 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
+    private toastr: ToastrService,
     private spotifyService: SpotifyService
   ) { }
 
@@ -68,6 +70,7 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.spotifyService.updatePlaylists(this.isSecondary);
         this.isCreating = false;
+        this.toastr.success('Playlist was successfully created!', null, { progressBar: true, timeOut: 2000 });
       }));
   }
 

@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, Subscription, Subject, EMPTY } from 'rxjs';
-import { flatMap, shareReplay, tap, scan, catchError } from 'rxjs/operators';
+import { flatMap, shareReplay, tap, scan } from 'rxjs/operators';
+
+import { ToastrService } from 'ngx-toastr';
 
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
@@ -39,6 +41,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private toastr: ToastrService,
     private spotifyService: SpotifyService,
     private authService: AuthService
   ) { }
@@ -177,7 +180,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   execute(action: PlaylistAction): void {
     this.subscriptions.push(this.performOnTracks(action).pipe(
       flatMap(() => this.getSecondaryPlaylist(this.secondaryId))
-    ).subscribe());
+    ).subscribe(() => this.onSuccess(action)));
   }
 
   performOnTracks(action: PlaylistAction): Observable<ArrayBuffer | never> {
@@ -190,6 +193,23 @@ export class ExportComponent implements OnInit, OnDestroy {
         return action.complete
           ? this.spotifyService.removeTracks(this.secondaryId, action.trackUri, this.secondaryId)
           : this.spotifyService.removeTracks(this.secondaryId, action.trackUri);
+      default:
+        break;
+    }
+  }
+
+  private onSuccess(action: PlaylistAction): void {
+    switch (action.action) {
+      case ETrackAction.ADD:
+        action.complete
+          ? this.toastr.success('Tracks were successfully added!', null, { progressBar: true, timeOut: 2000 })
+          : this.toastr.success('Track was successfully added!', null, { progressBar: true, timeOut: 2000 });
+        break;
+      case ETrackAction.REMOVE:
+        action.complete
+          ? this.toastr.success('Tracks were successfully removed!', null, { progressBar: true, timeOut: 2000 })
+          : this.toastr.success('Track was successfully removed!', null, { progressBar: true, timeOut: 2000 });
+        break;
       default:
         break;
     }

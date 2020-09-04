@@ -3,14 +3,16 @@
     <h1>Welcome {{ (spotifyUser$ | async)?.display_name }} !</h1>
     <h3>Select a playlist and let the magic happen !</h3>
   </div>
-  <ul>
-    <li class="playlist" *ngFor="let playlist of (spotifyPlaylists$ | async)?.items" (click)="redirect(playlist.id)">
-      <div class="box">
-        <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
-        <div class="overlay">
-          <div><i class="icon magic"></i>{{ playlist.name }}</div>
+  <div class="wrapper">
+    <ul>
+      <li class="playlist" *ngFor="let playlist of (spotifyPlaylists$ | async)?.items" (click)="redirect(playlist.id)">
+        <div class="box">
+          <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
+          <div class="overlay">
+            <div><i class="icon magic"></i>{{ playlist.name }}</div>
+          </div>
         </div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
 </section>

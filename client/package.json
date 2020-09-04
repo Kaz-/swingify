@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~10.0.3",
+    "@angular/animations": "^10.0.14",
     "@angular/common": "~10.0.3",
     "@angular/compiler": "~10.0.3",
     "@angular/core": "~10.0.3",
@@ -21,6 +21,7 @@
     "@angular/router": "~10.0.3",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "ngx-infinite-scroll": "^9.0.0",
+    "ngx-toastr": "^13.0.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
