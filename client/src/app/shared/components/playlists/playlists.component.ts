@@ -9,7 +9,7 @@ import { DialogInput } from '../../models/shared.models';
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 
 @Component({
-  selector: 'exp-playlists',
+  selector: 'swg-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss']
 })

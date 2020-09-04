@@ -10,7 +10,7 @@
     {{ (user$ | async)?.display_name }}
     <i class="icon {{ isMenuActive ? 'chevron-up' : 'chevron-down' }}"></i>
     <ng-container *ngIf="(user$ | async) as user">
-      <exp-dropdown [items]="generateUserLinks(user)" *ngIf="isMenuActive"></exp-dropdown>
+      <swg-dropdown [items]="generateUserLinks(user)" *ngIf="isMenuActive"></swg-dropdown>
     </ng-container>
   </span>
 </div>

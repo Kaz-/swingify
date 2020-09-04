@@ -7,7 +7,7 @@ import { SpotifyPlaylist, SpotifyPaging, PlaylistTrack, SpotifyUser } from 'src/
 import { PlaylistAction, ETrackAction } from '../../models/shared.models';
 
 @Component({
-  selector: 'exp-playlist',
+  selector: 'swg-playlist',
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss']
 })

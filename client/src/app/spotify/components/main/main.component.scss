@@ -118,7 +118,7 @@
         padding: 0 1em;
         overflow-y: scroll;
         @include scrollbar;
-        exp-playlists::ng-deep {
+        swg-playlists::ng-deep {
           .create {
             .default {
               width: 40px;
@@ -129,7 +129,7 @@
             }
           }
           .playlist-link {
-            exp-playlist-image::ng-deep {
+            swg-playlist-image::ng-deep {
               .container {
                 width: 40px !important;
                 height: 40px !important;

@@ -15,8 +15,8 @@
         <div>{{ primaryUser?.display_name }}</div>
       </div>
     </div>
-    <exp-playlist [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$" [tracks$]="primaryPlaylistTracks$"
-      (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></exp-playlist>
+    <swg-playlist [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$" [tracks$]="primaryPlaylistTracks$"
+      (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></swg-playlist>
   </div>
   <div class="content" *ngIf="isLargeScreen()">
     <header>
@@ -25,11 +25,11 @@
     </header>
     <div class="from-to">
       <div class="box" [title]="(primaryPlaylist$ | async)?.name ? (primaryPlaylist$ | async)?.name : 'Unknown'">
-        <exp-playlist-image [playlist]="primaryPlaylist$ | async"></exp-playlist-image>
+        <swg-playlist-image [playlist]="primaryPlaylist$ | async"></swg-playlist-image>
       </div>
       <i class="icon long-arrow-right"></i>
       <div class="box" [title]="(secondaryPlaylist$ | async)?.name ? (secondaryPlaylist$ | async)?.name : 'Unknown'">
-        <exp-playlist-image [playlist]="secondaryPlaylist$ | async"></exp-playlist-image>
+        <swg-playlist-image [playlist]="secondaryPlaylist$ | async"></swg-playlist-image>
       </div>
     </div>
   </div>
@@ -40,14 +40,14 @@
         <a class="back" title="Back to playlists" (click)="navigateBack(true)">
           <i class="icon long-arrow-left"></i>
         </a>
-        <exp-profile-menu [user$]="secondaryUser$" [isSecondary]="true"></exp-profile-menu>
+        <swg-profile-menu [user$]="secondaryUser$" [isSecondary]="true"></swg-profile-menu>
       </div>
-      <exp-playlist [user$]="secondaryUser$" [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$" [tracks$]="secondaryPlaylistTracks$"
-        [isSecondary]="true" (action)="execute($event)" (next)="onNext($event, true)" (search)="onSearch($event, true)"></exp-playlist>
+      <swg-playlist [user$]="secondaryUser$" [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$" [tracks$]="secondaryPlaylistTracks$"
+        [isSecondary]="true" (action)="execute($event)" (next)="onNext($event, true)" (search)="onSearch($event, true)"></swg-playlist>
     </ng-template>
     <ng-template #card>
       <div class="card-wrapper">
-        <exp-card platform="Spotify" (auth)="authenticate($event)">
+        <swg-card platform="Spotify" (auth)="authenticate($event)">
           <ul class="tips">
             <li>
               <h2>Log in with your Spotify account</h2>
@@ -62,7 +62,7 @@
               <p>You can now add or remove tracks one by one or simply all in one!</p>
             </li>
           </ul>
-        </exp-card>
+        </swg-card>
       </div>
     </ng-template>
   </div>

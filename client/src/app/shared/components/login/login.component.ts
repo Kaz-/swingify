@@ -10,7 +10,7 @@ import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
 import { AuthPlatform } from '../../models/shared.models';
 
 @Component({
-  selector: 'exp-login',
+  selector: 'swg-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'exp-card',
+  selector: 'swg-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss']
 })

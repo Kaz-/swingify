@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
 
 @Component({
-  selector: 'exp-process',
+  selector: 'swg-process',
   templateUrl: './process.component.html',
   styleUrls: ['./process.component.scss']
 })

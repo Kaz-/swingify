@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'exp-error',
+  selector: 'swg-error',
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.scss']
 })

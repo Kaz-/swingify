@@ -7,7 +7,7 @@ import { NavLink } from '../../models/shared.models';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'exp-profile-menu',
+  selector: 'swg-profile-menu',
   templateUrl: './profile-menu.component.html',
   styleUrls: ['./profile-menu.component.scss']
 })

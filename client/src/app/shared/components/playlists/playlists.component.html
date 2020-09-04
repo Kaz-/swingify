@@ -10,12 +10,12 @@
   </li>
   <li *ngFor="let playlist of playlists?.items">
     <a class="playlist-link" (click)="navigate(playlist.id)">
-      <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
+      <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
       <div>{{ playlist.name }}</div>
     </a>
   </li>
 </ul>
 <ng-container *ngIf="(user$ | async)?.id as user">
-  <exp-dialog *ngIf="allowCreation && isCreating" [entry]="dialog" (cancel)="isCreating = false"
-    (action)="onCreate($event, user)"></exp-dialog>
+  <swg-dialog *ngIf="allowCreation && isCreating" [entry]="dialog" (cancel)="isCreating = false"
+    (action)="onCreate($event, user)"></swg-dialog>
 </ng-container>

@@ -2,7 +2,7 @@
 <ng-template #playlist>
   <div class="header" *ngIf="playlist$ | async as playlist">
     <a href="{{ playlist?.external_urls.spotify }}" target="_blank">
-      <exp-playlist-image [playlist]="playlist"></exp-playlist-image>
+      <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
       <div>
         <h3>{{ playlist?.name }}</h3>
         <small>By {{ playlist?.owner.display_name }}</small>
@@ -52,5 +52,5 @@
   </ng-container>
 </ng-template>
 <ng-template #selection>
-  <exp-playlists title="Playlists" [allowCreation]="true" [user$]="user$" [playlists$]="playlists$" [isSecondary]="isSecondary"></exp-playlists>
+  <swg-playlists title="Playlists" [allowCreation]="true" [user$]="user$" [playlists$]="playlists$" [isSecondary]="isSecondary"></swg-playlists>
 </ng-template>

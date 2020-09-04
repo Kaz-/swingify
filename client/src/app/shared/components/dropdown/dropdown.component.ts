@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NavLink } from '../../models/shared.models';
 
 @Component({
-  selector: 'exp-dropdown',
+  selector: 'swg-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss']
 })

@@ -6,7 +6,7 @@ import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 
 @Component({
-  selector: 'exp-home',
+  selector: 'swg-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

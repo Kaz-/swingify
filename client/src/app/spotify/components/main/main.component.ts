@@ -12,7 +12,7 @@ import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 
 @Component({
-  selector: 'exp-main',
+  selector: 'swg-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })

@@ -1,3 +1,3 @@
 export const environment = {
-    database: 'mongodb://localhost/exportify'
+    database: 'mongodb://localhost/swingify'
 }

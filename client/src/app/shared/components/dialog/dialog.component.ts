@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { DialogInput } from '../../models/shared.models';
 
 @Component({
-  selector: 'exp-dialog',
+  selector: 'swg-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss']
 })

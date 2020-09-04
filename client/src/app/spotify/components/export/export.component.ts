@@ -12,7 +12,7 @@ import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack } from '../.
 import { PlaylistAction, ETrackAction } from 'src/app/shared/models/shared.models';
 
 @Component({
-  selector: 'exp-export',
+  selector: 'swg-export',
   templateUrl: './export.component.html',
   styleUrls: ['./export.component.scss']
 })

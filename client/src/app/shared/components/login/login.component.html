@@ -1,9 +1,9 @@
 <header>
-  <h1>Exportify</h1>
+  <h1>Swingify</h1>
   <div>v.{{ version }}</div>
 </header>
 <section>
-  <exp-card platform="Spotify" (auth)="redirect($event)">
+  <swg-card platform="Spotify" (auth)="redirect($event)">
     <ul class="tips">
       <li>
         <h2>Log in with your Spotify account</h2>
@@ -18,8 +18,8 @@
         <p>You can export tracks one by one or simply all in one.</p>
       </li>
     </ul>
-  </exp-card>
-  <exp-card platform="YouTube" (auth)="redirect($event)">
+  </swg-card>
+  <swg-card platform="YouTube" (auth)="redirect($event)">
     <ul class="tips">
       <h1 class="status">Currently in development</h1>
       <li>
@@ -35,6 +35,6 @@
         <p>You can export tracks one by one or simply all in one.</p>
       </li>
     </ul>
-  </exp-card>
+  </swg-card>
 </section>
 
