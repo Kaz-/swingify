@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { map, flatMap, scan, expand, takeWhile } from 'rxjs/operators';
 
-import { environment } from '../../environment';
+import { environment } from '../config/environment';
 import { SpotifyManagerService } from '../services/spotify-manager.service';
 import {
   SpotifyConfiguration,

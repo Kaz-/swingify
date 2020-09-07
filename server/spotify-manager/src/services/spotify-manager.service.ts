@@ -4,7 +4,8 @@ import { Request } from 'express';
 import { Observable, from, EMPTY, Subject } from 'rxjs';
 import { map, flatMap, tap, bufferWhen, expand, takeWhile } from 'rxjs/operators';
 
-import { environment } from '../../environment';
+import { ConfigService } from '../config/config.service';
+import { environment } from '../config/environment';
 import { SpotifyConfiguration, SpotifyPaging, PlaylistTrack } from '../models/spotify.models';
 
 @Injectable()
@@ -13,14 +14,14 @@ export class SpotifyManagerService {
   private client: ClientProxy;
   private baseApiUrl: string = environment.apiBaseUrl;
 
-  constructor(private http: HttpService) {
+  constructor(
+    private http: HttpService,
+    private configService: ConfigService
+  ) {
     this.client = ClientProxyFactory.create({
       transport: Transport.TCP,
-      options: {
-        host: 'localhost',
-        port: 1337
-      }
-    })
+      options: this.configService.proxyConf
+    });
   }
 
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
