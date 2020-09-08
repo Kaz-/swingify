@@ -1,2 +1,7 @@
 docker-compose.yml
 mongo-initializer.js
+terraform/terraform.tfvars
+terraform/swingify.*
+terraform/.terraform
+terraform/*.tfstate
+terraform/*.tfstate.*
