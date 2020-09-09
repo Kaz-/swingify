@@ -1,11 +1,11 @@
 variable "aws-access-key" {
-    type = string
+  type = string
 }
 
 variable "aws-secret-key" {
-    type = string
+  type = string
 }
 
 variable "aws-region" {
-    type = string
+  type = string
 }

@@ -1,36 +1,36 @@
 variable "ami-id" {
-    type = string
+  type = string
 }
 
 variable "iam-instance-profile" {
-    default = ""
-    type = string
+  default = ""
+  type    = string
 }
 
 variable "instance-type" {
-    default = "t2.micro"
-    type = string
+  default = "t2.micro"
+  type    = string
 }
 
 variable "key-pair" {
-    type = string
+  type = string
 }
 
 variable "name" {
-    type = string
+  type = string
 }
 
 variable "private-ip" {
-    default = ""
-    type = string
+  default = ""
+  type    = string
 }
 
 variable "subnet-id" {
-    default = ""
-    type = string
+  default = ""
+  type    = string
 }
 
 variable "vpc-security-group-ids" {
-    default = []
-    type = list(string)
+  default = []
+  type    = list(string)
 }
