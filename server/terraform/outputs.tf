@@ -1,11 +1,7 @@
-output "spotify-manager-private-ip" {
-  value = module.spotify-manager.private-ip
+output "swingify-private-ip" {
+  value = module.swingify.private-ip
 }
 
-output "spotify-manager-public-ip" {
-  value = aws_eip.spotify-manager-eip.public_ip
-}
-
-output "core-private-ip" {
-  value = module.core.private-ip
+output "swingify-public-ip" {
+  value = aws_eip.swingify-eip.public_ip
 }

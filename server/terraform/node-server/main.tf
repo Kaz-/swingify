@@ -13,6 +13,11 @@ resource "aws_instance" "default" {
     echo '#!/bin/bash
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
     source ~/.bashrc
+    sudo yum update -y
+    sudo yum install -y ruby wget
+    sudo amazon-linux-extras install docker
+    sudo systemctl docker start
+    sudo usermod -a -G docker ec2-user
     nvm i 12.18.3
     curl -o- -L https://yarnpkg.com/install.sh | bash
     sudo yum install -y ruby wget
