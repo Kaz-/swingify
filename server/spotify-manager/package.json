@@ -1,8 +1,8 @@
 {
   "name": "spotify-manager",
   "version": "1.0.0",
-  "description": "",
-  "author": "",
+  "description": "Spotify API Service",
+  "author": "Wilfried Pereira",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

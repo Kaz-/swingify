@@ -25,14 +25,27 @@ resource "aws_route_table_association" "swingify-subnet-private-1" {
   route_table_id = aws_route_table.allow-outgoing-access.id
 }
 
-resource "aws_security_group" "allow-internal-http" {
-  name        = "allow-internal-http"
-  description = "Allow internal HTTP requests"
+resource "aws_security_group" "allow-internal-core" {
+  name        = "allow-internal-core"
+  description = "Allow internal HTTP requests to Core"
   vpc_id      = aws_vpc.swingify.id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 1337
+    to_port     = 1337
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.swingify.cidr_block]
+  }
+}
+
+resource "aws_security_group" "allow-internal-spotify" {
+  name        = "allow-internal-spotify"
+  description = "Allow internal HTTP requests to Spotify Manager"
+  vpc_id      = aws_vpc.swingify.id
+
+  ingress {
+    from_port   = 7200
+    to_port     = 7200
     protocol    = "tcp"
     cidr_blocks = [aws_vpc.swingify.cidr_block]
   }

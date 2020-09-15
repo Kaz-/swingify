@@ -1,29 +1,29 @@
 # ---- Base Node ----
-FROM node:latest AS base
+FROM node:12-alpine AS base
+
+RUN yarn global add pm2
 
 ENV SERVER /server
 WORKDIR ${SERVER}
 
 COPY package.json ${SERVER}
+COPY yarn.lock ${SERVER}
+COPY ecosystem.config.js ${SERVER}
+COPY prod.env ${SERVER}
 
 # ---- Dependencies ----
 FROM base AS dependencies
-RUN npm i --only=prod
+RUN yarn install --production
 
 # ---- Build ----
 FROM dependencies AS build
 COPY . ${SERVER}
-RUN npm run build --prod
+RUN yarn build
 
 # ---- Release ----
-FROM node:latest
+FROM base AS release
 
-ENV SERVER /server
-WORKDIR ${SERVER}
-
-COPY --from=build ${SERVER}/package.json ${SERVER}
 COPY --from=build ${SERVER}/dist ${SERVER}/dist
-COPY --from=build ${SERVER}/prod.env ${SERVER}
 COPY --from=build ${SERVER}/node_modules ${SERVER}/node_modules
 
-CMD ["npm", "run", "start:prod"]
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]

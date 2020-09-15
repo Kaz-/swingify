@@ -1,8 +1,8 @@
 {
   "name": "core",
   "version": "1.0.0",
-  "description": "",
-  "author": "",
+  "description": "Internal Core Microservice",
+  "author": "Wilfried Pereira",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

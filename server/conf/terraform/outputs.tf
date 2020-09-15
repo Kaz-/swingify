@@ -1,3 +1,7 @@
+output "aws-region" {
+  value = var.aws-region
+}
+
 output "swingify-private-ip" {
   value = module.swingify.private-ip
 }

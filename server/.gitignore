@@ -1,7 +1,9 @@
-docker-compose.yml
-mongo-initializer.js
-terraform/terraform.tfvars
-terraform/swingify.*
-terraform/.terraform
-terraform/*.tfstate
-terraform/*.tfstate.*
+docker
+conf/terraform/terraform.tfvars
+conf/terraform/swingify.key
+conf/terraform/swingify.pem
+conf/terraform/.terraform
+conf/terraform/*.tfstate
+conf/terraform/*.tfstate.*
+conf/nginx
+conf/*.sh
