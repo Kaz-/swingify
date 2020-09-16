@@ -1,4 +1,5 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, SecurityContext } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ export class AuthService {
     private http: HttpClient,
     private errorService: ErrorService,
     private router: Router,
+    private sanitizer: DomSanitizer,
     @Inject(DOCUMENT) private document: Document,
   ) { }
 
@@ -85,7 +87,7 @@ export class AuthService {
     return this.http.get<string>(`${environment.spotify.serverPath}/authorize`, { responseType: 'text' as 'json' })
       .pipe(
         mergeMap(redirection => {
-          this.document.location.href = redirection;
+          this.document.location.href = this.sanitizer.sanitize(SecurityContext.URL, redirection);
           return EMPTY;
         }),
         catchError(err => this.errorService.handleError(err))

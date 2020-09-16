@@ -12,7 +12,9 @@ data "template_file" "userdata" {
     sudo curl -L "https://github.com/docker/compose/releases/download/1.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
     sudo amazon-linux-extras install nginx1
-    sudo systemctl start nginx' >> init.sh
+    sudo systemctl start nginx
+    sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    sudo yum install -y certbot python2-certbot-nginx' >> init.sh
     chmod +x init.sh
     /bin/su -c "/tmp/init.sh" - ec2-user
     cat /tmp/docker_credentials.txt | docker login --username nohanna --password-stdin

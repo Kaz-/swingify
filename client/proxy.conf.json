@@ -1,6 +1,6 @@
 {
   "/api/spotify": {
-    "target": "http://localhost:7200",
+    "target": "http://15.188.130.185:80",
     "secure": false
   }
 }
