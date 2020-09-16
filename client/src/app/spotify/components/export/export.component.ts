@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, Subscription, Subject, EMPTY } from 'rxjs';
-import { flatMap, shareReplay, tap, scan } from 'rxjs/operators';
+import { mergeMap, shareReplay, tap, scan } from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -80,14 +80,14 @@ export class ExportComponent implements OnInit, OnDestroy {
   private initPrimaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
       tap(params => this.primaryId = params.p),
-      flatMap(params => params.p ? this.getPrimaryPlaylist(params.p) : EMPTY)
+      mergeMap(params => params.p ? this.getPrimaryPlaylist(params.p) : EMPTY)
     ).subscribe();
   }
 
   private getPrimaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.spotifyService.getPlaylist(id, false).pipe(
       tap(playlist => this.updatePrimaryPlaylist(playlist)),
-      flatMap(playlist => this.getPrimaryPlaylistTracks(playlist.id, fromNext))
+      mergeMap(playlist => this.getPrimaryPlaylistTracks(playlist.id, fromNext))
     );
   }
 
@@ -115,14 +115,14 @@ export class ExportComponent implements OnInit, OnDestroy {
   private initSecondaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
       tap(params => this.secondaryId = params.s),
-      flatMap(params => params.s ? this.getSecondaryPlaylist(params.s) : EMPTY)
+      mergeMap(params => params.s ? this.getSecondaryPlaylist(params.s) : EMPTY)
     ).subscribe();
   }
 
   private getSecondaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.spotifyService.getPlaylist(id, true).pipe(
       tap(playlist => this.updateSecondaryPlaylist(playlist)),
-      flatMap(playlist => playlist ? this.getSecondaryPlaylistTracks(playlist.id, fromNext) : EMPTY)
+      mergeMap(playlist => playlist ? this.getSecondaryPlaylistTracks(playlist.id, fromNext) : EMPTY)
     );
   }
 
@@ -179,7 +179,7 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   execute(action: PlaylistAction): void {
     this.subscriptions.push(this.performOnTracks(action).pipe(
-      flatMap(() => this.getSecondaryPlaylist(this.secondaryId))
+      mergeMap(() => this.getSecondaryPlaylist(this.secondaryId))
     ).subscribe(() => this.onSuccess(action)));
   }
 

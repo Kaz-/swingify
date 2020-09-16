@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, UrlTree, RouterEvent } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { flatMap, filter, map } from 'rxjs/operators';
+import { mergeMap, filter, map } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
 
@@ -93,7 +93,7 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
   onSearch(playlistName: string): void {
     this.subscriptions.push(
       this.spotifyPlaylists$.pipe(
-        flatMap(paging => paging.items),
+        mergeMap(paging => paging.items),
         filter(playlist => playlist.name.toLowerCase().trim().includes(playlistName))
       ).subscribe(playlist => {
         this.navigate(playlist.id);

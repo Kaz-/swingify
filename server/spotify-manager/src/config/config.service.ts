@@ -11,6 +11,10 @@ export class ConfigService {
     this.envConfig = dotenv.parse(fs.readFileSync(`${process.env.NODE_ENV}.env`));
   }
 
+  get baseUrl(): string {
+    return this.envConfig.BASE_URL;
+  }
+
   get proxyConf(): { host: string, port: number } {
     return {
       host: this.envConfig.CORE_PROXY_HOST,
