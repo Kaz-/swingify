@@ -23,6 +23,7 @@
       overflow-y: scroll;
       max-height: calc(100vh - 175px);
       padding: 0 0.5em;
+      margin: 0 1.5em;
       @include scrollbar;
       ul {
         display: grid;
