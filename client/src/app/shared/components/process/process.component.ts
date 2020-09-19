@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth.service';
 import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
@@ -23,7 +23,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.route.queryParams
-      .pipe(flatMap(params => this.isSecondaryAuthentication(params)))
+      .pipe(mergeMap(params => this.isSecondaryAuthentication(params)))
       .subscribe(token => {
         token.created_at = Math.round(Date.now() / 1000); // in seconds
         this.setTokenAccordingly(token);

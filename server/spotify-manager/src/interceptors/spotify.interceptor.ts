@@ -45,7 +45,6 @@ export class SpotifyInterceptor implements NestInterceptor {
       case 404:
       default:
         return new NotFoundException(error.message);
-
     }
   }
 

@@ -2,9 +2,10 @@ import { Injectable, HttpService, flatten } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { Request } from 'express';
 import { Observable, from, EMPTY, Subject } from 'rxjs';
-import { map, flatMap, tap, bufferWhen, expand, takeWhile } from 'rxjs/operators';
+import { map, mergeMap, tap, bufferWhen, expand, takeWhile } from 'rxjs/operators';
 
-import { environment } from '../../environment';
+import { ConfigService } from '../config/config.service';
+import { environment } from '../config/environment';
 import { SpotifyConfiguration, SpotifyPaging, PlaylistTrack } from '../models/spotify.models';
 
 @Injectable()
@@ -13,14 +14,18 @@ export class SpotifyManagerService {
   private client: ClientProxy;
   private baseApiUrl: string = environment.apiBaseUrl;
 
-  constructor(private http: HttpService) {
+  constructor(
+    private http: HttpService,
+    private configService: ConfigService
+  ) {
     this.client = ClientProxyFactory.create({
       transport: Transport.TCP,
-      options: {
-        host: 'localhost',
-        port: 1337
-      }
-    })
+      options: this.configService.proxyConf
+    });
+  }
+
+  get baseUrl(): string {
+    return this.configService.baseUrl;
   }
 
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
@@ -52,7 +57,7 @@ export class SpotifyManagerService {
     return this.getCompleteTracklist(request, playlist).pipe(
       map(tracks => tracks.items.map(item => item.track.uri)),
       map(uris => ({ uris: [...uris] })),
-      flatMap(tracklist => this.addTracksByRequest(request, true, tracklist))
+      mergeMap(tracklist => this.addTracksByRequest(request, true, tracklist))
     );
   }
 
@@ -61,7 +66,7 @@ export class SpotifyManagerService {
       `${this.baseApiUrl}/playlists/${request.params.id}/tracks`,
       complete ? JSON.stringify(tracklist) : JSON.stringify(request.body),
       { headers: this.getAuthorizationHeader(request) }
-    ).pipe(flatMap(() => EMPTY));
+    ).pipe(mergeMap(() => EMPTY));
   }
 
   getTracksToRemove(request: Request, playlist: string): Observable<never> {
@@ -72,8 +77,8 @@ export class SpotifyManagerService {
       bufferWhen(() => closingEvent.asObservable()),
       map(buffer => flatten(buffer)),
       map(uris => this.formatTracksToRemoveAsChunks(uris)),
-      flatMap(tracklist => tracklist.pipe(
-        flatMap(list => this.removeTracksByRequest(request, true, list))
+      mergeMap(tracklist => tracklist.pipe(
+        mergeMap(list => this.removeTracksByRequest(request, true, list))
       ))
     );
   }
@@ -91,7 +96,7 @@ export class SpotifyManagerService {
           : JSON.stringify(this.formatTracksToRemove(request.body)),
         headers: this.getAuthorizationHeader(request)
       }
-    ).pipe(flatMap(() => EMPTY));
+    ).pipe(mergeMap(() => EMPTY));
   }
 
   getCompleteTracklist(request: Request, from?: string): Observable<SpotifyPaging<PlaylistTrack>> {

@@ -1,9 +1,9 @@
 import { Controller, Get, Logger, HttpService, Req, Post, Delete } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { map, flatMap, scan, expand, takeWhile } from 'rxjs/operators';
+import { map, mergeMap, scan, expand, takeWhile } from 'rxjs/operators';
 
-import { environment } from '../../environment';
+import { environment } from '../config/environment';
 import { SpotifyManagerService } from '../services/spotify-manager.service';
 import {
   SpotifyConfiguration,
@@ -11,13 +11,14 @@ import {
   SpotifyPaging,
   SpotifyPlaylist,
   PlaylistTrack,
-  SpotifyFeaturedPlaylists
+  SpotifyFeaturedPlaylists, AuthorizationToken, AuthorizeQueryOptions
 } from '../models/spotify.models';
 
 @Controller('spotify')
 export class SpotifyManagerController {
 
   private logger = new Logger('Spotify Manager Controller');
+  private accountsPath: string = environment.accountsPath;
   private baseApiUrl: string = environment.apiBaseUrl;
 
   constructor(
@@ -25,10 +26,47 @@ export class SpotifyManagerController {
     private spotifyService: SpotifyManagerService
   ) { }
 
-  @Get('configuration')
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
     this.logger.log('Requesting Spotify configuration');
     return this.spotifyService.getSpotifyConfiguration();
+  }
+
+  @Get('verify')
+  verify(@Req() request: Request): Observable<AuthorizationToken> {
+    return this.getSpotifyConfiguration().pipe(
+      mergeMap(config => {
+        const options = {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: `Basic ${Buffer.from(`${config.clientId}:${config.clientSecret}`).toString('base64')}`
+          },
+          params: {
+            grant_type: 'authorization_code',
+            code: request.query.authorizationCode,
+            redirect_uri: `${this.spotifyService.baseUrl}/process`
+          }
+        };
+        return this.http.post<AuthorizationToken>(`${this.accountsPath}/api/token`, null, options);
+      }),
+      map(response => response.data)
+    );
+  }
+
+  @Get('authorize')
+  authorize(): Observable<string> {
+    return this.getSpotifyConfiguration().pipe(
+      map(config => {
+        const options: AuthorizeQueryOptions = {
+          responseType: 'code',
+          clientId: config.clientId,
+          redirectUri: escape(`${this.spotifyService.baseUrl}/process`),
+          scope: 'playlist-modify-public',
+          showDialog: true
+        };
+        return `${this.accountsPath}/authorize?client_id=${options.clientId}` +
+          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}&scope=${options.scope}&show_dialog=${options.showDialog}`;
+      })
+    );
   }
 
   @Get('me')
@@ -41,7 +79,7 @@ export class SpotifyManagerController {
   @Get('playlists')
   getPlaylists(@Req() request: Request): Observable<SpotifyPaging<SpotifyPlaylist>> {
     return this.getUserProfile(request)
-      .pipe(flatMap(user => {
+      .pipe(mergeMap(user => {
         this.logger.log(`Requesting playlists for user: ${user.id}`);
         return this.http.get<SpotifyPaging<SpotifyPlaylist>>(
           `${this.baseApiUrl}/users/${user.id}/playlists`,

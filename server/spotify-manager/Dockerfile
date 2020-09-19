@@ -1,30 +1,29 @@
 # ---- Base Node ----
-FROM node:12 AS base
+FROM node:12-alpine AS base
 
-ENV SERVER /home/pereira/Workspace/swingify/server/spotify-manager
+RUN yarn global add pm2
+
+ENV SERVER /server
 WORKDIR ${SERVER}
 
-COPY package*.json .
+COPY package.json ${SERVER}
+COPY yarn.lock ${SERVER}
+COPY ecosystem.config.js ${SERVER}
+COPY prod.env ${SERVER}
 
 # ---- Dependencies ----
 FROM base AS dependencies
-# install node packages
-RUN npm i --production
-# copy production node_modules aside
-RUN cp -R node_modules prod_node_modules
-# install ALL node_modules, including 'devDependencies'
-RUN npm i
+RUN yarn install --production
 
 # ---- Build ----
 FROM dependencies AS build
-COPY . .
-RUN npm run build --prod
+COPY . ${SERVER}
+RUN yarn build
 
 # ---- Release ----
 FROM base AS release
-# copy production node_modules
-COPY --from=build ${SERVER}/prod_node_modules ./node_modules
-# copy app sources
-COPY --from=build ${SERVER}/dist .
 
-CMD ["node", "main.js"]
+COPY --from=build ${SERVER}/dist ${SERVER}/dist
+COPY --from=build ${SERVER}/node_modules ${SERVER}/node_modules
+
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]

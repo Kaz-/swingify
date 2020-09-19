@@ -3,15 +3,6 @@ export interface SpotifyConfiguration {
   readonly clientSecret: string;
 }
 
-export interface AuthorizeQueryOptions {
-  clientId: string;
-  responseType: string;
-  redirectUri: string;
-  scope: string;
-  state?: string;
-  showDialog?: boolean;
-}
-
 export interface AuthorizationToken {
   readonly access_token: string;
   readonly expires_in: number;

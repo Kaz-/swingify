@@ -4,18 +4,17 @@ import { NestApplicationContextOptions } from '@nestjs/common/interfaces/nest-ap
 import { Logger } from '@nestjs/common';
 
 import { CoreModule } from './core.module';
+import { ConfigService } from './config/config.service';
 
 const logger = new Logger('Core');
 
 const microserviceOptions: (NestApplicationContextOptions & TcpOptions) = {
-  transport: Transport.TCP,
-  options: {
-    host: 'localhost',
-    port: 1337
-  }
+  transport: Transport.TCP
 };
 
 async function bootstrap() {
+  const configService: ConfigService = new ConfigService();
+  microserviceOptions.options = configService.microserviceConfig;
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(CoreModule, microserviceOptions);
   app.listen(() => logger.log('Microservice is listening'));
 }

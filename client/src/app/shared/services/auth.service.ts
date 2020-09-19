@@ -1,12 +1,13 @@
-import { Injectable, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, Inject, SecurityContext } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable, EMPTY } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { switchMap, catchError, mergeMap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { AuthorizationToken, SpotifyConfiguration, AuthorizeQueryOptions } from 'src/app/spotify/models/spotify.models';
+import { AuthorizationToken, SpotifyConfiguration } from 'src/app/spotify/models/spotify.models';
 import { ErrorService } from './error.service';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class AuthService {
     private http: HttpClient,
     private errorService: ErrorService,
     private router: Router,
+    private sanitizer: DomSanitizer,
     @Inject(DOCUMENT) private document: Document,
   ) { }
 
@@ -64,22 +66,10 @@ export class AuthService {
   }
 
   verify(authorizationCode: string, isSecondary: boolean): Observable<AuthorizationToken> {
-    return this.getSpotifyConfiguration().pipe(
-      switchMap(config => {
-        const options = {
-          headers: {
-            Secondary: isSecondary ? 'true' : 'false',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Basic ${btoa(`${config.clientId}:${config.clientSecret}`)}`
-          },
-          params: {
-            grant_type: 'authorization_code',
-            code: authorizationCode,
-            redirect_uri: 'http://localhost:4200/process'
-          }
-        };
-        return this.http.post<AuthorizationToken>(`${environment.spotify.accountsPath}/api/token`, null, options);
-      }),
+    return this.http.get<AuthorizationToken>(
+      `${environment.spotify.serverPath}/verify`,
+      { params: new HttpParams().set('authorizationCode', authorizationCode) }
+    ).pipe(
       catchError(() => {
         if (isSecondary) {
           AuthService.removeSecondaryToken();
@@ -94,21 +84,14 @@ export class AuthService {
   }
 
   authorize(): Observable<never> {
-    return this.getSpotifyConfiguration().pipe(
-      switchMap(config => {
-        const options: AuthorizeQueryOptions = {
-          responseType: 'code',
-          clientId: config.clientId,
-          redirectUri: 'http%3A%2F%2Flocalhost%3A4200%2Fprocess',
-          scope: 'playlist-modify-public',
-          showDialog: true
-        };
-        this.document.location.href = `${environment.spotify.accountsPath}/authorize?client_id=${options.clientId}` +
-          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}&scope=${options.scope}&show_dialog=${options.showDialog}`;
-        return EMPTY;
-      }),
-      catchError(err => this.errorService.handleError(err))
-    );
+    return this.http.get<string>(`${environment.spotify.serverPath}/authorize`, { responseType: 'text' as 'json' })
+      .pipe(
+        mergeMap(redirection => {
+          this.document.location.href = this.sanitizer.sanitize(SecurityContext.URL, redirection);
+          return EMPTY;
+        }),
+        catchError(err => this.errorService.handleError(err))
+      );
   }
 
   refresh(token: AuthorizationToken): Observable<never> {
