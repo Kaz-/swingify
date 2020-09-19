@@ -1,14 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, Subject, EMPTY } from 'rxjs';
-import { mergeMap, shareReplay, tap, scan } from 'rxjs/operators';
+import { Observable, Subscription, EMPTY } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { SpotifyService } from '../../services/spotify.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { SpotifyService } from '../../services/spotify.service';
+import { PrimaryService } from '../../services/primary.service';
+import { SecondaryService } from '../../services/secondary.service';
 
-import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack } from '../../models/spotify.models';
+import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack } from '../../models/spotify.models';
 import { PlaylistAction, ETrackAction } from 'src/app/shared/models/shared.models';
 
 @Component({
@@ -18,22 +20,6 @@ import { PlaylistAction, ETrackAction } from 'src/app/shared/models/shared.model
 })
 export class ExportComponent implements OnInit, OnDestroy {
 
-  primaryPlaylist: Subject<SpotifyPlaylist> = new Subject<SpotifyPlaylist>();
-  primaryPlaylist$: Observable<SpotifyPlaylist> = this.primaryPlaylist.asObservable().pipe(shareReplay());
-  primaryPlaylistTracks: Subject<SpotifyPaging<PlaylistTrack>> = new Subject<SpotifyPaging<PlaylistTrack>>();
-  primaryPlaylistTracks$: Observable<SpotifyPaging<PlaylistTrack>> = this.primaryPlaylistTracks.asObservable().pipe(
-    scan((prev: SpotifyPaging<PlaylistTrack>, next: SpotifyPaging<PlaylistTrack>) => this.handleEmittedTracks(prev, next)),
-    shareReplay()
-  );
-
-  secondaryPlaylist: Subject<SpotifyPlaylist> = new Subject<SpotifyPlaylist>();
-  secondaryPlaylist$: Observable<SpotifyPlaylist> = this.secondaryPlaylist.asObservable().pipe(shareReplay());
-  secondaryPlaylistTracks: Subject<SpotifyPaging<PlaylistTrack>> = new Subject<SpotifyPaging<PlaylistTrack>>();
-  secondaryPlaylistTracks$: Observable<SpotifyPaging<PlaylistTrack>> = this.secondaryPlaylistTracks.asObservable().pipe(
-    scan((prev: SpotifyPaging<PlaylistTrack>, next: SpotifyPaging<PlaylistTrack>) => this.handleEmittedTracks(prev, next)),
-    shareReplay()
-  );
-
   private primaryId: string;
   private secondaryId: string;
   private subscriptions: Subscription[] = [];
@@ -42,8 +28,10 @@ export class ExportComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
+    private authService: AuthService,
     private spotifyService: SpotifyService,
-    private authService: AuthService
+    private primaryService: PrimaryService,
+    private secondaryService: SecondaryService
   ) { }
 
   ngOnInit(): void {
@@ -61,98 +49,96 @@ export class ExportComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  /**
+   * Returns the current primary user
+   */
   get primaryUser$(): Observable<SpotifyUser> {
     return this.spotifyService.primaryUser$;
   }
 
+  /**
+   * Returns all primary playlists
+   */
   get primaryPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
     return this.spotifyService.primaryPlaylists$;
   }
 
+  /**
+   * Returns a single primary playlist
+   */
+  get primaryPlaylist$(): Observable<SpotifyPlaylist> {
+    return this.primaryService.primaryPlaylist$;
+  }
+
+  /**
+   * Returns all tracks from a primary playlist
+   */
+  get primaryPlaylistTracks$(): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.primaryService.primaryPlaylistTracks$;
+  }
+
+  /**
+   * Returns all saved tracks from primary user
+   */
+  get primarySavedTracks$(): Observable<SpotifyPaging<SavedTrack>> {
+    return this.primaryService.primarySavedTracks$;
+  }
+
+  /**
+   * Returns the current secondary user
+   */
   get secondaryUser$(): Observable<SpotifyUser> {
     return this.spotifyService.secondaryUser$;
   }
 
+  /**
+   * Returns all secondary playlists
+   */
   get secondaryPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
     return this.spotifyService.secondaryPlaylists$;
+  }
+
+  /**
+   * Returns a single secondary playlist
+   */
+  get secondaryPlaylist$(): Observable<SpotifyPlaylist> {
+    return this.secondaryService.secondaryPlaylist$;
+  }
+
+  /**
+   * Returns all tracks from a secondary playlist
+   */
+  get secondaryPlaylistTracks$(): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.secondaryService.secondaryPlaylistTracks$;
+  }
+
+  /**
+   * Returns all saved tracks from secondary user
+   */
+  get secondarySavedTracks$(): Observable<SpotifyPaging<SavedTrack>> {
+    return this.secondaryService.secondarySavedTracks$;
   }
 
   private initPrimaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
       tap(params => this.primaryId = params.p),
-      mergeMap(params => params.p ? this.getPrimaryPlaylist(params.p) : EMPTY)
+      mergeMap(params => {
+        return params.p
+          ? params.p === 'liked' ? this.primaryService.getPrimarySavedTracks() : this.primaryService.getPrimaryPlaylist(params.p)
+          : EMPTY;
+      })
     ).subscribe();
-  }
-
-  private getPrimaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.spotifyService.getPlaylist(id, false).pipe(
-      tap(playlist => this.updatePrimaryPlaylist(playlist)),
-      mergeMap(playlist => this.getPrimaryPlaylistTracks(playlist.id, fromNext))
-    );
-  }
-
-  private getPrimaryPlaylistTracks(
-    id: string,
-    fromNext?: boolean,
-    toNext?: string,
-    query?: string
-  ): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.spotifyService.getPlaylistTracks(id, false, toNext, query).pipe(
-      tap(tracks => tracks.parentId = id),
-      tap(tracks => tracks.fromNext = fromNext),
-      tap(tracks => this.updatePrimaryPlaylistTracks(tracks))
-    );
-  }
-
-  private updatePrimaryPlaylist(playlist: SpotifyPlaylist): void {
-    this.primaryPlaylist.next(playlist);
-  }
-
-  private updatePrimaryPlaylistTracks(tracks: SpotifyPaging<PlaylistTrack>): void {
-    this.primaryPlaylistTracks.next(tracks);
   }
 
   private initSecondaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
       tap(params => this.secondaryId = params.s),
-      mergeMap(params => params.s ? this.getSecondaryPlaylist(params.s) : EMPTY)
+      mergeMap(params => {
+        return params.s
+          ? params.s === 'liked' ? this.secondaryService.getsecondarySavedTracks() : this.secondaryService.getSecondaryPlaylist(params.s)
+          : EMPTY;
+      })
     ).subscribe();
-  }
-
-  private getSecondaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.spotifyService.getPlaylist(id, true).pipe(
-      tap(playlist => this.updateSecondaryPlaylist(playlist)),
-      mergeMap(playlist => playlist ? this.getSecondaryPlaylistTracks(playlist.id, fromNext) : EMPTY)
-    );
-  }
-
-  private getSecondaryPlaylistTracks(
-    id: string,
-    fromNext?: boolean,
-    toNext?: string,
-    query?: string
-  ): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.spotifyService.getPlaylistTracks(id, true, toNext, query).pipe(
-      tap(tracks => tracks.parentId = id),
-      tap(tracks => tracks.fromNext = fromNext),
-      tap(tracks => this.updateSecondaryPlaylistTracks(tracks))
-    );
-  }
-
-  private updateSecondaryPlaylist(playlist: SpotifyPlaylist): void {
-    this.secondaryPlaylist.next(playlist);
-  }
-
-  private updateSecondaryPlaylistTracks(tracks: SpotifyPaging<PlaylistTrack>): void {
-    this.secondaryPlaylistTracks.next(tracks);
-  }
-
-  private handleEmittedTracks(
-    prev: SpotifyPaging<PlaylistTrack>,
-    next: SpotifyPaging<PlaylistTrack>
-  ): SpotifyPaging<PlaylistTrack> {
-    return prev.parentId === next.parentId && next.items.length > 0 && next.fromNext
-      ? { ...next, items: [...prev.items, ...next.items] } : next;
   }
 
   isLargeScreen(): boolean {
@@ -170,16 +156,18 @@ export class ExportComponent implements OnInit, OnDestroy {
   navigateBack(isSecondary?: boolean): void {
     if (isSecondary) {
       this.router.navigate(['/spotify/export'], { queryParams: { p: this.primaryId } });
-      this.updateSecondaryPlaylist(null);
+      this.secondaryService.updateSecondaryPlaylist(null);
+      this.secondaryService.updateSecondarySavedTracks(null);
     } else {
       this.router.navigate(['/spotify/export'], { queryParams: { s: this.secondaryId } });
-      this.updatePrimaryPlaylist(null);
+      this.primaryService.updatePrimaryPlaylist(null);
+      this.primaryService.updatePrimarySavedTracks(null);
     }
   }
 
   execute(action: PlaylistAction): void {
     this.subscriptions.push(this.performOnTracks(action).pipe(
-      mergeMap(() => this.getSecondaryPlaylist(this.secondaryId))
+      mergeMap(() => this.secondaryService.getSecondaryPlaylist(this.secondaryId))
     ).subscribe(() => this.onSuccess(action)));
   }
 
@@ -217,14 +205,14 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   onNext(next: string, isSecondary: boolean): void {
     isSecondary
-      ? this.subscriptions.push(this.getSecondaryPlaylistTracks(this.secondaryId, true, next).subscribe())
-      : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, true, next).subscribe());
+      ? this.subscriptions.push(this.secondaryService.getSecondaryPlaylistTracks(this.secondaryId, true, next).subscribe())
+      : this.subscriptions.push(this.primaryService.getPrimaryPlaylistTracks(this.primaryId, true, next).subscribe());
   }
 
   onSearch(query: string, isSecondary: boolean): void {
     isSecondary
-      ? this.subscriptions.push(this.getSecondaryPlaylistTracks(this.secondaryId, false, null, query).subscribe())
-      : this.subscriptions.push(this.getPrimaryPlaylistTracks(this.primaryId, false, null, query).subscribe());
+      ? this.subscriptions.push(this.secondaryService.getSecondaryPlaylistTracks(this.secondaryId, false, null, query).subscribe())
+      : this.subscriptions.push(this.primaryService.getPrimaryPlaylistTracks(this.primaryId, false, null, query).subscribe());
   }
 
 }

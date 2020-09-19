@@ -1,11 +1,10 @@
-<div class="header" *ngIf="playlist$ | async as playlist">
-  <a href="{{ playlist?.external_urls.spotify }}" target="_blank">
-    <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
-    <div>
-      <h3>{{ playlist?.name }}</h3>
-      <small>By {{ playlist?.owner.display_name }}</small>
+<div class="header">
+  <div class="top">
+    <div class="default">
+      <i class="icon heart"></i>
     </div>
-  </a>
+    <h3>Liked Songs</h3>
+  </div>
   <div *ngIf="tracks$ | async as tracks">
     <span class="total">{{ tracks?.items.length }} of {{ tracks?.total }} tracks</span>
     <button class="{{ isSecondary ? 'red' : 'green' }}-button" [title]="isSecondary ? 'Remove all tracks' : 'Export all tracks'"

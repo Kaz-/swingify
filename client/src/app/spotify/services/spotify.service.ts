@@ -5,7 +5,7 @@ import { shareReplay, catchError } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation, PlaylistTrack, SpotifyFeaturedPlaylists } from '../models/spotify.models';
+import { SpotifyUser, SpotifyPlaylist, SpotifyPaging, PlaylistCreation, PlaylistTrack, SpotifyFeaturedPlaylists, SavedTrack } from '../models/spotify.models';
 import { ErrorService } from 'src/app/shared/services/error.service';
 
 @Injectable({
@@ -34,6 +34,14 @@ export class SpotifyService implements OnDestroy {
       this.updateUser(false),
       this.updatePlaylists(false)
     );
+  }
+
+  static handleEmittedTracks<T>(
+    prev: SpotifyPaging<T>,
+    next: SpotifyPaging<T>
+  ): SpotifyPaging<T> {
+    return prev?.parentId === next?.parentId && next?.items.length > 0 && next?.fromNext
+      ? { ...next, items: [...prev.items, ...next.items] } : next;
   }
 
   ngOnDestroy(): void {
@@ -78,17 +86,6 @@ export class SpotifyService implements OnDestroy {
     ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
-  private createParams(next?: string, query?: string): HttpParams {
-    let params: HttpParams = new HttpParams();
-    if (next) {
-      params = params.append('next', btoa(next));
-    }
-    if (query) {
-      params = params.append('search', query);
-    }
-    return params;
-  }
-
   createPlaylist(userId: string, playlist: PlaylistCreation, isSecondary: boolean): Observable<SpotifyPlaylist> {
     return this.http.post<SpotifyPlaylist>(
       `${environment.spotify.serverPath}/users/${userId}/playlists`, playlist,
@@ -122,6 +119,24 @@ export class SpotifyService implements OnDestroy {
       shareReplay(),
       catchError(err => this.errorService.handleError(err))
     );
+  }
+
+  getSavedTracks(isSecondary: boolean, next?: string, query?: string): Observable<SpotifyPaging<SavedTrack>> {
+    return this.http.get<SpotifyPaging<SavedTrack>>(
+      `${environment.spotify.serverPath}/me/saved`,
+      { params: this.createParams(next, query), headers: this.setSecondaryHeader(isSecondary) }
+    ).pipe(catchError(err => this.errorService.handleError(err)));
+  }
+
+  private createParams(next?: string, query?: string): HttpParams {
+    let params: HttpParams = new HttpParams();
+    if (next) {
+      params = params.append('next', btoa(next));
+    }
+    if (query) {
+      params = params.append('search', query);
+    }
+    return params;
   }
 
   private setSecondaryHeader(isSecondary: boolean): HttpHeaders {

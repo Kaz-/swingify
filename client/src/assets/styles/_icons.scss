@@ -47,6 +47,9 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   &.search {
     @extend .fa-search;
   }
+  &.heart {
+    @extend .fa-heart;
+  }
 }
 .brand {
   font-family: 'Font Awesome 5 brands';

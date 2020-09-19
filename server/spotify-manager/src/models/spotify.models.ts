@@ -1,3 +1,5 @@
+export const SCOPES = 'playlist-read-private playlist-modify-private playlist-modify-public user-library-read'
+
 export interface SpotifyConfiguration {
   readonly clientId: string;
   readonly clientSecret: string;
@@ -86,6 +88,11 @@ export interface Image {
   readonly height: number;
   readonly url: string;
   readonly width: number;
+}
+
+export interface SavedTrack {
+  readonly added_at: string;
+  readonly track: Track;
 }
 
 export interface PlaylistTrack {

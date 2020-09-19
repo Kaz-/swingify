@@ -11,7 +11,7 @@ import {
   SpotifyPaging,
   SpotifyPlaylist,
   PlaylistTrack,
-  SpotifyFeaturedPlaylists, AuthorizationToken, AuthorizeQueryOptions
+  SpotifyFeaturedPlaylists, AuthorizationToken, AuthorizeQueryOptions, SavedTrack, SCOPES
 } from '../models/spotify.models';
 
 @Controller('spotify')
@@ -60,11 +60,12 @@ export class SpotifyManagerController {
           responseType: 'code',
           clientId: config.clientId,
           redirectUri: escape(`${this.spotifyService.baseUrl}/process`),
-          scope: 'playlist-modify-public',
+          scope: SCOPES,
           showDialog: true
         };
         return `${this.accountsPath}/authorize?client_id=${options.clientId}` +
-          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}&scope=${options.scope}&show_dialog=${options.showDialog}`;
+          `&response_type=${options.responseType}&redirect_uri=${options.redirectUri}` +
+          `&scope=${encodeURIComponent(options.scope)}&show_dialog=${options.showDialog}`;
       })
     );
   }
@@ -147,6 +148,24 @@ export class SpotifyManagerController {
       `${this.baseApiUrl}/browse/featured-playlists`,
       { headers: this.spotifyService.getAuthorizationHeader(request) }
     ).pipe(map(response => response.data));
+  }
+
+  @Get('/me/saved')
+  getSavedTracks(@Req() request: Request): Observable<SpotifyPaging<SavedTrack>> {
+    this.logger.log(`Requesting user's saved tracks`);
+    return this.spotifyService.getSavedTracks(request).pipe(
+      expand(tracks => this.spotifyService.getSavedTracksByNext(tracks.next, this.spotifyService.getAuthorizationHeader(request))),
+      takeWhile(tracks => Boolean(request.query.search) && Boolean(tracks.next), true),
+      scan((prev, next) => ({ ...next, items: [...prev.items, ...next.items] })),
+      map(tracks => request.query.search
+        ? ({
+          ...tracks,
+          items: tracks.items.filter(item => this.spotifyService
+            .findMatchInTrack(item, request.query.search.toString().toLowerCase().trim())),
+          next: null
+        }) : tracks
+      )
+    );
   }
 
 }

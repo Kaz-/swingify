@@ -15,8 +15,19 @@
         <div>{{ primaryUser?.display_name }}</div>
       </div>
     </div>
-    <swg-playlist [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$" [tracks$]="primaryPlaylistTracks$"
-      (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></swg-playlist>
+    <ng-container *ngIf="(primaryPlaylist$ | async) || (primarySavedTracks$ | async); then primaryPlaylist; else primarySelection"></ng-container>
+    <ng-template #primaryPlaylist>
+      <swg-playlist *ngIf="primaryPlaylist$ | async" [user$]="primaryUser$" [playlists$]="primaryPlaylists$"
+        [playlist$]="primaryPlaylist$" [tracks$]="primaryPlaylistTracks$"
+        (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></swg-playlist>
+      <swg-liked *ngIf="primarySavedTracks$ | async" [user$]="primaryUser$"
+        [playlists$]="primaryPlaylists$" [tracks$]="primarySavedTracks$"
+        (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></swg-liked>
+    </ng-template>
+    <ng-template #primarySelection>
+      <swg-playlists title="Playlists" [allowCreation]="true" [user$]="primaryUser$"
+        [playlists$]="primaryPlaylists$" [isSecondary]="false"></swg-playlists>
+    </ng-template>
   </div>
   <div class="content" *ngIf="isLargeScreen()">
     <header>
@@ -42,8 +53,19 @@
         </a>
         <swg-profile-menu [user$]="secondaryUser$" [isSecondary]="true"></swg-profile-menu>
       </div>
-      <swg-playlist [user$]="secondaryUser$" [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$" [tracks$]="secondaryPlaylistTracks$"
-        [isSecondary]="true" (action)="execute($event)" (next)="onNext($event, true)" (search)="onSearch($event, true)"></swg-playlist>
+      <ng-container *ngIf="(secondaryPlaylist$ | async) || (secondarySavedTracks$ | async); then secondaryPlaylist; else secondarySelection"></ng-container>
+      <ng-template #secondaryPlaylist>
+        <swg-playlist *ngIf="secondaryPlaylist$ | async" [user$]="secondaryUser$" [playlists$]="secondaryPlaylists$"
+          [playlist$]="secondaryPlaylist$" [tracks$]="secondaryPlaylistTracks$" [isSecondary]="true"
+          (action)="execute($event)" (next)="onNext($event, true)" (search)="onSearch($event, true)"></swg-playlist>
+        <swg-liked *ngIf="secondarySavedTracks$ | async" [user$]="secondaryUser$"
+          [playlists$]="secondaryPlaylists$" [tracks$]="secondarySavedTracks$"
+          (action)="execute($event)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></swg-liked>
+      </ng-template>
+      <ng-template #secondarySelection>
+        <swg-playlists title="Playlists" [allowCreation]="true" [user$]="secondaryUser$"
+          [playlists$]="secondaryPlaylists$" [isSecondary]="true"></swg-playlists>
+      </ng-template>
     </ng-template>
     <ng-template #card>
       <div class="card-wrapper">

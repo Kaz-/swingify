@@ -6,7 +6,7 @@ import { map, mergeMap, tap, bufferWhen, expand, takeWhile } from 'rxjs/operator
 
 import { ConfigService } from '../config/config.service';
 import { environment } from '../config/environment';
-import { SpotifyConfiguration, SpotifyPaging, PlaylistTrack } from '../models/spotify.models';
+import { SpotifyConfiguration, SpotifyPaging, PlaylistTrack, SavedTrack } from '../models/spotify.models';
 
 @Injectable()
 export class SpotifyManagerService {
@@ -50,6 +50,19 @@ export class SpotifyManagerService {
 
   getTracksByNext(next: string, authorization: string): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.http.get<SpotifyPaging<PlaylistTrack>>(next, { headers: authorization })
+      .pipe(map(response => response.data));
+  }
+
+  getSavedTracks(request: Request): Observable<SpotifyPaging<SavedTrack>> {
+    return this.http.get<SpotifyPaging<SavedTrack>>(
+      request.query.next
+        ? Buffer.from(request.query.next.toString(), 'base64').toString()
+        : `${this.baseApiUrl}/me/tracks?offset=0&limit=50`,
+      { headers: this.getAuthorizationHeader(request) }).pipe(map(response => response.data));
+  }
+
+  getSavedTracksByNext(next: string, authorization: string): Observable<SpotifyPaging<SavedTrack>> {
+    return this.http.get<SpotifyPaging<SavedTrack>>(next, { headers: authorization })
       .pipe(map(response => response.data));
   }
 
@@ -124,13 +137,13 @@ export class SpotifyManagerService {
     return { tracks: tracks.map(track => ({ uri: track })) };
   }
 
-  findMatchInTrack(item: PlaylistTrack, query: string): boolean {
+  findMatchInTrack(item: PlaylistTrack | SavedTrack, query: string): boolean {
     return item.track.name.toLowerCase().trim().includes(query)
       || item.track.album.name.toLowerCase().trim().includes(query)
       || this.findMatchInArtists(item, query);
   }
 
-  private findMatchInArtists(item: PlaylistTrack, query: string): boolean {
+  private findMatchInArtists(item: PlaylistTrack | SavedTrack, query: string): boolean {
     return item.track.artists.some(artist => artist.name.toLowerCase().trim().includes(query));
   }
 
