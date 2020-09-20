@@ -10,7 +10,7 @@ import { SpotifyService } from '../../services/spotify.service';
 import { PrimaryService } from '../../services/primary.service';
 import { SecondaryService } from '../../services/secondary.service';
 
-import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack } from '../../models/spotify.models';
+import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack, LIKED_ID } from '../../models/spotify.models';
 import { PlaylistAction, ETrackAction } from 'src/app/shared/models/shared.models';
 
 @Component({
@@ -47,6 +47,8 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.primaryService.resetPrimary();
+    this.secondaryService.resetSecondary();
   }
 
   /**
@@ -122,22 +124,18 @@ export class ExportComponent implements OnInit, OnDestroy {
   private initPrimaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
       tap(params => this.primaryId = params.p),
-      mergeMap(params => {
-        return params.p
-          ? params.p === 'liked' ? this.primaryService.getPrimarySavedTracks() : this.primaryService.getPrimaryPlaylist(params.p)
-          : EMPTY;
-      })
+      mergeMap(params => params.p
+        ? params.p === LIKED_ID ? this.primaryService.getPrimarySavedTracks() : this.primaryService.getPrimaryPlaylist(params.p)
+        : EMPTY)
     ).subscribe();
   }
 
   private initSecondaryPlaylist(): Subscription {
     return this.route.queryParams.pipe(
       tap(params => this.secondaryId = params.s),
-      mergeMap(params => {
-        return params.s
-          ? params.s === 'liked' ? this.secondaryService.getsecondarySavedTracks() : this.secondaryService.getSecondaryPlaylist(params.s)
-          : EMPTY;
-      })
+      mergeMap(params => params.s
+        ? params.s === LIKED_ID ? this.secondaryService.getsecondarySavedTracks() : this.secondaryService.getSecondaryPlaylist(params.s)
+        : EMPTY)
     ).subscribe();
   }
 
@@ -156,12 +154,10 @@ export class ExportComponent implements OnInit, OnDestroy {
   navigateBack(isSecondary?: boolean): void {
     if (isSecondary) {
       this.router.navigate(['/spotify/export'], { queryParams: { p: this.primaryId } });
-      this.secondaryService.updateSecondaryPlaylist(null);
-      this.secondaryService.updateSecondarySavedTracks(null);
+      this.secondaryService.resetSecondary();
     } else {
       this.router.navigate(['/spotify/export'], { queryParams: { s: this.secondaryId } });
-      this.primaryService.updatePrimaryPlaylist(null);
-      this.primaryService.updatePrimarySavedTracks(null);
+      this.primaryService.resetPrimary();
     }
   }
 

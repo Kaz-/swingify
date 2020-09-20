@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { tap, mergeMap, scan, shareReplay } from 'rxjs/operators';
 
 import { SpotifyService } from './spotify.service';
-import { SpotifyPaging, PlaylistTrack, SpotifyPlaylist, SavedTrack } from '../models/spotify.models';
+import { SpotifyPaging, PlaylistTrack, SpotifyPlaylist, SavedTrack, LIKED_ID } from '../models/spotify.models';
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +61,7 @@ export class PrimaryService {
     query?: string
   ): Observable<SpotifyPaging<SavedTrack>> {
     return this.spotifyService.getSavedTracks(false, toNext, query).pipe(
-      tap(tracks => tracks.parentId = 'liked'),
+      tap(tracks => tracks.parentId = LIKED_ID),
       tap(tracks => tracks.fromNext = fromNext),
       tap(tracks => this.updatePrimarySavedTracks(tracks))
     );
@@ -70,6 +70,12 @@ export class PrimaryService {
   updatePrimarySavedTracks(tracks: SpotifyPaging<SavedTrack> | null): void {
     this.primarySavedTracks.next(tracks);
     this.primaryPlaylist.next(null); // force switch from playlist to 'liked playlist'
+  }
+
+  resetPrimary(): void {
+    this.updatePrimaryPlaylist(null);
+    this.updatePrimaryPlaylistTracks(null);
+    this.updatePrimarySavedTracks(null);
   }
 
 }

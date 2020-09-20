@@ -2,7 +2,7 @@
 @import "../../../../assets/styles/mixins";
 :host {
   flex-grow: 1;
-  background-image: linear-gradient(90deg, #4891ad, #521063);
+  background: linear-gradient(90deg, #4891ad, #521063);
   .selector {
     display: flex;
     align-items: center;

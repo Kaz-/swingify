@@ -151,3 +151,5 @@ export interface PlaylistCreation {
   colloborative?: boolean;
   description?: string;
 }
+
+export const LIKED_ID = 'liked';
