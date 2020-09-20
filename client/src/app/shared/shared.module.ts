@@ -21,6 +21,7 @@ import { PlaylistsComponent } from './components/playlists/playlists.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { ErrorComponent } from './components/error/error.component';
 import { LikedComponent } from './components/liked/liked.component';
+import { PlaylistNavComponent } from './components/playlist-nav/playlist-nav.component';
 
 import { FormatStatusPipe } from './pipes/status.pipe';
 import { FormatErrorPipe } from './pipes/error.pipe';
@@ -40,7 +41,8 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     ErrorComponent,
     FormatErrorPipe,
     FormatStatusPipe,
-    LikedComponent
+    LikedComponent,
+    PlaylistNavComponent
   ],
   imports: [
     CommonModule,
@@ -62,7 +64,8 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     ProfileMenuComponent,
     PlaylistsComponent,
     DialogComponent,
-    LikedComponent
+    LikedComponent,
+    PlaylistNavComponent
   ]
 })
 export class SharedModule { }

@@ -1,7 +1,18 @@
 <div class="container">
-  <ng-container *ngIf="playlist?.images.length > 0; then image; else default"></ng-container>
-  <ng-template #image>
-    <img [src]="playlist?.images[0]?.url" />
+  <ng-container *ngIf="playlist; then asPlaylist; else asSaved"></ng-container>
+  <ng-template #asPlaylist>
+    <ng-container *ngIf="playlist?.images.length > 0; then image; else default"></ng-container>
+    <ng-template #image>
+      <img [src]="playlist?.images[0]?.url" />
+    </ng-template>
+  </ng-template>
+  <ng-template #asSaved>
+    <ng-container *ngIf="savedTracks; then heart; else default"></ng-container>
+    <ng-template #heart>
+      <div class="default liked">
+        <i class="icon heart"></i>
+      </div>
+    </ng-template>
   </ng-template>
   <ng-template #default>
     <div class="default">
@@ -9,7 +20,3 @@
     </div>
   </ng-template>
 </div>
-
-
-
-

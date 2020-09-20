@@ -25,7 +25,7 @@
       }
     }
     .liked {
-      background: linear-gradient(45deg, #23659e, #d617c7);
+      background: $like;
     }
     .separator {
       border-bottom: 1px solid $alt;

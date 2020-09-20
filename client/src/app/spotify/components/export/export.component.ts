@@ -1,17 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, EMPTY } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 
-import { ToastrService } from 'ngx-toastr';
-
-import { AuthService } from 'src/app/shared/services/auth.service';
 import { SpotifyService } from '../../services/spotify.service';
 import { PrimaryService } from '../../services/primary.service';
 import { SecondaryService } from '../../services/secondary.service';
 
-import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack, LIKED_ID } from '../../models/spotify.models';
-import { PlaylistAction, ETrackAction } from 'src/app/shared/models/shared.models';
+import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack } from '../../models/spotify.models';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'swg-export',
@@ -20,27 +16,20 @@ import { PlaylistAction, ETrackAction } from 'src/app/shared/models/shared.model
 })
 export class ExportComponent implements OnInit, OnDestroy {
 
-  private primaryId: string;
-  private secondaryId: string;
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
-    private toastr: ToastrService,
-    private authService: AuthService,
     private spotifyService: SpotifyService,
     private primaryService: PrimaryService,
     private secondaryService: SecondaryService
   ) { }
 
   ngOnInit(): void {
-    this.subscriptions.push(this.initPrimaryPlaylist());
     if (this.isSecondaryAuthenticated()) {
       this.subscriptions.push(
         this.spotifyService.updateUser(true),
-        this.spotifyService.updatePlaylists(true),
-        this.initSecondaryPlaylist()
+        this.spotifyService.updatePlaylists(true)
       );
     }
   }
@@ -121,94 +110,12 @@ export class ExportComponent implements OnInit, OnDestroy {
     return this.secondaryService.secondarySavedTracks$;
   }
 
-  private initPrimaryPlaylist(): Subscription {
-    return this.route.queryParams.pipe(
-      tap(params => this.primaryId = params.p),
-      mergeMap(params => params.p
-        ? params.p === LIKED_ID ? this.primaryService.getPrimarySavedTracks() : this.primaryService.getPrimaryPlaylist(params.p)
-        : EMPTY)
-    ).subscribe();
-  }
-
-  private initSecondaryPlaylist(): Subscription {
-    return this.route.queryParams.pipe(
-      tap(params => this.secondaryId = params.s),
-      mergeMap(params => params.s
-        ? params.s === LIKED_ID ? this.secondaryService.getsecondarySavedTracks() : this.secondaryService.getSecondaryPlaylist(params.s)
-        : EMPTY)
-    ).subscribe();
-  }
-
-  isLargeScreen(): boolean {
-    return window.screen.width > 1750;
+  isAuthenticated(): boolean {
+    return AuthService.isAuthenticated();
   }
 
   isSecondaryAuthenticated(): boolean {
     return AuthService.isSecondaryAuthenticated();
-  }
-
-  authenticate(): void {
-    this.authService.authorize().subscribe();
-  }
-
-  navigateBack(isSecondary?: boolean): void {
-    if (isSecondary) {
-      this.router.navigate(['/spotify/export'], { queryParams: { p: this.primaryId } });
-      this.secondaryService.resetSecondary();
-    } else {
-      this.router.navigate(['/spotify/export'], { queryParams: { s: this.secondaryId } });
-      this.primaryService.resetPrimary();
-    }
-  }
-
-  execute(action: PlaylistAction): void {
-    this.subscriptions.push(this.performOnTracks(action).pipe(
-      mergeMap(() => this.secondaryService.getSecondaryPlaylist(this.secondaryId))
-    ).subscribe(() => this.onSuccess(action)));
-  }
-
-  performOnTracks(action: PlaylistAction): Observable<ArrayBuffer | never> {
-    switch (action.action) {
-      case ETrackAction.ADD:
-        return action.complete
-          ? this.spotifyService.addTracks(this.secondaryId, action.trackUri, this.primaryId)
-          : this.spotifyService.addTracks(this.secondaryId, action.trackUri);
-      case ETrackAction.REMOVE:
-        return action.complete
-          ? this.spotifyService.removeTracks(this.secondaryId, action.trackUri, this.secondaryId)
-          : this.spotifyService.removeTracks(this.secondaryId, action.trackUri);
-      default:
-        break;
-    }
-  }
-
-  private onSuccess(action: PlaylistAction): void {
-    switch (action.action) {
-      case ETrackAction.ADD:
-        action.complete
-          ? this.toastr.success('Tracks were successfully added!', null, { progressBar: true, timeOut: 2000 })
-          : this.toastr.success('Track was successfully added!', null, { progressBar: true, timeOut: 2000 });
-        break;
-      case ETrackAction.REMOVE:
-        action.complete
-          ? this.toastr.success('Tracks were successfully removed!', null, { progressBar: true, timeOut: 2000 })
-          : this.toastr.success('Track was successfully removed!', null, { progressBar: true, timeOut: 2000 });
-        break;
-      default:
-        break;
-    }
-  }
-
-  onNext(next: string, isSecondary: boolean): void {
-    isSecondary
-      ? this.subscriptions.push(this.secondaryService.getSecondaryPlaylistTracks(this.secondaryId, true, next).subscribe())
-      : this.subscriptions.push(this.primaryService.getPrimaryPlaylistTracks(this.primaryId, true, next).subscribe());
-  }
-
-  onSearch(query: string, isSecondary: boolean): void {
-    isSecondary
-      ? this.subscriptions.push(this.secondaryService.getSecondaryPlaylistTracks(this.secondaryId, false, null, query).subscribe())
-      : this.subscriptions.push(this.primaryService.getPrimaryPlaylistTracks(this.primaryId, false, null, query).subscribe());
   }
 
 }

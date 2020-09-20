@@ -1,0 +1,42 @@
+<ng-container *ngIf="isAuthenticated; then playlist; else card"></ng-container>
+<ng-template #playlist>
+  <div class="header">
+    <a class="back" title="Back to playlists" (click)="navigateBack()">
+      <i class="icon long-arrow-left"></i>
+    </a>
+    <swg-profile-menu [user$]="user$" [isSecondary]="isSecondary"></swg-profile-menu>
+  </div>
+  <ng-container *ngIf="(playlist$ | async) || (savedTracks$ | async); then playlist; else selection"></ng-container>
+  <ng-template #playlist>
+    <swg-playlist *ngIf="playlist$ | async" [user$]="user$" [playlists$]="playlists$"
+      [playlist$]="playlist$" [tracks$]="playlistTracks$" [isSecondary]="isSecondary"
+      (action)="execute($event)" (next)="onNext($event)" (search)="onSearch($event)"></swg-playlist>
+    <swg-liked *ngIf="savedTracks$ | async" [user$]="user$"
+      [playlists$]="playlists$" [tracks$]="savedTracks$"
+      (action)="execute($event)" (next)="onNext($event)" (search)="onSearch($event)"></swg-liked>
+  </ng-template>
+  <ng-template #selection>
+    <swg-playlists title="Playlists" [allowCreation]="true" [user$]="user$"
+      [playlists$]="playlists$" [isSecondary]="isSecondary"></swg-playlists>
+  </ng-template>
+</ng-template>
+<ng-template #card>
+  <div class="card-wrapper">
+    <swg-card platform="Spotify" (auth)="authenticate($event)">
+      <ul class="tips">
+        <li>
+          <h2>Log in with your Spotify account</h2>
+          <p>You will be redirected to Spotify's login page and will be automatically logged in with your current account.</p>
+        </li>
+        <li *ngIf="isSecondary">
+          <h2>Switch account</h2>
+          <p>Make sure to switch your account when the Spotify's dialog box will show up and log in with your second account.</p>
+        </li>
+        <li>
+          <h2>Export your tracks</h2>
+          <p>You can now add or remove tracks one by one or simply all in one!</p>
+        </li>
+      </ul>
+    </swg-card>
+  </div>
+</ng-template>
