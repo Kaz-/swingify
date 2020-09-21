@@ -6,7 +6,7 @@
       <small>By {{ playlist?.owner.display_name }}</small>
     </div>
   </a>
-  <div *ngIf="tracks$ | async as tracks">
+  <div class="sub-header" *ngIf="tracks$ | async as tracks">
     <span class="total">{{ tracks?.items.length }} of {{ tracks?.total }} tracks</span>
     <button class="{{ isSecondary ? 'red' : 'green' }}-button" [title]="isSecondary ? 'Remove all tracks' : 'Export all tracks'"
       (click)="execute(true)">

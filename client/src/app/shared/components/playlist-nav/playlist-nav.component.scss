@@ -13,22 +13,9 @@
     .back {
       cursor: pointer;
     }
-    .primary-user {
-      display: flex;
-      align-items: center;
-      margin: 0 1em;
-      i {
-        margin: 0 0.5em 0.3em 0;
-      }
-      img {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        margin: 0 0.5em;
-      }
-    }
   }
-  swg-playlist::ng-deep {
+  swg-playlist::ng-deep,
+  swg-liked::ng-deep {
     max-height: calc(100vh - 145px);
   }
   swg-playlists::ng-deep {

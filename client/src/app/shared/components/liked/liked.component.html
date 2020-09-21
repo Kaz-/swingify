@@ -1,11 +1,9 @@
 <div class="header">
   <div class="top">
-    <div class="default">
-      <i class="icon heart"></i>
-    </div>
+    <swg-playlist-image [savedTracks]="tracks$ | async"></swg-playlist-image>
     <h3>Liked Songs</h3>
   </div>
-  <div *ngIf="tracks$ | async as tracks">
+  <div class="sub-header" *ngIf="tracks$ | async as tracks">
     <span class="total">{{ tracks?.items.length }} of {{ tracks?.total }} tracks</span>
     <button class="{{ isSecondary ? 'red' : 'green' }}-button" [title]="isSecondary ? 'Remove all tracks' : 'Export all tracks'"
       (click)="execute(true)">

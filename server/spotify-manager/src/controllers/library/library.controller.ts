@@ -35,16 +35,16 @@ export class LibraryController {
   @Put('tracks')
   saveTracks(@Req() request: Request): Observable<never> {
     this.logger.log('Saving tracks for user');
-    return request.query.complete
-      ? this.libraryService.getTracksToSave(request)
+    return request.query.from
+      ? this.libraryService.getTracksToSave(request, request.query.from.toString())
       : this.libraryService.saveTracksByRequest(request);
   }
 
   @Delete('tracks')
   removeSavedTracks(@Req() request: Request): Observable<never> {
     this.logger.log(`Removing tracks from saved tracks`);
-    return request.query.complete
-      ? this.libraryService.getSavedTracksToRemove(request, request.query.from.toString())
+    return request.query.from
+      ? this.libraryService.getSavedTracksToRemove(request)
       : this.libraryService.removeSavedTracksByRequest(request);
   }
 

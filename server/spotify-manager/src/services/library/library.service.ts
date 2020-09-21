@@ -5,13 +5,17 @@ import { Observable, EMPTY, Subject, from } from 'rxjs';
 import { map, mergeMap, tap, bufferWhen, expand, takeWhile } from 'rxjs/operators';
 
 import { environment } from '../../config/environment';
-import { SpotifyPaging, SavedTrack } from '../../models/spotify.models';
+import { SpotifyPaging, SavedTrack, PlaylistTrack } from '../../models/spotify.models';
+import { PlaylistsService } from '../playlists/playlists.service';
 import { SharedService } from '../shared/shared.service';
 
 @Injectable()
 export class LibraryService {
 
-  constructor(private http: HttpService) { }
+  constructor(
+    private http: HttpService,
+    private playlistsService: PlaylistsService
+  ) { }
 
   getSavedTracksByRequest(request: Request): Observable<SpotifyPaging<SavedTrack>> {
     return this.http.get<SpotifyPaging<SavedTrack>>(
@@ -26,8 +30,11 @@ export class LibraryService {
       .pipe(map(response => response.data));
   }
 
-  getTracksToSave(request: Request): Observable<never> {
-    return this.getCompleteSavedTracklist(request).pipe(
+  getTracksToSave(request: Request, playlist: string): Observable<never> {
+    const tracklist$: Observable<SpotifyPaging<PlaylistTrack | SavedTrack>> = playlist === 'liked'
+      ? this.getCompleteSavedTracklist(request)
+      : this.playlistsService.getCompleteTracklist(request, playlist, 50);
+    return tracklist$.pipe(
       map(tracks => tracks.items.map(item => item.track.id)),
       map(ids => ({ ids: [...ids] })),
       mergeMap(tracklist => this.saveTracksByRequest(request, true, tracklist))
@@ -37,12 +44,12 @@ export class LibraryService {
   saveTracksByRequest(request: Request, complete?: boolean, tracklist?: { ids: string[] }): Observable<never> {
     return this.http.put<never>(
       `${environment.apiBaseUrl}/me/tracks`,
-      complete ? tracklist : this.formatTracksToSaveOrRemove(request.body),
+      complete ? tracklist : JSON.stringify(this.formatTracksToSaveOrRemove(request.body)),
       { headers: SharedService.getAuthorizationHeader(request) }
     ).pipe(mergeMap(() => EMPTY));
   }
 
-  getSavedTracksToRemove(request: Request, playlist: string): Observable<never> {
+  getSavedTracksToRemove(request: Request): Observable<never> {
     const closingEvent: Subject<boolean> = new Subject<boolean>();
     return this.getCompleteSavedTracklist(request).pipe(
       tap(tracks => SharedService.toggleClosingBuffer(tracks, closingEvent)),
@@ -64,7 +71,7 @@ export class LibraryService {
     return this.http.delete<never>(
       `${environment.apiBaseUrl}/me/tracks`,
       {
-        data: complete ? tracklist : this.formatTracksToSaveOrRemove(request.body),
+        data: complete ? tracklist : JSON.stringify(request.body),
         headers: SharedService.getAuthorizationHeader(request)
       }
     ).pipe(mergeMap(() => EMPTY));
@@ -78,7 +85,7 @@ export class LibraryService {
   }
 
   formatSavedTracksToRemoveAsChunks(tracks: string[]): Observable<string[]> {
-    const max = 100;
+    const max = 50;
     return from(Array(Math.ceil(tracks.length / max))
       .fill(null)
       .map(() => tracks.splice(0, max), tracks.slice()));

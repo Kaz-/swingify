@@ -136,19 +136,22 @@ export class SpotifyService implements OnDestroy {
     ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
-  saveTracks(track: string[], complete: boolean): Observable<never> {
+  saveTracks(track: string[], from?: string): Observable<never> {
     return this.http.put<never>(
       `${environment.spotify.libraryPath}/tracks`, track,
-      { params: new HttpParams().set('complete', JSON.stringify(complete)), headers: this.setSecondaryHeader(true) }
+      {
+        params: from ? new HttpParams().set('from', from) : null,
+        headers: this.setSecondaryHeader(true)
+      }
     ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
-  removeSavedTracks(track: string[], complete: boolean): Observable<ArrayBuffer> {
+  removeSavedTracks(track: string[], from?: string): Observable<ArrayBuffer> {
     return this.http.request<ArrayBuffer>('delete',
       `${environment.spotify.libraryPath}/tracks`,
       {
         body: track,
-        params: new HttpParams().set('complete', JSON.stringify(complete)),
+        params: from ? new HttpParams().set('from', from) : null,
         headers: this.setSecondaryHeader(true)
       }
     ).pipe(catchError(err => this.errorService.handleError(err)));

@@ -42,10 +42,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     return `${minutes}:${parseInt(seconds, 10) < 10 ? '0' : ''}${seconds}`;
   }
 
-  execute(onAll: boolean, track: Track): void {
+  execute(onAll: boolean, track?: Track): void {
     const action: PlaylistAction = {
-      trackId: track.id ? [track.id] : [],
-      trackUri: track.uri ? [track.uri] : [],
+      trackId: track?.id ? [track.id] : [],
+      trackUri: track?.uri ? [track.uri] : [],
       action: this.isSecondary ? ETrackAction.REMOVE : ETrackAction.ADD,
       complete: onAll
     };

@@ -13,11 +13,11 @@ export class PlaylistsService {
 
   constructor(private http: HttpService) { }
 
-  getTracksByRequest(request: Request, from?: string): Observable<SpotifyPaging<PlaylistTrack>> {
+  getTracksByRequest(request: Request, from?: string, limit?: number): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.http.get<SpotifyPaging<PlaylistTrack>>(
       request.query.next
         ? Buffer.from(request.query.next.toString(), 'base64').toString()
-        : `${environment.apiBaseUrl}/playlists/${from ? from : request.params.id}/tracks?offset=0&limit=100`,
+        : `${environment.apiBaseUrl}/playlists/${from ? from : request.params.id}/tracks?offset=0&limit=${limit ? limit : 100}`,
       { headers: SharedService.getAuthorizationHeader(request) }).pipe(map(response => response.data));
   }
 
@@ -72,8 +72,8 @@ export class PlaylistsService {
     ).pipe(mergeMap(() => EMPTY));
   }
 
-  getCompleteTracklist(request: Request, from?: string): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.getTracksByRequest(request, from).pipe(
+  getCompleteTracklist(request: Request, from?: string, limit?: number): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.getTracksByRequest(request, from, limit).pipe(
       expand(tracks => this.getTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
       takeWhile(tracks => Boolean(tracks.next), true)
     );

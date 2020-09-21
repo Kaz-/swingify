@@ -105,12 +105,12 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
     switch (action.action) {
       case ETrackAction.ADD:
         return action.complete
-          ? this.spotifyService.saveTracks(action.trackId, true)
-          : this.spotifyService.saveTracks(action.trackId, false);
+          ? this.spotifyService.saveTracks(action.trackId, this.primaryId)
+          : this.spotifyService.saveTracks(action.trackId);
       case ETrackAction.REMOVE:
         return action.complete
-          ? this.spotifyService.removeSavedTracks(action.trackId, true)
-          : this.spotifyService.removeSavedTracks(action.trackId, false);
+          ? this.spotifyService.removeSavedTracks(action.trackId, this.secondaryId)
+          : this.spotifyService.removeSavedTracks(action.trackId);
       default:
         break;
     }
