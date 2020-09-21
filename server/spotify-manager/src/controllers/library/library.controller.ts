@@ -13,13 +13,16 @@ export class LibraryController {
 
   private logger = new Logger('Library Controller');
 
-  constructor(private libraryService: LibraryService) { }
+  constructor(
+    private libraryService: LibraryService,
+    private sharedService: SharedService
+  ) { }
 
   @Get('tracks')
   getSavedTracks(@Req() request: Request): Observable<SpotifyPaging<SavedTrack>> {
     this.logger.log(`Requesting user's saved tracks`);
-    return this.libraryService.getSavedTracksByRequest(request).pipe(
-      expand(tracks => this.libraryService.getSavedTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
+    return this.sharedService.getSavedTracksByRequest(request).pipe(
+      expand(tracks => this.sharedService.getSavedTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
       takeWhile(tracks => Boolean(request.query.search) && Boolean(tracks.next), true),
       scan((prev, next) => ({ ...next, items: [...prev.items, ...next.items] })),
       map(tracks => request.query.search

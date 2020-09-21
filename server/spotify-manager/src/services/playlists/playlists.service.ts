@@ -2,32 +2,25 @@ import { flatten, HttpService, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
 import { EMPTY, from, Observable, Subject } from 'rxjs';
-import { mergeMap, map, expand, takeWhile, bufferWhen, tap } from 'rxjs/operators';
+import { mergeMap, map, bufferWhen, tap } from 'rxjs/operators';
 
 import { environment } from '../../config/environment';
-import { SpotifyPaging, PlaylistTrack } from '../../models/spotify.models';
+import { SpotifyPaging, PlaylistTrack, SavedTrack, LIKED_ID } from '../../models/spotify.models';
 import { SharedService } from '../shared/shared.service';
 
 @Injectable()
 export class PlaylistsService {
 
-  constructor(private http: HttpService) { }
-
-  getTracksByRequest(request: Request, from?: string, limit?: number): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.http.get<SpotifyPaging<PlaylistTrack>>(
-      request.query.next
-        ? Buffer.from(request.query.next.toString(), 'base64').toString()
-        : `${environment.apiBaseUrl}/playlists/${from ? from : request.params.id}/tracks?offset=0&limit=${limit ? limit : 100}`,
-      { headers: SharedService.getAuthorizationHeader(request) }).pipe(map(response => response.data));
-  }
-
-  getTracksByNext(next: string, authorization: string): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.http.get<SpotifyPaging<PlaylistTrack>>(next, { headers: authorization })
-      .pipe(map(response => response.data));
-  }
+  constructor(
+    private http: HttpService,
+    public sharedService: SharedService
+  ) { }
 
   getTracksToAdd(request: Request, playlist: string): Observable<never> {
-    return this.getCompleteTracklist(request, playlist).pipe(
+    const tracklist$: Observable<SpotifyPaging<PlaylistTrack | SavedTrack>> = playlist === LIKED_ID
+      ? this.sharedService.getCompleteSavedTracklist(request)
+      : this.sharedService.getCompleteTracklist(request, playlist, 50);
+    return tracklist$.pipe(
       map(tracks => tracks.items.map(item => item.track.uri)),
       map(uris => ({ uris: [...uris] })),
       mergeMap(tracklist => this.addTracksByRequest(request, true, tracklist))
@@ -44,7 +37,7 @@ export class PlaylistsService {
 
   getTracksToRemove(request: Request, playlist: string): Observable<never> {
     const closingEvent: Subject<boolean> = new Subject<boolean>();
-    return this.getCompleteTracklist(request, playlist).pipe(
+    return this.sharedService.getCompleteTracklist(request, playlist).pipe(
       tap(tracks => SharedService.toggleClosingBuffer(tracks, closingEvent)),
       map(tracks => tracks.items.map(item => item.track.uri)),
       bufferWhen(() => closingEvent.asObservable()),
@@ -70,13 +63,6 @@ export class PlaylistsService {
         headers: SharedService.getAuthorizationHeader(request)
       }
     ).pipe(mergeMap(() => EMPTY));
-  }
-
-  getCompleteTracklist(request: Request, from?: string, limit?: number): Observable<SpotifyPaging<PlaylistTrack>> {
-    return this.getTracksByRequest(request, from, limit).pipe(
-      expand(tracks => this.getTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
-      takeWhile(tracks => Boolean(tracks.next), true)
-    );
   }
 
   formatTracksToRemoveAsChunks(tracks: string[]): Observable<{ tracks: { uri: string }[] }> {

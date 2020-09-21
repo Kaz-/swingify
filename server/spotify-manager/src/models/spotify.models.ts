@@ -1,4 +1,6 @@
-export const SCOPES = 'playlist-read-private playlist-modify-private playlist-modify-public user-library-read user-library-modify'
+export const SCOPES = 'playlist-read-private playlist-modify-private playlist-modify-public user-library-read user-library-modify';
+
+export const LIKED_ID = 'liked';
 
 export interface SpotifyConfiguration {
   readonly clientId: string;

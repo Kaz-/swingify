@@ -44,8 +44,8 @@ export class PlaylistsController {
   @Get(':id/tracks')
   getPlaylistTracks(@Req() request: Request): Observable<SpotifyPaging<PlaylistTrack>> {
     this.logger.log(`Requesting tracks from playlist: ${request.params.id}`);
-    return this.playlistsService.getTracksByRequest(request).pipe(
-      expand(tracks => this.playlistsService.getTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
+    return this.sharedService.getTracksByRequest(request).pipe(
+      expand(tracks => this.sharedService.getTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
       takeWhile(tracks => Boolean(request.query.search) && Boolean(tracks.next), true),
       scan((prev, next) => ({ ...next, items: [...prev.items, ...next.items] })),
       map(tracks => request.query.search

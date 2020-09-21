@@ -3,7 +3,7 @@ import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservice
 import { Request } from 'express';
 
 import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { expand, map, takeWhile } from 'rxjs/operators';
 
 import { ConfigService } from '../../config/config.service';
 import { environment } from '../../config/environment';
@@ -59,6 +59,46 @@ export class SharedService {
   getUserProfile(request: Request): Observable<SpotifyUser> {
     return this.http.get<SpotifyUser>(`${environment.apiBaseUrl}/me`, { headers: SharedService.getAuthorizationHeader(request) })
       .pipe(map(response => response.data));
+  }
+
+  getTracksByRequest(request: Request, from?: string, limit?: number): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.http.get<SpotifyPaging<PlaylistTrack>>(
+      request.query.next
+        ? Buffer.from(request.query.next.toString(), 'base64').toString()
+        : `${environment.apiBaseUrl}/playlists/${from ? from : request.params.id}/tracks?offset=0&limit=${limit ? limit : 100}`,
+      { headers: SharedService.getAuthorizationHeader(request) }).pipe(map(response => response.data));
+  }
+
+  getSavedTracksByRequest(request: Request): Observable<SpotifyPaging<SavedTrack>> {
+    return this.http.get<SpotifyPaging<SavedTrack>>(
+      request.query.next
+        ? Buffer.from(request.query.next.toString(), 'base64').toString()
+        : `${environment.apiBaseUrl}/me/tracks?offset=0&limit=50`,
+      { headers: SharedService.getAuthorizationHeader(request) }).pipe(map(response => response.data));
+  }
+
+  getTracksByNext(next: string, authorization: string): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.http.get<SpotifyPaging<PlaylistTrack>>(next, { headers: authorization })
+      .pipe(map(response => response.data));
+  }
+
+  getSavedTracksByNext(next: string, authorization: string): Observable<SpotifyPaging<SavedTrack>> {
+    return this.http.get<SpotifyPaging<SavedTrack>>(next, { headers: authorization })
+      .pipe(map(response => response.data));
+  }
+
+  getCompleteTracklist(request: Request, from?: string, limit?: number): Observable<SpotifyPaging<PlaylistTrack>> {
+    return this.getTracksByRequest(request, from, limit).pipe(
+      expand(tracks => this.getTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
+      takeWhile(tracks => Boolean(tracks.next), true)
+    );
+  }
+
+  getCompleteSavedTracklist(request: Request): Observable<SpotifyPaging<SavedTrack>> {
+    return this.getSavedTracksByRequest(request).pipe(
+      expand(tracks => this.getSavedTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
+      takeWhile(tracks => Boolean(tracks.next), true)
+    );
   }
 
 }
