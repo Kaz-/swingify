@@ -14,10 +14,9 @@ import {
   mergedTracks,
   playlists,
   playlist,
-  featuredPlaylists
 } from '../../../test/models/spotify.models.spec';
-import { PlaylistsService } from '../../services/playlists/playlists.service';
-import { SharedService } from '../../services/shared/shared.service';
+import { PlaylistsService } from '../../services/playlists.service';
+import { SharedService } from '../../services/shared.service';
 import { PlaylistsController } from './playlists.controller';
 
 describe('PlaylistsController', () => {
@@ -37,17 +36,17 @@ describe('PlaylistsController', () => {
             getSpotifyConfiguration: jest.fn().mockReturnValue(of(spotifyConfiguration)),
             getAuthorizationHeader: jest.fn().mockReturnValue(authorizationHeader),
             findMatchInTrack: jest.fn().mockReturnValue(true),
-            findMatchInArtists: jest.fn().mockReturnValue(true)
+            findMatchInArtists: jest.fn().mockReturnValue(true),
+            getTracksByRequest: jest.fn().mockReturnValueOnce(of(tracksWithNext)),
+            getTracksByNext: jest.fn().mockReturnValue(of(tracksWithoutNext)),
+            getCompleteTracklist: jest.fn().mockReturnValue(of(mergedTracks))
           }
         },
         {
           provide: PlaylistsService,
           useValue: {
-            getTracksByRequest: jest.fn().mockReturnValueOnce(of(tracksWithNext)),
-            getTracksByNext: jest.fn().mockReturnValue(of(tracksWithoutNext)),
             getTracksToAdd: jest.fn().mockReturnValue(EMPTY),
-            getTracksToRemove: jest.fn().mockReturnValue(EMPTY),
-            getCompleteTracklist: jest.fn().mockReturnValue(of(mergedTracks))
+            getTracksToRemove: jest.fn().mockReturnValue(EMPTY)
           }
         }
       ]
@@ -97,14 +96,14 @@ describe('PlaylistsController', () => {
   describe(`/GET tracks with search query`, () => {
     it(`should get tracks according to the current query and merge all tracks`, done => {
       const req: Request = createMock<Request>({ query: { search: 'testQuery' } });
-      jest.spyOn(playlistsService, 'getTracksByNext')
+      jest.spyOn(sharedService, 'getTracksByNext')
         .mockReturnValueOnce(of(tracksWithNext))
         .mockReturnValueOnce(of(tracksWithoutNext));
       controller.getPlaylistTracks(req)
         .pipe(takeLast(1))
         .subscribe(res => {
-          expect(playlistsService.getTracksByRequest).toHaveBeenCalledTimes(1);
-          expect(playlistsService.getTracksByNext).toHaveBeenCalledTimes(2);
+          expect(sharedService.getTracksByRequest).toHaveBeenCalledTimes(1);
+          expect(sharedService.getTracksByNext).toHaveBeenCalledTimes(2);
           expect(res).toEqual(mergedTracks);
           done();
         });
@@ -118,18 +117,6 @@ describe('PlaylistsController', () => {
       controller.createPlaylist(req)
         .subscribe(res => {
           expect(res).toEqual(playlist);
-          done();
-        });
-    });
-  });
-
-  describe(`/GET featured playlists`, () => {
-    it(`should get featured playlists from current locale`, done => {
-      const req: Request = createMock<Request>();
-      jest.spyOn(controller, 'getFeaturedPlaylists').mockReturnValue(of(featuredPlaylists));
-      controller.getFeaturedPlaylists(req)
-        .subscribe(res => {
-          expect(res).toEqual(featuredPlaylists);
           done();
         });
     });

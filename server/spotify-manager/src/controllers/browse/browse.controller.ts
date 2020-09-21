@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../config/environment';
 import { SpotifyFeaturedPlaylists } from '../../models/spotify.models';
-import { SharedService } from '../../services/shared/shared.service';
+import { SharedService } from '../../services/shared.service';
 
 @Controller('browse')
 export class BrowseController {

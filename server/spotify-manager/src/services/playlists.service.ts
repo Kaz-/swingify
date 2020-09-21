@@ -4,9 +4,9 @@ import { Request } from 'express';
 import { EMPTY, from, Observable, Subject } from 'rxjs';
 import { mergeMap, map, bufferWhen, tap } from 'rxjs/operators';
 
-import { environment } from '../../config/environment';
-import { SpotifyPaging, PlaylistTrack, SavedTrack, LIKED_ID } from '../../models/spotify.models';
-import { SharedService } from '../shared/shared.service';
+import { environment } from '../config/environment';
+import { SpotifyPaging, PlaylistTrack, SavedTrack, LIKED_ID } from '../models/spotify.models';
+import { SharedService } from './shared.service';
 
 @Injectable()
 export class PlaylistsService {

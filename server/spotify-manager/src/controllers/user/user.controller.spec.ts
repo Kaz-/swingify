@@ -6,7 +6,7 @@ import { Request } from 'express';
 import { of } from 'rxjs';
 
 import { authorizationHeader, spotifyConfiguration, user } from '../../../test/models/spotify.models.spec';
-import { SharedService } from '../../services/shared/shared.service';
+import { SharedService } from '../../services/shared.service';
 import { UserController } from './user.controller';
 
 describe('UserController', () => {

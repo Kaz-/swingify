@@ -8,9 +8,9 @@ import { PlaylistsController } from './controllers/playlists/playlists.controlle
 import { LibraryController } from './controllers/library/library.controller';
 import { BrowseController } from './controllers/browse/browse.controller';
 
-import { SharedService } from './services/shared/shared.service';
-import { PlaylistsService } from './services/playlists/playlists.service';
-import { LibraryService } from './services/library/library.service';
+import { SharedService } from './services/shared.service';
+import { PlaylistsService } from './services/playlists.service';
+import { LibraryService } from './services/library.service';
 import { SpotifyInterceptor } from './interceptors/spotify.interceptor';
 
 @Module({

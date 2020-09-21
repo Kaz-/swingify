@@ -6,8 +6,8 @@ import { mergeMap, map, expand, takeWhile, scan } from 'rxjs/operators';
 
 import { environment } from '../../config/environment';
 import { SpotifyPaging, SpotifyPlaylist, PlaylistTrack, SpotifyFeaturedPlaylists } from '../../models/spotify.models';
-import { PlaylistsService } from '../../services/playlists/playlists.service';
-import { SharedService } from '../../services/shared/shared.service';
+import { PlaylistsService } from '../../services/playlists.service';
+import { SharedService } from '../../services/shared.service';
 
 @Controller('playlists')
 export class PlaylistsController {

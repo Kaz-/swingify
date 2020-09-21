@@ -5,9 +5,9 @@ import { Request } from 'express';
 import { Observable, Subject } from 'rxjs';
 import { expand, map, takeWhile } from 'rxjs/operators';
 
-import { ConfigService } from '../../config/config.service';
-import { environment } from '../../config/environment';
-import { PlaylistTrack, SavedTrack, SpotifyConfiguration, SpotifyPaging, SpotifyUser } from '../../models/spotify.models';
+import { ConfigService } from '../config/config.service';
+import { environment } from '../config/environment';
+import { PlaylistTrack, SavedTrack, SpotifyConfiguration, SpotifyPaging, SpotifyUser } from '../models/spotify.models';
 
 @Injectable()
 export class SharedService {

@@ -6,7 +6,7 @@ import { mergeMap, map } from 'rxjs/operators';
 
 import { environment } from '../../config/environment';
 import { AuthorizationToken, AuthorizeQueryOptions, SCOPES, SpotifyUser } from '../../models/spotify.models';
-import { SharedService } from '../../services/shared/shared.service';
+import { SharedService } from '../../services/shared.service';
 
 @Controller('user')
 export class UserController {

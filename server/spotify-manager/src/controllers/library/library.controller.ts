@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import { expand, takeWhile, scan, map } from 'rxjs/operators';
 
 import { SpotifyPaging, SavedTrack } from '../../models/spotify.models';
-import { LibraryService } from '../../services/library/library.service';
-import { SharedService } from '../../services/shared/shared.service';
+import { LibraryService } from '../../services/library.service';
+import { SharedService } from '../../services/shared.service';
 
 @Controller('library')
 export class LibraryController {
