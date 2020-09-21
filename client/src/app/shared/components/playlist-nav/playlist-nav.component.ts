@@ -89,11 +89,34 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
 
   execute(action: PlaylistAction): void {
     this.subscriptions.push(this.performOnTracks(action).pipe(
-      mergeMap(() => this.secondaryService.getSecondaryPlaylist(this.secondaryId))
+      mergeMap(() => this.secondaryId === LIKED_ID
+        ? this.secondaryService.getsecondarySavedTracks()
+        : this.secondaryService.getSecondaryPlaylist(this.secondaryId))
     ).subscribe(() => this.onSuccess(action)));
   }
 
   performOnTracks(action: PlaylistAction): Observable<ArrayBuffer | never> {
+    return this.secondaryId === LIKED_ID
+      ? this.actionOnSavedTracks(action)
+      : this.actionOnPlaylist(action);
+  }
+
+  private actionOnSavedTracks(action: PlaylistAction): Observable<ArrayBuffer | never> {
+    switch (action.action) {
+      case ETrackAction.ADD:
+        return action.complete
+          ? this.spotifyService.saveTracks(action.trackId, true)
+          : this.spotifyService.saveTracks(action.trackId, false);
+      case ETrackAction.REMOVE:
+        return action.complete
+          ? this.spotifyService.removeSavedTracks(action.trackId, true)
+          : this.spotifyService.removeSavedTracks(action.trackId, false);
+      default:
+        break;
+    }
+  }
+
+  private actionOnPlaylist(action: PlaylistAction): Observable<ArrayBuffer | never> {
     switch (action.action) {
       case ETrackAction.ADD:
         return action.complete
@@ -125,16 +148,28 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
     }
   }
 
-  onNext(next: string): void {
-    this.isSecondary
-      ? this.subscriptions.push(this.secondaryService.getSecondaryPlaylistTracks(this.secondaryId, true, next).subscribe())
-      : this.subscriptions.push(this.primaryService.getPrimaryPlaylistTracks(this.primaryId, true, next).subscribe());
+  onNext(next: string, inSavedTracks: boolean): void {
+    if (inSavedTracks) {
+      this.isSecondary
+        ? this.subscriptions.push(this.secondaryService.getsecondarySavedTracks(true, next).subscribe())
+        : this.subscriptions.push(this.primaryService.getPrimarySavedTracks(true, next).subscribe());
+    } else {
+      this.isSecondary
+        ? this.subscriptions.push(this.secondaryService.getSecondaryPlaylistTracks(this.secondaryId, true, next).subscribe())
+        : this.subscriptions.push(this.primaryService.getPrimaryPlaylistTracks(this.primaryId, true, next).subscribe());
+    }
   }
 
-  onSearch(query: string): void {
-    this.isSecondary
-      ? this.subscriptions.push(this.secondaryService.getSecondaryPlaylistTracks(this.secondaryId, false, null, query).subscribe())
-      : this.subscriptions.push(this.primaryService.getPrimaryPlaylistTracks(this.primaryId, false, null, query).subscribe());
+  onSearch(query: string, inSavedTracks: boolean): void {
+    if (inSavedTracks) {
+      this.isSecondary
+        ? this.subscriptions.push(this.secondaryService.getsecondarySavedTracks(false, null, query).subscribe())
+        : this.subscriptions.push(this.primaryService.getPrimarySavedTracks(false, null, query).subscribe());
+    } else {
+      this.isSecondary
+        ? this.subscriptions.push(this.secondaryService.getSecondaryPlaylistTracks(this.secondaryId, false, null, query).subscribe())
+        : this.subscriptions.push(this.primaryService.getPrimaryPlaylistTracks(this.primaryId, false, null, query).subscribe());
+    }
   }
 
 }

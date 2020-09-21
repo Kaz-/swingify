@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { SpotifyPlaylist, SpotifyPaging, PlaylistTrack, SpotifyUser } from 'src/app/spotify/models/spotify.models';
+import { SpotifyPlaylist, SpotifyPaging, PlaylistTrack, SpotifyUser, Track } from 'src/app/spotify/models/spotify.models';
 import { PlaylistAction, ETrackAction } from '../../models/shared.models';
 
 @Component({
@@ -42,9 +42,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     return `${minutes}:${parseInt(seconds, 10) < 10 ? '0' : ''}${seconds}`;
   }
 
-  execute(onAll: boolean, track?: string): void {
-    const action: any = {
-      trackUri: track ? [track] : [],
+  execute(onAll: boolean, track: Track): void {
+    const action: PlaylistAction = {
+      trackId: track.id ? [track.id] : [],
+      trackUri: track.uri ? [track.uri] : [],
       action: this.isSecondary ? ETrackAction.REMOVE : ETrackAction.ADD,
       complete: onAll
     };

@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser } from '../../../spotify/models/spotify.models';
+import { SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser, Track } from '../../../spotify/models/spotify.models';
 import { ETrackAction, PlaylistAction } from '../../models/shared.models';
 
 @Component({
@@ -41,9 +41,10 @@ export class LikedComponent implements OnInit, OnDestroy {
     return `${minutes}:${parseInt(seconds, 10) < 10 ? '0' : ''}${seconds}`;
   }
 
-  execute(onAll: boolean, track?: string): void {
-    const action: any = {
-      trackUri: track ? [track] : [],
+  execute(onAll: boolean, track: Track): void {
+    const action: PlaylistAction = {
+      trackId: track.id ? [track.id] : [],
+      trackUri: track.uri ? [track.uri] : [],
       action: this.isSecondary ? ETrackAction.REMOVE : ETrackAction.ADD,
       complete: onAll
     };

@@ -10,10 +10,10 @@
   <ng-template #playlist>
     <swg-playlist *ngIf="playlist$ | async" [user$]="user$" [playlists$]="playlists$"
       [playlist$]="playlist$" [tracks$]="playlistTracks$" [isSecondary]="isSecondary"
-      (action)="execute($event)" (next)="onNext($event)" (search)="onSearch($event)"></swg-playlist>
+      (action)="execute($event, false)" (next)="onNext($event, false)" (search)="onSearch($event, false)"></swg-playlist>
     <swg-liked *ngIf="savedTracks$ | async" [user$]="user$"
-      [playlists$]="playlists$" [tracks$]="savedTracks$"
-      (action)="execute($event)" (next)="onNext($event)" (search)="onSearch($event)"></swg-liked>
+      [playlists$]="playlists$" [tracks$]="savedTracks$" [isSecondary]="isSecondary"
+      (action)="execute($event, true)" (next)="onNext($event, true)" (search)="onSearch($event, true)"></swg-liked>
   </ng-template>
   <ng-template #selection>
     <swg-playlists title="Playlists" [allowCreation]="true" [user$]="user$"
