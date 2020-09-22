@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { EMPTY, Observable, Subscription } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, tap } from 'rxjs/operators';
 
 import { PrimaryService } from '../../../spotify/services/primary.service';
 import { SecondaryService } from '../../../spotify/services/secondary.service';
@@ -54,23 +54,33 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
       tap(params => this.primaryId = params.p),
       tap(params => this.secondaryId = params.s)
     );
-    return this.isSecondary ? this.setupSecondary(source$) : this.setupPrimary(source$);
+    return this.isSecondary
+      ? this.setupSecondary(source$)
+      : this.setupPrimary(source$);
   }
 
   setupPrimary(source$: Observable<Params>): Subscription {
     return source$.pipe(
-      mergeMap(params => params.p
-        ? params.p === LIKED_ID ? this.primaryService.getPrimarySavedTracks() : this.primaryService.getPrimaryPlaylist(params.p)
-        : EMPTY)
-    ).subscribe();
+      map(params => params.p),
+      distinctUntilChanged(),
+      mergeMap(primary => primary
+        ? primary === LIKED_ID
+          ? this.primaryService.getPrimarySavedTracks()
+          : this.primaryService.getPrimaryPlaylist(primary)
+        : EMPTY
+      )).subscribe();
   }
 
   setupSecondary(source$: Observable<Params>): Subscription {
     return source$.pipe(
-      mergeMap(params => params.s
-        ? params.s === LIKED_ID ? this.secondaryService.getsecondarySavedTracks() : this.secondaryService.getSecondaryPlaylist(params.s)
-        : EMPTY)
-    ).subscribe();
+      map(params => params.s),
+      distinctUntilChanged(),
+      mergeMap(secondary => secondary
+        ? secondary === LIKED_ID
+          ? this.secondaryService.getsecondarySavedTracks()
+          : this.secondaryService.getSecondaryPlaylist(secondary)
+        : EMPTY
+      )).subscribe();
   }
 
   authenticate(): void {

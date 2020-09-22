@@ -20,9 +20,9 @@
   </div>
   <div class="tracklist-wrapper" infiniteScroll [scrollWindow]="false" (scrolled)="onScroll(tracks)">
     <ul class="tracklist">
-      <ng-container *ngIf="(tracks$ | async)?.items.length > 0; then displayTracks; else displayTip"></ng-container>
+      <ng-container *ngIf="tracks?.items.length > 0; then displayTracks; else displayTip"></ng-container>
       <ng-template #displayTracks>
-        <li class="track" *ngFor="let item of (tracks$ | async)?.items">
+        <li class="track" *ngFor="let item of tracks?.items">
           <ng-container *ngIf="item.track?.album.images.length > 0; then image; else icon"></ng-container>
           <ng-template #image>
             <img class="track-image" [src]="item.track?.album.images[0].url">
