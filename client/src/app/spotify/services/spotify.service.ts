@@ -12,7 +12,8 @@ import {
   PlaylistCreation,
   PlaylistTrack,
   SpotifyFeaturedPlaylists,
-  SavedTrack
+  SavedTrack,
+  LIKED_ID
 } from '../models/spotify.models';
 import { ErrorService } from 'src/app/shared/services/error.service';
 import { AuthService } from '../../shared/services/auth.service';
@@ -103,9 +104,13 @@ export class SpotifyService implements OnDestroy {
   }
 
   addTracks(id: string, track: string[], from?: string): Observable<never> {
+    console.log(from);
     return this.http.post<never>(
       `${environment.spotify.playlistsPath}/${id}`, track,
-      { params: from ? new HttpParams().set('from', from) : null, headers: this.setSecondaryHeader(true) }
+      {
+        params: from ? new HttpParams().set('from', from) : null,
+        headers: from === LIKED_ID ? this.setSecondaryHeader(true, true) : this.setSecondaryHeader(true)
+      }
     ).pipe(catchError(err => this.errorService.handleError(err)));
   }
 
@@ -142,7 +147,7 @@ export class SpotifyService implements OnDestroy {
       `${environment.spotify.libraryPath}/tracks`, track,
       {
         params: from ? new HttpParams().set('from', from) : null,
-        headers: this.setSecondaryHeader(true, true)
+        headers: from === LIKED_ID ? this.setSecondaryHeader(true, true) : this.setSecondaryHeader(true)
       }
     ).pipe(catchError(err => this.errorService.handleError(err)));
   }

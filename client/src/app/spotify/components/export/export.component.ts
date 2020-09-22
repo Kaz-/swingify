@@ -119,9 +119,9 @@ export class ExportComponent implements OnInit, OnDestroy {
   }
 
   getHelp(): string {
-    return 'If you want to share your playlist with a friend,\n' +
-      'you can click on this button or directly copy the\n' +
-      'URL from your browser with the "p" parameter only.\n' +
+    return 'If you want to share your playlist, you can click\n' +
+      'on this button or directly copy the URL from\n' +
+      'your browser with the "p" parameter only.\n' +
       'Also make sure that your playlist is public.';
   }
 
