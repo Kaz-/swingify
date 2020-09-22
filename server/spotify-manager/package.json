@@ -1,10 +1,10 @@
 {
   "name": "spotify-manager",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Spotify API Service",
   "author": "Wilfried Pereira",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT License",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
