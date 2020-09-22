@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, UrlTree } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 import { SpotifyService } from '../../services/spotify.service';
 import { PrimaryService } from '../../services/primary.service';
@@ -7,7 +9,7 @@ import { SecondaryService } from '../../services/secondary.service';
 
 import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack } from '../../models/spotify.models';
 import { AuthService } from '../../../shared/services/auth.service';
-import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'swg-export',
@@ -19,6 +21,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
+    private router: Router,
     private toastr: ToastrService,
     private spotifyService: SpotifyService,
     private primaryService: PrimaryService,
@@ -126,9 +129,10 @@ export class ExportComponent implements OnInit, OnDestroy {
   }
 
   share(): void {
-    const url: string = window.location.href;
     const dummy = document.createElement('input');
-    dummy.value = url.split('s=')[0]; // remove secondary part
+    const url: UrlTree = this.router.parseUrl(this.router.url);
+    url.queryParams = { p: url.queryParams.p }; // remove secondary part
+    dummy.value = `${environment.baseUrl}${this.router.serializeUrl(url)}`;
     document.body.appendChild(dummy);
     dummy.focus();
     dummy.select();

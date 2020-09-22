@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, EMPTY, Subject } from 'rxjs';
-import { tap, mergeMap, scan, shareReplay } from 'rxjs/operators';
+import { tap, mergeMap, scan, shareReplay, distinctUntilChanged } from 'rxjs/operators';
 
 import { SpotifyService } from './spotify.service';
 import { SpotifyPaging, PlaylistTrack, SpotifyPlaylist, SavedTrack, LIKED_ID } from '../models/spotify.models';
@@ -10,15 +10,15 @@ import { SpotifyPaging, PlaylistTrack, SpotifyPlaylist, SavedTrack, LIKED_ID } f
 })
 export class SecondaryService {
 
-  secondaryPlaylist: Subject<SpotifyPlaylist> = new Subject<SpotifyPlaylist>();
+  private secondaryPlaylist: Subject<SpotifyPlaylist> = new Subject<SpotifyPlaylist>();
   secondaryPlaylist$: Observable<SpotifyPlaylist> = this.secondaryPlaylist.asObservable().pipe(shareReplay());
-  secondaryPlaylistTracks: Subject<SpotifyPaging<PlaylistTrack>> = new Subject<SpotifyPaging<PlaylistTrack>>();
+  private secondaryPlaylistTracks: Subject<SpotifyPaging<PlaylistTrack>> = new Subject<SpotifyPaging<PlaylistTrack>>();
   secondaryPlaylistTracks$: Observable<SpotifyPaging<PlaylistTrack>> = this.secondaryPlaylistTracks.asObservable().pipe(
     scan((prev: SpotifyPaging<PlaylistTrack>, next: SpotifyPaging<PlaylistTrack>) => SpotifyService.handleEmittedTracks(prev, next)),
     shareReplay()
   );
 
-  secondarySavedTracks: Subject<SpotifyPaging<SavedTrack>> = new Subject<SpotifyPaging<SavedTrack>>();
+  private secondarySavedTracks: Subject<SpotifyPaging<SavedTrack>> = new Subject<SpotifyPaging<SavedTrack>>();
   secondarySavedTracks$: Observable<SpotifyPaging<SavedTrack>> = this.secondarySavedTracks.asObservable().pipe(
     scan((prev: SpotifyPaging<SavedTrack>, next: SpotifyPaging<SavedTrack>) => SpotifyService.handleEmittedTracks(prev, next)),
     shareReplay()
@@ -29,7 +29,8 @@ export class SecondaryService {
   getSecondaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.spotifyService.getPlaylist(id, true).pipe(
       tap(playlist => this.updateSecondaryPlaylist(playlist)),
-      mergeMap(playlist => playlist ? this.getSecondaryPlaylistTracks(playlist.id, fromNext) : EMPTY)
+      mergeMap(playlist => playlist ? this.getSecondaryPlaylistTracks(playlist.id, fromNext) : EMPTY),
+      distinctUntilChanged()
     );
   }
 
