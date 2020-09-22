@@ -1,3 +1,7 @@
+export const SCOPES = 'playlist-read-private playlist-modify-private playlist-modify-public user-library-read user-library-modify';
+
+export const LIKED_ID = 'liked';
+
 export interface SpotifyConfiguration {
   readonly clientId: string;
   readonly clientSecret: string;
@@ -86,6 +90,11 @@ export interface Image {
   readonly height: number;
   readonly url: string;
   readonly width: number;
+}
+
+export interface SavedTrack {
+  readonly added_at: string;
+  readonly track: Track;
 }
 
 export interface PlaylistTrack {

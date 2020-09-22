@@ -1,0 +1,13 @@
+@import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/mixins";
+:host {
+  @include playlist-nav;
+  .top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    h3 {
+      font-weight: normal;
+    }
+  }
+}

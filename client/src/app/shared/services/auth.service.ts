@@ -62,12 +62,12 @@ export class AuthService {
   }
 
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
-    return this.http.get<SpotifyConfiguration>(`${environment.spotify.serverPath}/configuration`);
+    return this.http.get<SpotifyConfiguration>(`${environment.spotify.userPath}/configuration`);
   }
 
   verify(authorizationCode: string, isSecondary: boolean): Observable<AuthorizationToken> {
     return this.http.get<AuthorizationToken>(
-      `${environment.spotify.serverPath}/verify`,
+      `${environment.spotify.userPath}/verify`,
       { params: new HttpParams().set('authorizationCode', authorizationCode) }
     ).pipe(
       catchError(() => {
@@ -84,7 +84,7 @@ export class AuthService {
   }
 
   authorize(): Observable<never> {
-    return this.http.get<string>(`${environment.spotify.serverPath}/authorize`, { responseType: 'text' as 'json' })
+    return this.http.get<string>(`${environment.spotify.userPath}/authorize`, { responseType: 'text' as 'json' })
       .pipe(
         mergeMap(redirection => {
           this.document.location.href = this.sanitizer.sanitize(SecurityContext.URL, redirection);

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
+import { SavedTrack, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 
 @Component({
   selector: 'swg-playlist-image',
@@ -9,5 +9,6 @@ import { SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 export class PlaylistImageComponent {
 
   @Input() playlist: SpotifyPlaylist;
+  @Input() savedTracks: SpotifyPaging<SavedTrack>;
 
 }

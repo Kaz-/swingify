@@ -11,7 +11,8 @@ export interface NavLink {
 }
 
 export interface PlaylistAction {
-  trackUri: string;
+  trackId?: string[]; // array of one element due to Spotify API
+  trackUri?: string[];
   action: ETrackAction;
   complete?: boolean;
 }

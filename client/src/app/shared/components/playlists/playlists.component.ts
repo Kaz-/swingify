@@ -46,22 +46,30 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
     }
   }
 
-  navigate(playlistId: string): void {
-    this.isSecondary ? this.secondaryNavigate(playlistId) : this.primaryNavigate(playlistId);
+  navigate(toSavedTracks: boolean, playlistId?: string): void {
+    this.isSecondary ? this.secondaryNavigate(toSavedTracks, playlistId) : this.primaryNavigate(toSavedTracks, playlistId);
   }
 
-  primaryNavigate(playlistId: string): void {
+  primaryNavigate(toSavedTracks: boolean, playlistId?: string): void {
     const tree: UrlTree = this.router.parseUrl(this.router.url);
-    tree.queryParams
-      ? this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId, s: tree.queryParams.s } })
-      : this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId } });
+    if (toSavedTracks) {
+      this.router.navigate(['/spotify/export'], { queryParams: { p: 'liked', s: tree.queryParams.s } });
+    } else {
+      tree.queryParams
+        ? this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId, s: tree.queryParams.s } })
+        : this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId } });
+    }
   }
 
-  secondaryNavigate(playlistId: string): void {
+  secondaryNavigate(toSavedTracks: boolean, playlistId?: string): void {
     const tree: UrlTree = this.router.parseUrl(this.router.url);
-    tree.queryParams
-      ? this.router.navigate(['/spotify/export'], { queryParams: { p: tree.queryParams.p, s: playlistId } })
-      : this.router.navigate(['/spotify/export'], { queryParams: { s: playlistId } });
+    if (toSavedTracks) {
+      this.router.navigate(['/spotify/export'], { queryParams: { p: tree.queryParams.p, s: 'liked' } });
+    } else {
+      tree.queryParams
+        ? this.router.navigate(['/spotify/export'], { queryParams: { p: tree.queryParams.p, s: playlistId } })
+        : this.router.navigate(['/spotify/export'], { queryParams: { s: playlistId } });
+    }
   }
 
   onCreate(name: string, user: string): void {

@@ -10,21 +10,26 @@
     overflow-x: hidden;
     overflow-y: scroll;
     @include scrollbar;
-    .create {
-      .default {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid $white;
-        max-width: 60px;
-        max-height: 60px;
-        width: 60px;
-        height: 60px;
-        margin-right: 0.5em;
-        i {
-          font-size: 13px;
-        }
+    .default {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid $white;
+      max-width: 60px;
+      max-height: 60px;
+      width: 60px;
+      height: 60px;
+      margin-right: 0.5em;
+      i {
+        font-size: 13px;
       }
+    }
+    .liked {
+      background: $like;
+    }
+    .separator {
+      border-bottom: 1px solid $alt;
+      margin: 0.7em 1em;
     }
     li {
       .playlist-link {
