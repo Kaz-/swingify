@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
 import { SpotifyService } from '../../services/spotify.service';
@@ -8,6 +7,7 @@ import { SecondaryService } from '../../services/secondary.service';
 
 import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack } from '../../models/spotify.models';
 import { AuthService } from '../../../shared/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'swg-export',
@@ -19,7 +19,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private route: ActivatedRoute,
+    private toastr: ToastrService,
     private spotifyService: SpotifyService,
     private primaryService: PrimaryService,
     private secondaryService: SecondaryService
@@ -116,6 +116,25 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   isSecondaryAuthenticated(): boolean {
     return AuthService.isSecondaryAuthenticated();
+  }
+
+  getHelp(): string {
+    return 'If you want to share your playlist with a friend,\n' +
+      'you can click on this button or directly copy the\n' +
+      'URL from your browser with the "p" parameter only.\n' +
+      'Also make sure that your playlist is public.';
+  }
+
+  share(): void {
+    const url: string = window.location.href;
+    const dummy = document.createElement('input');
+    dummy.value = url.split('&s=')[0];
+    document.body.appendChild(dummy);
+    dummy.focus();
+    dummy.select();
+    document.execCommand('copy');
+    document.body.removeChild(dummy);
+    this.toastr.info('Copied to clipboard!', null, { progressBar: true, timeOut: 2000 });
   }
 
 }

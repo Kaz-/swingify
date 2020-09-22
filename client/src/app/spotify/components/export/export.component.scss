@@ -35,6 +35,18 @@
       header {
         text-align: center;
         margin-bottom: 1.5em;
+        > p {
+          margin-bottom: 0.5em;
+        }
+        .share {
+          .icon {
+            margin-right: 0.5em;
+          }
+        }
+        .tip {
+          margin-left: 0.5em;
+          cursor: pointer;
+        }
       }
       .from-to {
         display: grid;

@@ -7,7 +7,11 @@
   <div class="content">
     <header>
       <h1>Wanna see a magic trick?</h1>
-      <p>Export your favorite tracks!</p>
+      <button class="primary-button share" title="Share with a friend" (click)="share()">
+        <i class="icon copy"></i>
+        <span>Share</span>
+      </button>
+      <span class="tip" [title]="getHelp()"><i class="icon question-circle"></i></span>
     </header>
     <div class="from-to">
       <div class="box" [title]="(primaryPlaylist$ | async)?.name

@@ -38,6 +38,9 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   &.question {
     @extend .fa-question;
   }
+  &.question-circle {
+    @extend .fa-question-circle;
+  }
   &.chevron-up {
     @extend .fa-chevron-up;
   }
@@ -49,6 +52,12 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   }
   &.heart {
     @extend .fa-heart;
+  }
+  &.share {
+    @extend .fa-share;
+  }
+  &.copy {
+    @extend .fa-copy;
   }
 }
 .brand {
