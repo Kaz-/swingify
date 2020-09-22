@@ -35,6 +35,13 @@ export class SharedService {
     };
   }
 
+  static getAdditionalAuthorizationHeader(request: Request): any {
+    return {
+      Authorization: request.headers['additionalauthorization'] ? request.headers['additionalauthorization'] : null,
+      'Content-Type': 'application/json'
+    };
+  }
+
   static toggleClosingBuffer(tracks: SpotifyPaging<PlaylistTrack | SavedTrack>, closingEvent: Subject<boolean>): void {
     if (!tracks.next && !tracks.previous) {
       closingEvent.next(true);
@@ -69,12 +76,17 @@ export class SharedService {
       { headers: SharedService.getAuthorizationHeader(request) }).pipe(map(response => response.data));
   }
 
-  getSavedTracksByRequest(request: Request): Observable<SpotifyPaging<SavedTrack>> {
+  getSavedTracksByRequest(request: Request, isAdditionalAuthorizationRequired: boolean): Observable<SpotifyPaging<SavedTrack>> {
     return this.http.get<SpotifyPaging<SavedTrack>>(
       request.query.next
         ? Buffer.from(request.query.next.toString(), 'base64').toString()
         : `${environment.apiBaseUrl}/me/tracks?offset=0&limit=50`,
-      { headers: SharedService.getAuthorizationHeader(request) }).pipe(map(response => response.data));
+      {
+        headers: isAdditionalAuthorizationRequired
+          ? SharedService.getAdditionalAuthorizationHeader(request)
+          : SharedService.getAuthorizationHeader(request)
+      })
+      .pipe(map(response => response.data));
   }
 
   getTracksByNext(next: string, authorization: string): Observable<SpotifyPaging<PlaylistTrack>> {
@@ -94,9 +106,13 @@ export class SharedService {
     );
   }
 
-  getCompleteSavedTracklist(request: Request): Observable<SpotifyPaging<SavedTrack>> {
-    return this.getSavedTracksByRequest(request).pipe(
-      expand(tracks => this.getSavedTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
+  getCompleteSavedTracklist(request: Request, isAdditionalAuthorizationRequired: boolean): Observable<SpotifyPaging<SavedTrack>> {
+    return this.getSavedTracksByRequest(request, isAdditionalAuthorizationRequired).pipe(
+      expand(tracks => this.getSavedTracksByNext(
+        tracks.next, isAdditionalAuthorizationRequired
+        ? SharedService.getAdditionalAuthorizationHeader(request)
+        : SharedService.getAuthorizationHeader(request)
+      )),
       takeWhile(tracks => Boolean(tracks.next), true)
     );
   }

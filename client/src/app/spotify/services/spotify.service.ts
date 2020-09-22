@@ -15,6 +15,7 @@ import {
   SavedTrack
 } from '../models/spotify.models';
 import { ErrorService } from 'src/app/shared/services/error.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -141,7 +142,7 @@ export class SpotifyService implements OnDestroy {
       `${environment.spotify.libraryPath}/tracks`, track,
       {
         params: from ? new HttpParams().set('from', from) : null,
-        headers: this.setSecondaryHeader(true)
+        headers: this.setSecondaryHeader(true, true)
       }
     ).pipe(catchError(err => this.errorService.handleError(err)));
   }
@@ -168,8 +169,17 @@ export class SpotifyService implements OnDestroy {
     return params;
   }
 
-  private setSecondaryHeader(isSecondary: boolean): HttpHeaders {
-    return new HttpHeaders({ Secondary: isSecondary.toString() });
+  /**
+   * Defines if the Authorization header should be Secondary.
+   * @param isSecondary defines if the request is issued from the secondary account.
+   * @param withAdditionalAuthorization in some cases, a request requires the primary authorization.
+   * Export all songs from "Like Songs" for example requires to be authorized from primary to differentiate from which
+   * playlist we're going to export.
+   */
+  private setSecondaryHeader(isSecondary: boolean, withAdditionalAuthorization?: boolean): HttpHeaders {
+    return withAdditionalAuthorization
+      ? new HttpHeaders({ Secondary: isSecondary.toString(), AdditionalAuthorization: `Bearer ${AuthService.getToken().access_token}` })
+      : new HttpHeaders({ Secondary: isSecondary.toString() });
   }
 
 }

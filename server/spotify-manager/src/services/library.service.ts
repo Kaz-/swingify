@@ -18,7 +18,7 @@ export class LibraryService {
 
   getTracksToSave(request: Request, playlist: string): Observable<never> {
     const tracklist$: Observable<SpotifyPaging<PlaylistTrack | SavedTrack>> = playlist === LIKED_ID
-      ? this.sharedService.getCompleteSavedTracklist(request)
+      ? this.sharedService.getCompleteSavedTracklist(request, true)
       : this.sharedService.getCompleteTracklist(request, playlist, 50);
     return tracklist$.pipe(
       map(tracks => tracks.items.map(item => item.track.id)),
@@ -37,7 +37,7 @@ export class LibraryService {
 
   getSavedTracksToRemove(request: Request): Observable<never> {
     const closingEvent: Subject<boolean> = new Subject<boolean>();
-    return this.sharedService.getCompleteSavedTracklist(request).pipe(
+    return this.sharedService.getCompleteSavedTracklist(request, false).pipe(
       tap(tracks => SharedService.toggleClosingBuffer(tracks, closingEvent)),
       map(tracks => tracks.items.map(item => item.track.id)),
       bufferWhen(() => closingEvent.asObservable()),

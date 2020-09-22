@@ -18,7 +18,7 @@ export class PlaylistsService {
 
   getTracksToAdd(request: Request, playlist: string): Observable<never> {
     const tracklist$: Observable<SpotifyPaging<PlaylistTrack | SavedTrack>> = playlist === LIKED_ID
-      ? this.sharedService.getCompleteSavedTracklist(request)
+      ? this.sharedService.getCompleteSavedTracklist(request, true)
       : this.sharedService.getCompleteTracklist(request, playlist, 50);
     return tracklist$.pipe(
       map(tracks => tracks.items.map(item => item.track.uri)),

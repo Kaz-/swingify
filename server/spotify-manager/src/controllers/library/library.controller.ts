@@ -21,7 +21,7 @@ export class LibraryController {
   @Get('tracks')
   getSavedTracks(@Req() request: Request): Observable<SpotifyPaging<SavedTrack>> {
     this.logger.log(`Requesting user's saved tracks`);
-    return this.sharedService.getSavedTracksByRequest(request).pipe(
+    return this.sharedService.getSavedTracksByRequest(request, false).pipe(
       expand(tracks => this.sharedService.getSavedTracksByNext(tracks.next, SharedService.getAuthorizationHeader(request))),
       takeWhile(tracks => Boolean(request.query.search) && Boolean(tracks.next), true),
       scan((prev, next) => ({ ...next, items: [...prev.items, ...next.items] })),
