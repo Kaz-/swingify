@@ -1,22 +1,21 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { SpotifyPlaylist, SpotifyPaging, PlaylistTrack, SpotifyUser, Track } from 'src/app/spotify/models/spotify.models';
-import { PlaylistAction, ETrackAction } from '../../models/shared.models';
+import { SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser, Track } from '../../../spotify/models/spotify.models';
+import { ETrackAction, PlaylistAction } from '../../models/shared.models';
 
 @Component({
-  selector: 'swg-playlist',
-  templateUrl: './playlist.component.html',
-  styleUrls: ['./playlist.component.scss']
+  selector: 'swg-liked',
+  templateUrl: './liked.component.html',
+  styleUrls: ['./liked.component.scss']
 })
-export class PlaylistComponent implements OnInit, OnDestroy {
+export class LikedComponent implements OnInit, OnDestroy {
 
   @Input() user$: Observable<SpotifyUser>;
   @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
-  @Input() playlist$: Observable<SpotifyPlaylist>;
-  @Input() tracks$: Observable<SpotifyPaging<PlaylistTrack>>;
+  @Input() tracks$: Observable<SpotifyPaging<SavedTrack>>;
   @Input() isSecondary?: boolean;
   @Output() action: EventEmitter<PlaylistAction> = new EventEmitter<PlaylistAction>();
   @Output() next: EventEmitter<string> = new EventEmitter<string>();
@@ -42,7 +41,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     return `${minutes}:${parseInt(seconds, 10) < 10 ? '0' : ''}${seconds}`;
   }
 
-  execute(onAll: boolean, track?: Track): void {
+  execute(onAll: boolean, track: Track): void {
     const action: PlaylistAction = {
       trackId: track?.id ? [track.id] : [],
       trackUri: track?.uri ? [track.uri] : [],
@@ -52,7 +51,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this.action.emit(action);
   }
 
-  onScroll(tracks: SpotifyPaging<PlaylistTrack>): void {
+  onScroll(tracks: SpotifyPaging<SavedTrack>): void {
     if (tracks.next) {
       this.next.emit(tracks.next);
     }

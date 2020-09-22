@@ -118,13 +118,11 @@
         overflow-y: scroll;
         @include scrollbar;
         swg-playlists::ng-deep {
-          .create {
-            .default {
-              width: 40px;
-              height: 40px;
-              i {
-                font-size: 10px;
-              }
+          .default {
+            width: 40px;
+            height: 40px;
+            i {
+              font-size: 10px;
             }
           }
           .playlist-link {

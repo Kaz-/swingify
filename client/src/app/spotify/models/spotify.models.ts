@@ -84,6 +84,11 @@ export interface Image {
   readonly width: number;
 }
 
+export interface SavedTrack {
+  readonly added_at: string;
+  readonly track: Track;
+}
+
 export interface PlaylistTrack {
   readonly added_at: string;
   readonly added_by: SpotifyUser;
@@ -146,3 +151,5 @@ export interface PlaylistCreation {
   colloborative?: boolean;
   description?: string;
 }
+
+export const LIKED_ID = 'liked';

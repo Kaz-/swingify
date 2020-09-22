@@ -1,21 +1,36 @@
 <h2>{{ title }}</h2>
 <ul class="playlists" *ngIf="playlists$ | async as playlists">
-  <li class="create" *ngIf="allowCreation" (click)="isCreating = true">
-    <div class="playlist-link">
-      <div class="default">
-        <i class="icon plus"></i>
+  <ng-container *ngIf="allowCreation">
+    <li class="create" (click)="isCreating = true" title="Create a playlist">
+      <div class="playlist-link">
+        <div class="default">
+          <i class="icon plus"></i>
+        </div>
+        <div>Create Playlist</div>
       </div>
-      <div>Create a playlist</div>
-    </div>
-  </li>
-  <li *ngFor="let playlist of playlists?.items">
-    <a class="playlist-link" (click)="navigate(playlist.id)">
+    </li>
+    <li (click)="navigate(true)" title="Liked Songs">
+      <div class="playlist-link">
+        <div class="default liked">
+          <i class="icon heart"></i>
+        </div>
+        <div>Liked Songs</div>
+      </div>
+    </li>
+    <div class="separator"></div>
+  </ng-container>
+  <li *ngFor="let playlist of playlists?.items" [title]="playlist.name">
+    <a class="playlist-link" (click)="navigate(false, playlist.id)">
       <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
       <div>{{ playlist.name }}</div>
     </a>
   </li>
 </ul>
 <ng-container *ngIf="(user$ | async)?.id as user">
-  <swg-dialog *ngIf="allowCreation && isCreating" [entry]="dialog" (cancel)="isCreating = false"
-    (action)="onCreate($event, user)"></swg-dialog>
+  <swg-dialog
+    *ngIf="allowCreation && isCreating"
+    [entry]="dialog"
+    (cancel)="isCreating = false"
+    (action)="onCreate($event, user)"
+  ></swg-dialog>
 </ng-container>

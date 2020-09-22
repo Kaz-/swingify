@@ -5,6 +5,9 @@ export const environment = {
   baseUrl: 'https://swingify.me',
   productVersion: version,
   spotify: {
-    serverPath: 'https://swingify.me/api/spotify'
+    userPath: 'https://swingify.me/api/spotify/user',
+    playlistsPath: 'https://swingify.me/api/spotify/playlists',
+    libraryPath: 'https://swingify.me/api/spotify/library',
+    browsePath: 'https://swingify.me/api/spotify/browse'
   }
 };
