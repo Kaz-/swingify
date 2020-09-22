@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export enum AuthPlatform {
   SPOTIFY = 'Spotify',
   YOUTUBE = 'YouTube'
@@ -5,7 +7,7 @@ export enum AuthPlatform {
 
 export interface NavLink {
   name: string;
-  link?: string;
+  link?: string | Observable<string>;
   icon?: string;
   action?: () => void;
 }
@@ -36,5 +38,5 @@ export interface HttpError {
 }
 
 export const SUPPORTED_ERRORS: number[] = [
-  400, 401, 403, 404, 504
+  401, 403, 404, 504
 ];

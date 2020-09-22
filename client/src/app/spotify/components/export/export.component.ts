@@ -128,7 +128,7 @@ export class ExportComponent implements OnInit, OnDestroy {
   share(): void {
     const url: string = window.location.href;
     const dummy = document.createElement('input');
-    dummy.value = url.split('&s=')[0];
+    dummy.value = url.split('s=')[0]; // remove secondary part
     document.body.appendChild(dummy);
     dummy.focus();
     dummy.select();
