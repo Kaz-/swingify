@@ -15,12 +15,26 @@ export class ErrorService {
   ) { }
 
   handleError(error: HttpErrorResponse): Observable<never> {
-    if (error.status === 500) {
-      this.toastr.error('Please refresh the page and try again.', 'Internal Server Error', { progressBar: true });
-    } else {
-      SUPPORTED_ERRORS.includes(error.status)
-        ? this.router.navigateByUrl(`error/${error.status}`)
-        : this.router.navigateByUrl('error/404');
+    switch (error.status) {
+      case 400:
+        this.toastr.error(
+          'Whoops, an error occured.',
+          'Bad Request',
+          { progressBar: true }
+        );
+        break;
+      case 500:
+        this.toastr.error(
+          'An unexpected error occured, please refresh the page and try again.',
+          'Internal Server Error',
+          { progressBar: true }
+        );
+        break;
+      default:
+        SUPPORTED_ERRORS.includes(error.status)
+          ? this.router.navigateByUrl(`error/${error.status}`)
+          : this.router.navigateByUrl('error/404');
+        break;
     }
     return EMPTY;
   }
