@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { mergeMap, map, expand, takeWhile, scan } from 'rxjs/operators';
 
 import { environment } from '../../config/environment';
-import { SpotifyPaging, SpotifyPlaylist, PlaylistTrack, SpotifyFeaturedPlaylists } from '../../models/spotify.models';
+import { SpotifyPaging, SpotifyPlaylist, PlaylistTrack } from '../../models/spotify.models';
 import { PlaylistsService } from '../../services/playlists.service';
 import { SharedService } from '../../services/shared.service';
 

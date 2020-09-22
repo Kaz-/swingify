@@ -30,8 +30,9 @@
       align-items: center;
       flex-grow: 1;
       flex-direction: column;
-      background: linear-gradient(90deg, #7b2075, #d0c8cf);
+      background: linear-gradient(360deg,#141414,#770454);
       padding: 2em;
+      border-top: 1px solid $background;
       header {
         text-align: center;
         margin-bottom: 1.5em;

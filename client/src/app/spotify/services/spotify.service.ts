@@ -104,7 +104,6 @@ export class SpotifyService implements OnDestroy {
   }
 
   addTracks(id: string, track: string[], from?: string): Observable<never> {
-    console.log(from);
     return this.http.post<never>(
       `${environment.spotify.playlistsPath}/${id}`, track,
       {
