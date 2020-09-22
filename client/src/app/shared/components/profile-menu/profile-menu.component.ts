@@ -1,5 +1,6 @@
+import { Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { SpotifyUser } from 'src/app/spotify/models/spotify.models';
@@ -19,7 +20,7 @@ export class ProfileMenuComponent {
 
   isMenuActive: boolean;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private location: Location) { }
 
   generateUserLinks(user: SpotifyUser): NavLink[] {
     return [{
@@ -38,7 +39,9 @@ export class ProfileMenuComponent {
   }
 
   redirect(): string {
-    return this.router.url.split('s=')[0]; // remove secondary part
+    const url: UrlTree = this.router.parseUrl(this.router.url);
+    url.queryParams = { p: url.queryParams.p }; // remove secondary part
+    return this.router.serializeUrl(url);
   }
 
 }
