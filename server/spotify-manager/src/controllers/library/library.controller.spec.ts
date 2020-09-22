@@ -6,7 +6,14 @@ import { Request } from 'express';
 import { of, EMPTY } from 'rxjs';
 import { takeLast } from 'rxjs/operators';
 
-import { spotifyConfiguration, authorizationHeader, tracksWithNext, tracksWithoutNext, mergedTracks } from '../../../test/models/spotify.models.spec';
+import {
+  spotifyConfiguration,
+  authorizationHeader,
+  tracksWithNext,
+  tracksWithoutNext,
+  mergedTracks,
+  noTracks
+} from '../../../test/models/spotify.models.spec';
 import { LibraryService } from '../../services/library.service';
 import { SharedService } from '../../services/shared.service';
 import { LibraryController } from './library.controller';
@@ -64,16 +71,33 @@ describe('LibraryController', () => {
 
   describe(`/GET tracks with search query`, () => {
     it(`should get tracks according to the current query and merge all tracks`, done => {
-      const req: Request = createMock<Request>({ query: { search: 'testQuery' } });
-      jest.spyOn(sharedService, 'getTracksByNext')
+      const req: Request = createMock<Request>({ query: { search: 'Joey Bada$$' } });
+      jest.spyOn(sharedService, 'getSavedTracksByNext')
         .mockReturnValueOnce(of(tracksWithNext))
         .mockReturnValueOnce(of(tracksWithoutNext));
       controller.getSavedTracks(req)
         .pipe(takeLast(1))
         .subscribe(res => {
-          expect(sharedService.getTracksByRequest).toHaveBeenCalledTimes(1);
-          expect(sharedService.getTracksByNext).toHaveBeenCalledTimes(2);
+          expect(sharedService.getSavedTracksByRequest).toHaveBeenCalledTimes(1);
+          expect(sharedService.getSavedTracksByNext).toHaveBeenCalledTimes(2);
           expect(res).toEqual(mergedTracks);
+          done();
+        });
+    });
+  });
+
+  describe(`/GET tracks with wrong search query`, () => {
+    it(`should get tracks according to the current query and return no tracks`, done => {
+      const req: Request = createMock<Request>({ query: { search: 'wrongQuery' } });
+      jest.spyOn(sharedService, 'getSavedTracksByNext')
+        .mockReturnValueOnce(of(tracksWithNext))
+        .mockReturnValueOnce(of(tracksWithoutNext));
+      controller.getSavedTracks(req)
+        .pipe(takeLast(1))
+        .subscribe(res => {
+          expect(sharedService.getSavedTracksByRequest).toHaveBeenCalledTimes(1);
+          expect(sharedService.getSavedTracksByNext).toHaveBeenCalledTimes(2);
+          expect(res).toEqual(noTracks);
           done();
         });
     });

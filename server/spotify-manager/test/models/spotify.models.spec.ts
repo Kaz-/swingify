@@ -138,7 +138,7 @@ export const tracksWithNext: SpotifyPaging<PlaylistTrack> = {
   next: 'testNext',
   offset: 0,
   previous: null,
-  total: 2,
+  total: 0,
   owner: 'testOwner'
 }
 
@@ -153,7 +153,7 @@ export const tracksWithoutNext: SpotifyPaging<PlaylistTrack> = {
   next: null,
   offset: 0,
   previous: null,
-  total: 3,
+  total: 0,
   owner: 'testOwner'
 }
 
@@ -172,7 +172,18 @@ export const mergedTracks: SpotifyPaging<PlaylistTrack> = {
   next: null,
   offset: 0,
   previous: null,
-  total: 3,
+  total: 0,
+  owner: 'testOwner'
+}
+
+export const noTracks: SpotifyPaging<PlaylistTrack> = {
+  href: 'http://an.external.url',
+  items: [],
+  limit: 100,
+  next: null,
+  offset: 0,
+  previous: null,
+  total: 0,
   owner: 'testOwner'
 }
 
