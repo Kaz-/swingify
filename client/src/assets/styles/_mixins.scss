@@ -17,11 +17,6 @@
     .tracklist {
       .track {
         max-width: 435px;
-        &-informations {
-          .wrapper {
-            max-width: 240px;
-          }
-        }
       }
     }
   }
@@ -29,11 +24,6 @@
     .tracklist {
       .track {
         max-width: 705px;
-        &-informations {
-          .wrapper {
-            max-width: 510px;
-          }
-        }
       }
     }
   }
@@ -127,6 +117,7 @@
         flex-grow: 1;
         padding: 0 0.75em;
         .wrapper {
+          max-width: 240px;
           .name {
             text-overflow: ellipsis;
             overflow: hidden;
