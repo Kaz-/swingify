@@ -23,15 +23,21 @@ export class ProfileMenuComponent {
   constructor(private router: Router, private location: Location) { }
 
   generateUserLinks(user: SpotifyUser): NavLink[] {
-    return [{
-      name: 'Profile',
-      link: user.external_urls.spotify
-    },
-    {
-      name: 'Disconnect',
-      link: this.isSecondary ? this.redirect() : 'login',
-      action: () => this.isSecondary ? AuthService.removeSecondaryToken() : AuthService.removeToken()
-    }];
+    return [
+      {
+        name: 'Profile',
+        link: user.external_urls.spotify
+      },
+      {
+        name: 'Privacy',
+        link: '/privacy-policy'
+      },
+      {
+        name: 'Log out',
+        link: this.isSecondary ? this.redirect() : 'login',
+        action: () => this.isSecondary ? AuthService.removeSecondaryToken() : AuthService.removeToken()
+      }
+    ];
   }
 
   handle(): void {
