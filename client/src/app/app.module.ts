@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 
 import { SharedModule } from './shared/shared.module';
 import { SpotifyModule } from './spotify/spotify.module';
+import { YoutubeModule } from './youtube/youtube.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { SpotifyModule } from './spotify/spotify.module';
       resetTimeoutOnDuplicate: true
     }),
     SharedModule,
-    SpotifyModule
+    SpotifyModule,
+    YoutubeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
