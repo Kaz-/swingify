@@ -1,4 +1,5 @@
 @import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/mixins";
 :host {
   display: flex;
   flex-direction: column;
@@ -9,7 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1em 1.7em 0 1em;
+    padding: 1em 1em 0 1em;
     .back {
       cursor: pointer;
     }
@@ -28,13 +29,13 @@
     }
   }
   .card-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow-y: scroll;
+    @include scrollbar;
+    max-height: calc(100vh - 84px);
     height: 100%;
     swg-card {
       max-width: 250px;
-      margin: auto;
+      margin: 1em auto;
     }
     .tips {
       display: grid;

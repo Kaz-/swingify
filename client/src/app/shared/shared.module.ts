@@ -25,6 +25,8 @@ import { PlaylistNavComponent } from './components/playlist-nav/playlist-nav.com
 
 import { FormatStatusPipe } from './pipes/status.pipe';
 import { FormatErrorPipe } from './pipes/error.pipe';
+import { FooterComponent } from './components/footer/footer.component';
+import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     FormatErrorPipe,
     FormatStatusPipe,
     LikedComponent,
-    PlaylistNavComponent
+    PlaylistNavComponent,
+    FooterComponent,
+    PrivacyPolicyComponent
   ],
   imports: [
     CommonModule,
@@ -65,7 +69,9 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     PlaylistsComponent,
     DialogComponent,
     LikedComponent,
-    PlaylistNavComponent
+    PlaylistNavComponent,
+    FooterComponent,
+    PrivacyPolicyComponent
   ]
 })
 export class SharedModule { }

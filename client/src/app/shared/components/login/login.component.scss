@@ -1,4 +1,5 @@
 @import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/mixins";
 :host {
   display: flex;
   flex-grow: 1;
@@ -7,7 +8,8 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, #bf6eb1, #12253c);
-  overflow: scroll;
+  overflow-y: scroll;
+  @include scrollbar;
   header {
     font-size: 25px;
     display: flex;
