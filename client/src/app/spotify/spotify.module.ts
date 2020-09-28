@@ -9,10 +9,14 @@ import { SharedModule } from '../shared/shared.module';
 import { MainComponent } from './components/main/main.component';
 import { ExportComponent } from './components/export/export.component';
 
+import { AuthService } from './services/auth.service';
 import { SpotifyInterceptor } from './services/spotify.interceptor';
 
 @NgModule({
-  declarations: [ExportComponent, MainComponent],
+  declarations: [
+    MainComponent,
+    ExportComponent
+  ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -21,6 +25,7 @@ import { SpotifyInterceptor } from './services/spotify.interceptor';
     SharedModule,
   ],
   providers: [
+    AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: SpotifyInterceptor, multi: true }
   ]
 })

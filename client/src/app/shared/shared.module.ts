@@ -4,8 +4,9 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
-import { AuthService } from './services/auth.service';
-import { AuthGuard } from './guards/auth.guard';
+import { SpotifyAuthGuard } from './guards/spotify-auth.guard';
+import { YoutubeAuthGuard } from './guards/youtube-auth.guard';
+
 import { ErrorService } from './services/error.service';
 import { LoaderService } from './services/loader.service';
 
@@ -55,8 +56,8 @@ import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-poli
     InfiniteScrollModule
   ],
   providers: [
-    AuthService,
-    AuthGuard,
+    SpotifyAuthGuard,
+    YoutubeAuthGuard,
     ErrorService,
     LoaderService
   ],

@@ -27,6 +27,10 @@ const routes: Routes = [
     loadChildren: () => import('./spotify/spotify.module').then(m => m.SpotifyModule)
   },
   {
+    path: 'youtube',
+    loadChildren: () => import('./youtube/youtube.module').then(m => m.YoutubeModule)
+  },
+  {
     path: 'privacy-policy',
     component: PrivacyPolicyComponent
   },

@@ -3,15 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from '../shared/components/home/home.component';
 
-import { AuthGuard } from '../shared/guards/auth.guard';
+import { YoutubeAuthGuard } from '../shared/guards/youtube-auth.guard';
 
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
+    canActivate: [YoutubeAuthGuard],
+    canActivateChild: [YoutubeAuthGuard],
     children: [
       {
         path: '',

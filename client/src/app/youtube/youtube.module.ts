@@ -6,8 +6,14 @@ import { RouterModule } from '@angular/router';
 import { YoutubeRoutingModule } from './youtube-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
+import { AuthService } from './services/auth.service';
+
+import { MainComponent } from './components/main/main.component';
+
 @NgModule({
-  declarations: [],
+  declarations: [
+    MainComponent
+  ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -15,6 +21,8 @@ import { SharedModule } from '../shared/shared.module';
     YoutubeRoutingModule,
     SharedModule,
   ],
-  providers: []
+  providers: [
+    AuthService
+  ]
 })
 export class YoutubeModule { }

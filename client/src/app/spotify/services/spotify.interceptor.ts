@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { AuthorizationToken } from '../models/spotify.models';
+import { AuthService } from '../services/auth.service';
+import { AuthorizationToken } from '../../shared/models/shared.models';
 
 @Injectable()
 export class SpotifyInterceptor implements HttpInterceptor {

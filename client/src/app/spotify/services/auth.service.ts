@@ -7,8 +7,8 @@ import { Observable, EMPTY } from 'rxjs';
 import { switchMap, catchError, mergeMap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { AuthorizationToken, SpotifyConfiguration } from 'src/app/spotify/models/spotify.models';
-import { ErrorService } from './error.service';
+import { AuthorizationToken } from '../../shared/models/shared.models';
+import { ErrorService } from '../../shared/services/error.service';
 
 @Injectable()
 export class AuthService {
@@ -59,10 +59,6 @@ export class AuthService {
   static isSecondaryAuthenticated(): boolean {
     const token = AuthService.getSecondaryToken();
     return token && !AuthService.isTokenExpired(token);
-  }
-
-  getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
-    return this.http.get<SpotifyConfiguration>(`${environment.spotify.userPath}/configuration`);
   }
 
   verify(authorizationCode: string, isSecondary: boolean): Observable<AuthorizationToken> {

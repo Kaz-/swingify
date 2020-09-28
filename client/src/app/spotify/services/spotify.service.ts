@@ -16,7 +16,7 @@ import {
   LIKED_ID
 } from '../models/spotify.models';
 import { ErrorService } from 'src/app/shared/services/error.service';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'

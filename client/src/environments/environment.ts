@@ -12,6 +12,9 @@ export const environment = {
     playlistsPath: 'http://localhost:4200/api/spotify/playlists',
     libraryPath: 'http://localhost:4200/api/spotify/library',
     browsePath: 'http://localhost:4200/api/spotify/browse'
+  },
+  youtube: {
+    userPath: 'http://localhost:4200/api/youtube/user',
   }
 };
 

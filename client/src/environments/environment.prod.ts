@@ -9,5 +9,8 @@ export const environment = {
     playlistsPath: 'https://swingify.me/api/spotify/playlists',
     libraryPath: 'https://swingify.me/api/spotify/library',
     browsePath: 'https://swingify.me/api/spotify/browse'
+  },
+  youtube: {
+    userPath: 'https://swingify.me/api/youtube/user',
   }
 };

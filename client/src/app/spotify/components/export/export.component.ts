@@ -8,7 +8,7 @@ import { PrimaryService } from '../../services/primary.service';
 import { SecondaryService } from '../../services/secondary.service';
 
 import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack } from '../../models/spotify.models';
-import { AuthService } from '../../../shared/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({

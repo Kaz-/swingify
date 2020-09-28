@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { SpotifyUser } from 'src/app/spotify/models/spotify.models';
 import { NavLink } from '../../models/shared.models';
 
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../spotify/services/auth.service';
 
 @Component({
   selector: 'swg-profile-menu',

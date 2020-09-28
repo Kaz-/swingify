@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from '../shared/components/home/home.component';
-
 import { MainComponent } from '../spotify/components/main/main.component';
+import { HomeComponent } from '../shared/components/home/home.component';
 import { ExportComponent } from '../spotify/components/export/export.component';
 
-import { AuthGuard } from '../shared/guards/auth.guard';
+import { SpotifyAuthGuard } from '../shared/guards/spotify-auth.guard';
 
 
 const routes: Routes = [
   {
     path: '',
     component: MainComponent,
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
+    canActivate: [SpotifyAuthGuard],
+    canActivateChild: [SpotifyAuthGuard],
     children: [
       {
         path: '',

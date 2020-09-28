@@ -4,9 +4,11 @@ import { Subscription } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 
-import { AuthService } from '../../services/auth.service';
+import { AuthService as SpotifyAuthService } from '../../../spotify/services/auth.service';
+import { AuthService as YoutubeAuthService } from '../../../youtube/services/auth.service';
 
-import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
+import { AuthorizationToken } from '../../models/shared.models';
+
 import { AuthPlatform } from '../../models/shared.models';
 
 @Component({
@@ -21,7 +23,8 @@ export class LoginComponent implements OnDestroy {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private spotifyAuthService: SpotifyAuthService,
+    private youtubeAuthService: YoutubeAuthService
   ) { }
 
   ngOnDestroy(): void {
@@ -42,18 +45,21 @@ export class LoginComponent implements OnDestroy {
   }
 
   private authenticateWithSpotify(): void {
-    const token: AuthorizationToken = AuthService.getToken();
+    const token: AuthorizationToken = SpotifyAuthService.getToken();
     if (token) {
-      AuthService.isTokenExpired(token)
-        ? this.subscriptions.push(this.authService.refresh(token).subscribe())
+      SpotifyAuthService.isTokenExpired(token)
+        ? this.subscriptions.push(this.spotifyAuthService.refresh(token).subscribe())
         : this.router.navigateByUrl('/spotify/home');
     } else {
-      this.subscriptions.push(this.authService.authorize().subscribe());
+      this.subscriptions.push(this.spotifyAuthService.authorize().subscribe());
     }
   }
 
   private authenticateWithYoutube(): void {
-    // TODO: implement YouTube authentication
+    const token: AuthorizationToken = YoutubeAuthService.getToken();
+    token
+      ? this.router.navigateByUrl('/youtube/home')
+      : this.subscriptions.push(this.youtubeAuthService.authorize().subscribe());
   }
 
 }
