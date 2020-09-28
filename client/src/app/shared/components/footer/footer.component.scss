@@ -4,8 +4,6 @@
   align-items: center;
   position: fixed;
   width: 100%;
-  height: 30px;
-  background: $background;
   bottom: 0;
   .footer {
     display: flex;
@@ -14,6 +12,9 @@
     flex: 1;
     .links > a {
       margin: 0 1em;
+      .brand {
+        margin-right: 0.5em;
+      }
       &:hover {
         text-decoration: underline;
       }
