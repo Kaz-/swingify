@@ -1,0 +1,23 @@
+@import "../../../../assets/styles/colors";
+:host {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  .footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+    .links > a {
+      margin: 0 1em;
+      .brand {
+        margin-right: 0.5em;
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
