@@ -12,5 +12,6 @@ export const environment = {
   },
   youtube: {
     userPath: 'https://swingify.me/api/youtube/user',
+    playlistsPath: 'https://swingify.me/api/youtube/playlists'
   }
 };

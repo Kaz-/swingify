@@ -14,12 +14,12 @@ export class SpotifyInterceptor implements HttpInterceptor {
 
   private processInterception(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     request = request.headers.get('Secondary') === 'true'
-      ? this.transformRequestForSecondary(request)
-      : this.transformRequestForPrimary(request);
+      ? this.mutateAsPrimary(request)
+      : this.mutateAsSecondary(request);
     return next.handle(request);
   }
 
-  private transformRequestForPrimary(request: HttpRequest<any>): HttpRequest<any> {
+  private mutateAsPrimary(request: HttpRequest<any>): HttpRequest<any> {
     const token: AuthorizationToken = AuthService.getToken();
     if (AuthService.isAuthenticated()) {
       request = request.clone({
@@ -36,7 +36,7 @@ export class SpotifyInterceptor implements HttpInterceptor {
     return request;
   }
 
-  private transformRequestForSecondary(request: HttpRequest<any>): HttpRequest<any> {
+  private mutateAsSecondary(request: HttpRequest<any>): HttpRequest<any> {
     if (AuthService.isSecondaryAuthenticated()) {
       const token: AuthorizationToken = AuthService.getSecondaryToken();
       request = request.clone({

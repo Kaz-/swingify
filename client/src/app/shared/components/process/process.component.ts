@@ -58,18 +58,19 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   private setTokenAccordingly(token: AuthorizationToken): void {
+    token.created_at = Math.round(Date.now() / 1000); // in seconds
     switch (this.platform) {
       case AuthPlatform.SPOTIFY.toLowerCase():
-        token.created_at = Math.round(Date.now() / 1000);
         SpotifyAuthService.isAuthenticated() ? SpotifyAuthService.setSecondaryToken(token) : SpotifyAuthService.setToken(token);
+        this.router.navigateByUrl('/spotify/home');
         break;
       case AuthPlatform.YOUTUBE.toLowerCase():
         YoutubeAuthService.setToken(token);
+        this.router.navigateByUrl('/youtube/home');
         break;
       default:
         break;
     }
-    this.router.navigateByUrl('/spotify/home');
   }
 
 }

@@ -1,7 +1,7 @@
 <div class="loader" #loader>
   <div class="element"></div>
 </div>
-<ng-container *ngIf="spotifyUser$ | async">
+<ng-container *ngIf="user$ | async">
   <div class="top-bar">
     <div class="shares">
       <a class="share-link" href="https://github.com/nohanna" target="_blank">
@@ -11,7 +11,7 @@
         <i class="brand twitter"></i>
       </a>
     </div>
-    <swg-profile-menu [user$]="spotifyUser$"></swg-profile-menu>
+    <swg-profile-menu [user$]="user$"></swg-profile-menu>
   </div>
   <div class="nav-bar">
     <nav>
@@ -38,9 +38,9 @@
         </ul>
       </div>
       <div class="playlists">
-        <swg-playlists title="Playlists" [allowCreation]="true" [user$]="spotifyUser$"
-          [playlists$]="spotifyPlaylists$" [isSecondary]="false"></swg-playlists>
-        <swg-playlists title="Featured" [user$]="spotifyUser$" [playlists$]="featuredPlaylists$" [isSecondary]="false"></swg-playlists>
+        <swg-playlists title="Playlists" [allowCreation]="true" [user$]="user$"
+          [playlists$]="playlists$" [isSecondary]="false"></swg-playlists>
+        <swg-playlists title="Featured" [user$]="user$" [playlists$]="featuredPlaylists$" [isSecondary]="false"></swg-playlists>
       </div>
     </nav>
   </div>

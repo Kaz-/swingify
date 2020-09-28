@@ -8,7 +8,7 @@ import { environment } from '../../../../environments/environment';
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 import { NavLink, DialogInput } from 'src/app/shared/models/shared.models';
 
-import { SpotifyService } from 'src/app/spotify/services/spotify.service';
+import { SpotifyService } from '../../services/spotify.service';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 
 @Component({
@@ -75,11 +75,11 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
-  get spotifyUser$(): Observable<SpotifyUser> {
+  get user$(): Observable<SpotifyUser> {
     return this.spotifyService.primaryUser$;
   }
 
-  get spotifyPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
+  get playlists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
     return this.spotifyService.primaryPlaylists$;
   }
 
@@ -92,7 +92,7 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onSearch(playlistName: string): void {
     this.subscriptions.push(
-      this.spotifyPlaylists$.pipe(
+      this.playlists$.pipe(
         mergeMap(paging => paging.items),
         filter(playlist => playlist.name.toLowerCase().trim().includes(playlistName))
       ).subscribe(playlist => {

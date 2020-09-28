@@ -56,6 +56,7 @@ export class LoginComponent implements OnDestroy {
   private authenticateWithYoutube(): void {
     const token: AuthorizationToken = YoutubeAuthService.getToken();
     if (token) {
+      console.log(YoutubeAuthService.isTokenExpired(token));
       YoutubeAuthService.isTokenExpired(token)
         ? this.subscriptions.push(this.youtubeAuthService.refresh(token).subscribe())
         : this.router.navigateByUrl('/youtube/home');

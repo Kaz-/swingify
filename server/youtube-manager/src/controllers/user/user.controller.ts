@@ -4,7 +4,7 @@ import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
 
-import { AuthorizationToken, AuthorizeQueryOptions, SCOPES } from '../../models/youtube.models';
+import { AuthorizationToken, AuthorizeQueryOptions, Details, SCOPES, Snippet } from '../../models/youtube.models';
 import { SharedService } from '../../services/shared.service';
 
 @Controller('user')
@@ -58,6 +58,12 @@ export class UserController {
           `&scope=${options.scope}&access_type=${options.accessType}&prompt=${options.prompt}`;
       })
     );
+  }
+
+  @Get('me')
+  getUser(@Req() request: Request): Observable<Details<Snippet>> {
+    this.logger.log(`Requesting user's profile`);
+    return this.sharedService.getUser(request);
   }
 
 }

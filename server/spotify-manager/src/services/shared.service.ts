@@ -64,8 +64,10 @@ export class SharedService {
   }
 
   getUserProfile(request: Request): Observable<SpotifyUser> {
-    return this.http.get<SpotifyUser>(`${environment.apiBaseUrl}/me`, { headers: SharedService.getAuthorizationHeader(request) })
-      .pipe(map(response => response.data));
+    return this.http.get<SpotifyUser>(
+      `${environment.apiBaseUrl}/me`,
+      { headers: SharedService.getAuthorizationHeader(request) }
+    ).pipe(map(response => response.data));
   }
 
   getTracksByRequest(request: Request, from?: string, limit?: number): Observable<SpotifyPaging<PlaylistTrack>> {

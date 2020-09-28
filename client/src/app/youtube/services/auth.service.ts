@@ -70,6 +70,7 @@ export class AuthService {
   refresh(token: AuthorizationToken): Observable<never> {
     return this.verify(token.refresh_token).pipe(
       switchMap(refreshedToken => {
+        token.created_at = Date.now() / 1000; // in seconds
         AuthService.setToken(refreshedToken);
         return EMPTY;
       }),
