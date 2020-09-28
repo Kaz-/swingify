@@ -4,15 +4,12 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
-import { SpotifyAuthGuard } from './guards/spotify-auth.guard';
-import { YoutubeAuthGuard } from './guards/youtube-auth.guard';
-
 import { ErrorService } from './services/error.service';
 import { LoaderService } from './services/loader.service';
 
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProcessComponent } from './components/process/process.component';
-import { HomeComponent } from './components/home/home.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
 import { CardComponent } from './components/card/card.component';
 import { PlaylistImageComponent } from './components/playlist-image/playlist-image.component';
@@ -23,17 +20,17 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { ErrorComponent } from './components/error/error.component';
 import { LikedComponent } from './components/liked/liked.component';
 import { PlaylistNavComponent } from './components/playlist-nav/playlist-nav.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 
 import { FormatStatusPipe } from './pipes/status.pipe';
 import { FormatErrorPipe } from './pipes/error.pipe';
-import { FooterComponent } from './components/footer/footer.component';
-import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     ProcessComponent,
-    HomeComponent,
+    DashboardComponent,
     PlaylistComponent,
     CardComponent,
     PlaylistImageComponent,
@@ -56,8 +53,6 @@ import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-poli
     InfiniteScrollModule
   ],
   providers: [
-    SpotifyAuthGuard,
-    YoutubeAuthGuard,
     ErrorService,
     LoaderService
   ],

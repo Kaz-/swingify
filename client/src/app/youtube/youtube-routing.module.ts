@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from '../shared/components/home/home.component';
+import { MainComponent } from './components/main/main.component';
+import { HomeComponent } from './components/home/home.component';
 
-import { YoutubeAuthGuard } from '../shared/guards/youtube-auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
-    canActivate: [YoutubeAuthGuard],
-    canActivateChild: [YoutubeAuthGuard],
+    component: MainComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',

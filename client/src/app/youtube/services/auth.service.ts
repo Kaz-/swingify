@@ -4,7 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable, EMPTY } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { AuthorizationToken } from '../../shared/models/shared.models';
@@ -65,6 +65,19 @@ export class AuthService {
         }),
         catchError(err => this.errorService.handleError(err))
       );
+  }
+
+  refresh(token: AuthorizationToken): Observable<never> {
+    return this.verify(token.refresh_token).pipe(
+      switchMap(refreshedToken => {
+        AuthService.setToken(refreshedToken);
+        return EMPTY;
+      }),
+      catchError(() => {
+        AuthService.removeToken();
+        return this.authorize();
+      })
+    );
   }
 
 }

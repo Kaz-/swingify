@@ -36,7 +36,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   private handle(params: Params): Observable<AuthorizationToken> {
-    console.log(params);
     this.platform = params.platform;
     switch (params.platform) {
       case AuthPlatform.SPOTIFY.toLowerCase():

@@ -9,10 +9,14 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthService } from './services/auth.service';
 
 import { MainComponent } from './components/main/main.component';
+import { HomeComponent } from './components/home/home.component';
+
+import { AuthGuard } from '../youtube/guards/auth.guard';
 
 @NgModule({
   declarations: [
-    MainComponent
+    MainComponent,
+    HomeComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +26,8 @@ import { MainComponent } from './components/main/main.component';
     SharedModule,
   ],
   providers: [
-    AuthService
+    AuthService,
+    AuthGuard
   ]
 })
 export class YoutubeModule { }

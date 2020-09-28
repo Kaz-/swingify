@@ -48,7 +48,7 @@ export class UserController {
         const options: AuthorizeQueryOptions = {
           responseType: 'code',
           clientId: config.clientId,
-          redirectUri: escape(`${this.sharedService.baseUrl}/process`),
+          redirectUri: escape(`${this.sharedService.baseUrl}/process?platform=spotify`),
           scope: SCOPES,
           showDialog: true
         };

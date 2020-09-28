@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, CanActivateChild } from '@angular/router';
 
-import { AuthService } from '../../spotify/services/auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class SpotifyAuthGuard implements CanActivate, CanActivateChild {
+export class AuthGuard implements CanActivate, CanActivateChild {
 
   constructor(public router: Router) { }
 
