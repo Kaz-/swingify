@@ -1,24 +1,30 @@
 @import "../../../../assets/styles/colors";
 :host {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  margin: 1em;
-  padding: 2em;
-  background: $background;
-  border-radius: 8px;
-  isolation: isolate;
-  h1 {
+  > div {
     display: flex;
-    align-items: baseline;
-    justify-content: center;
-    i {
-      margin-right: 0.5em;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin: 1em;
+    padding: 2em;
+    background: $background;
+    border-radius: 8px;
+    isolation: isolate;
+    &:hover {
+      cursor: pointer;
+      transition: ease 0.3s;
     }
-  }
-  button {
-    margin-top: 1em;
+    h1 {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      i {
+        margin-right: 0.5em;
+      }
+    }
+    button {
+      margin-top: 1em;
+    }
   }
 }

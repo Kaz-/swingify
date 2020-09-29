@@ -1,0 +1,49 @@
+@import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/mixins";
+:host {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  padding: 2em 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #bf6eb1, #12253c);
+  overflow-y: scroll;
+  @include scrollbar;
+  header {
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    > div {
+      font-size: 12px;
+    }
+  }
+  section {
+    margin: 2em;
+    display: flex;
+    justify-content: center;
+    swg-card::ng-deep {
+      > div {
+        background-color: #101a2f;
+        justify-content: flex-start;
+        &:hover {
+          background-color: #0b1323;
+        }
+      }
+    }
+    .tips {
+      display: grid;
+      row-gap: 2em;
+      justify-content: center;
+      margin: 2em;
+      h2 {
+        font-weight: 600;
+      }
+      p {
+        color: $alt;
+      }
+    }
+  }
+}

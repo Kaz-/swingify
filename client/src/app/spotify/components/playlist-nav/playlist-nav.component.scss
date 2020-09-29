@@ -33,9 +33,10 @@
     @include scrollbar;
     max-height: calc(100vh - 84px);
     height: 100%;
-    swg-card {
-      max-width: 250px;
-      margin: 1em auto;
+    swg-card::ng-deep {
+      > div {
+        margin: 2em 1em 2em 2em;
+      }
     }
     .tips {
       display: grid;

@@ -72,7 +72,7 @@ export class SpotifyAuthService {
           this.router.navigateByUrl('/spotify/export');
         } else {
           SpotifyAuthService.removeToken();
-          this.router.navigateByUrl('/login');
+          this.router.navigateByUrl('/dashboard');
         }
         return EMPTY;
       })

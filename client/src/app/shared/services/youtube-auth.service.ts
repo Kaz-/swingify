@@ -50,7 +50,7 @@ export class YoutubeAuthService {
       { params: new HttpParams().set('authorizationCode', authorizationCode) }
     ).pipe(
       catchError(() => {
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/dashboard');
         return EMPTY;
       })
     );

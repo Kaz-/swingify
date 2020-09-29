@@ -59,6 +59,9 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   &.copy {
     @extend .fa-copy;
   }
+  &.bars {
+    @extend .fa-bars;
+  }
 }
 .brand {
   font-family: 'Font Awesome 5 brands';

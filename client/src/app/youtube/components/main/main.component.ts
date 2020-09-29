@@ -52,6 +52,11 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         name: 'Dashboard',
         link: '/dashboard',
+        icon: 'bars'
+      },
+      {
+        name: 'Home',
+        link: '/youtube/home',
         icon: 'home'
       },
       {

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
-import { LoginComponent } from './shared/components/login/login.component';
 import { ProcessComponent } from './shared/components/process/process.component';
 import { PrivacyPolicyComponent } from './shared/components/privacy-policy/privacy-policy.component';
 import { ErrorComponent } from './shared/components/error/error.component';
@@ -17,10 +16,6 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
   },
   {
     path: 'process',

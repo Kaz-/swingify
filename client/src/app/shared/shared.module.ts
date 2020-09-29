@@ -8,7 +8,6 @@ import { SpotifyAuthService } from './services/spotify-auth.service';
 import { YoutubeAuthService } from './services/youtube-auth.service';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { LoginComponent } from './components/login/login.component';
 import { ProcessComponent } from './components/process/process.component';
 import { CardComponent } from './components/card/card.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
@@ -23,9 +22,8 @@ import { FormatErrorPipe } from './pipes/error.pipe';
 
 @NgModule({
   declarations: [
-    LoginComponent,
-    ProcessComponent,
     DashboardComponent,
+    ProcessComponent,
     CardComponent,
     DropdownComponent,
     DialogComponent,
