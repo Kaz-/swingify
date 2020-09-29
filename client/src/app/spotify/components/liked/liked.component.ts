@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser, Track } from '../../../spotify/models/spotify.models';
-import { ETrackAction, PlaylistAction } from '../../models/shared.models';
+import { ETrackAction, PlaylistAction } from '../../../shared/models/shared.models';
 
 @Component({
   selector: 'swg-liked',

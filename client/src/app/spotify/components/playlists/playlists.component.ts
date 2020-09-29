@@ -5,7 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { SpotifyPaging, SpotifyPlaylist, PlaylistCreation, SpotifyUser } from 'src/app/spotify/models/spotify.models';
-import { DialogInput } from '../../models/shared.models';
+import { DialogInput } from '../../../shared/models/shared.models';
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 
 @Component({

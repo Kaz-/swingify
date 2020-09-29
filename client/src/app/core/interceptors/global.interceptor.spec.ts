@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SpotifyInterceptor } from './spotify.interceptor';
+import { GlobalInterceptor } from './global.interceptor';
 
-describe('SpotifyInterceptor', () => {
-  let service: SpotifyInterceptor;
+describe('YoutubeService', () => {
+  let service: GlobalInterceptor;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(SpotifyInterceptor);
+    service = TestBed.inject(GlobalInterceptor);
   });
 
   it('should be created', () => {

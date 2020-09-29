@@ -3,8 +3,8 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { AuthService as SpotifyAuthService } from '../../../spotify/services/auth.service';
-import { AuthService as YoutubeAuthService } from '../../../youtube/services/auth.service';
+import { SpotifyAuthService } from '../../services/spotify-auth.service';
+import { YoutubeAuthService } from '../../services/youtube-auth.service';
 
 import { AuthPlatform, AuthorizationToken } from '../../models/shared.models';
 

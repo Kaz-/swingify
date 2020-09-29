@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { YoutubeInterceptor } from './youtube.interceptor';
+import { YoutubeAuthService } from './youtube-auth.service';
 
-describe('YoutubeService', () => {
-  let service: YoutubeInterceptor;
+describe('YoutubeAuthService', () => {
+  let service: YoutubeAuthService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(YoutubeInterceptor);
+    service = TestBed.inject(YoutubeAuthService);
   });
 
   it('should be created', () => {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, CanActivateChild } from '@angular/router';
 
-import { AuthService } from '../services/auth.service';
+import { YoutubeAuthService } from '../../shared/services/youtube-auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
 
   private checkAuthentication(): boolean {
-    if (!AuthService.isAuthenticated()) {
+    if (!YoutubeAuthService.isAuthenticated()) {
       this.router.navigate(['login']);
       return false;
     }

@@ -4,9 +4,9 @@ import { Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { SpotifyUser } from 'src/app/spotify/models/spotify.models';
-import { NavLink } from '../../models/shared.models';
+import { NavLink } from '../../../shared/models/shared.models';
 
-import { AuthService } from '../../../spotify/services/auth.service';
+import { SpotifyAuthService } from '../../../shared/services/spotify-auth.service';
 
 @Component({
   selector: 'swg-profile-menu',
@@ -35,7 +35,7 @@ export class ProfileMenuComponent {
       {
         name: 'Log out',
         link: this.isSecondary ? this.redirect() : 'login',
-        action: () => this.isSecondary ? AuthService.removeSecondaryToken() : AuthService.removeToken()
+        action: () => this.isSecondary ? SpotifyAuthService.removeSecondaryToken() : SpotifyAuthService.removeToken()
       }
     ];
   }

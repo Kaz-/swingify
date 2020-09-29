@@ -8,12 +8,14 @@ export const environment = {
   baseUrl: 'http://localhost:4200',
   productVersion: version,
   spotify: {
+    basePath: 'http://localhost:4200/api/spotify',
     userPath: 'http://localhost:4200/api/spotify/user',
     playlistsPath: 'http://localhost:4200/api/spotify/playlists',
     libraryPath: 'http://localhost:4200/api/spotify/library',
     browsePath: 'http://localhost:4200/api/spotify/browse'
   },
   youtube: {
+    basePath: 'http://localhost:4200/api/youtube',
     userPath: 'http://localhost:4200/api/youtube/user',
     playlistsPath: 'http://localhost:4200/api/youtube/playlists'
   }

@@ -7,10 +7,10 @@ import { distinctUntilChanged, map, mergeMap, tap } from 'rxjs/operators';
 import { PrimaryService } from '../../../spotify/services/primary.service';
 import { SecondaryService } from '../../../spotify/services/secondary.service';
 import { SpotifyService } from '../../../spotify/services/spotify.service';
-import { AuthService } from '../../../spotify/services/auth.service';
+import { SpotifyAuthService } from '../../../shared/services/spotify-auth.service';
 
 import { LIKED_ID, PlaylistTrack, SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser } from '../../../spotify/models/spotify.models';
-import { PlaylistAction, ETrackAction } from '../../models/shared.models';
+import { PlaylistAction, ETrackAction } from '../../../shared/models/shared.models';
 
 @Component({
   selector: 'swg-playlist-nav',
@@ -35,7 +35,7 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private authService: AuthService,
+    private authService: SpotifyAuthService,
     private spotifyService: SpotifyService,
     private primaryService: PrimaryService,
     private secondaryService: SecondaryService

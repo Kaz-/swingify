@@ -4,14 +4,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { Observable, EMPTY } from 'rxjs';
-import { switchMap, catchError, mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { AuthorizationToken } from '../../shared/models/shared.models';
 import { ErrorService } from '../../shared/services/error.service';
 
 @Injectable()
-export class AuthService {
+export class YoutubeAuthService {
 
   constructor(
     private http: HttpClient,
@@ -22,27 +22,15 @@ export class AuthService {
   ) { }
 
   static setToken(token: AuthorizationToken): void {
-    localStorage.setItem('primary_spotify_token', JSON.stringify(token));
-  }
-
-  static setSecondaryToken(token: AuthorizationToken): void {
-    localStorage.setItem('secondary_spotify_token', JSON.stringify(token));
+    localStorage.setItem('primary_youtube_token', JSON.stringify(token));
   }
 
   static getToken(): AuthorizationToken {
-    return JSON.parse(localStorage.getItem('primary_spotify_token'));
-  }
-
-  static getSecondaryToken(): AuthorizationToken {
-    return JSON.parse(localStorage.getItem('secondary_spotify_token'));
+    return JSON.parse(localStorage.getItem('primary_youtube_token'));
   }
 
   static removeToken(): void {
-    localStorage.removeItem('primary_spotify_token');
-  }
-
-  static removeSecondaryToken(): void {
-    localStorage.removeItem('secondary_spotify_token');
+    localStorage.removeItem('primary_youtube_token');
   }
 
   static isTokenExpired(token: AuthorizationToken): boolean {
@@ -52,35 +40,24 @@ export class AuthService {
   }
 
   static isAuthenticated(): boolean {
-    const token = AuthService.getToken();
-    return token && !AuthService.isTokenExpired(token);
+    const token = YoutubeAuthService.getToken();
+    return token && !YoutubeAuthService.isTokenExpired(token);
   }
 
-  static isSecondaryAuthenticated(): boolean {
-    const token = AuthService.getSecondaryToken();
-    return token && !AuthService.isTokenExpired(token);
-  }
-
-  verify(authorizationCode: string, isSecondary: boolean): Observable<AuthorizationToken> {
+  verify(authorizationCode: string): Observable<AuthorizationToken> {
     return this.http.get<AuthorizationToken>(
-      `${environment.spotify.userPath}/verify`,
+      `${environment.youtube.userPath}/verify`,
       { params: new HttpParams().set('authorizationCode', authorizationCode) }
     ).pipe(
       catchError(() => {
-        if (isSecondary) {
-          AuthService.removeSecondaryToken();
-          this.router.navigateByUrl('/spotify/export');
-        } else {
-          AuthService.removeToken();
-          this.router.navigateByUrl('/login');
-        }
+        this.router.navigateByUrl('/login');
         return EMPTY;
       })
     );
   }
 
   authorize(): Observable<never> {
-    return this.http.get<string>(`${environment.spotify.userPath}/authorize`, { responseType: 'text' as 'json' })
+    return this.http.get<string>(`${environment.youtube.userPath}/authorize`, { responseType: 'text' as 'json' })
       .pipe(
         mergeMap(redirection => {
           this.document.location.href = this.sanitizer.sanitize(SecurityContext.URL, redirection);
@@ -91,14 +68,14 @@ export class AuthService {
   }
 
   refresh(token: AuthorizationToken): Observable<never> {
-    return this.verify(token.refresh_token, false).pipe(
+    return this.verify(token.refresh_token).pipe(
       switchMap(refreshedToken => {
         token.created_at = Date.now() / 1000; // in seconds
-        AuthService.setToken(refreshedToken);
+        YoutubeAuthService.setToken(refreshedToken);
         return EMPTY;
       }),
       catchError(() => {
-        AuthService.removeToken();
+        YoutubeAuthService.removeToken();
         return this.authorize();
       })
     );

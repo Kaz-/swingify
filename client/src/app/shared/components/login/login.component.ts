@@ -4,8 +4,8 @@ import { Subscription } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 
-import { AuthService as SpotifyAuthService } from '../../../spotify/services/auth.service';
-import { AuthService as YoutubeAuthService } from '../../../youtube/services/auth.service';
+import { SpotifyAuthService } from '../../services/spotify-auth.service';
+import { YoutubeAuthService } from '../../services/youtube-auth.service';
 
 import { AuthorizationToken, AuthPlatform } from '../../models/shared.models';
 
