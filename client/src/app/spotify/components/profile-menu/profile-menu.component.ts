@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -20,7 +19,7 @@ export class ProfileMenuComponent {
 
   isMenuActive: boolean;
 
-  constructor(private router: Router, private location: Location) { }
+  constructor(private router: Router) { }
 
   generateUserLinks(user: SpotifyUser): NavLink[] {
     return [
@@ -34,7 +33,7 @@ export class ProfileMenuComponent {
       },
       {
         name: 'Log out',
-        link: this.isSecondary ? this.redirect() : 'login',
+        link: this.isSecondary ? this.redirect() : 'home',
         action: () => this.isSecondary ? SpotifyAuthService.removeSecondaryToken() : SpotifyAuthService.removeToken()
       }
     ];

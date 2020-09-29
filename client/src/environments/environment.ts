@@ -17,7 +17,10 @@ export const environment = {
   youtube: {
     basePath: 'http://localhost:4200/api/youtube',
     userPath: 'http://localhost:4200/api/youtube/user',
-    playlistsPath: 'http://localhost:4200/api/youtube/playlists'
+    playlistsPath: 'http://localhost:4200/api/youtube/playlists',
+    external: {
+      channel: 'https://www.youtube.com/channel'
+    }
   }
 };
 

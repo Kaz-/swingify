@@ -6,6 +6,8 @@ import { SharedModule } from '../shared/shared.module';
 
 import { MainComponent } from './components/main/main.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
+import { PlaylistsComponent } from './components/playlists/playlists.component';
 
 import { AuthGuard } from '../youtube/guards/auth.guard';
 
@@ -13,7 +15,9 @@ import { AuthGuard } from '../youtube/guards/auth.guard';
 @NgModule({
   declarations: [
     MainComponent,
-    DashboardComponent
+    DashboardComponent,
+    ProfileMenuComponent,
+    PlaylistsComponent
   ],
   imports: [
     CommonModule,
