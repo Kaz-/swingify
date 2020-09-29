@@ -5,6 +5,15 @@ export enum AuthPlatform {
   YOUTUBE = 'YouTube'
 }
 
+export interface AuthorizationToken {
+  readonly access_token: string;
+  readonly expires_in: number;
+  readonly refresh_token: string;
+  readonly scope: string;
+  readonly token_type: string;
+  created_at?: number;
+}
+
 export interface NavLink {
   name: string;
   link?: string | Observable<string>;

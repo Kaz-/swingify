@@ -1,0 +1,5 @@
+@import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/mixins";
+:host {
+  @include playlist-image;
+}

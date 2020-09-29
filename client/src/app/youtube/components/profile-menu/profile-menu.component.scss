@@ -1,0 +1,23 @@
+:host {
+  .profile {
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .display-name {
+      > i {
+        font-size: 10px;
+      }
+    }
+    i {
+      margin: 0 0.5em 0.3em 0;
+    }
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin: 0 0.5em;
+    }
+  }
+}

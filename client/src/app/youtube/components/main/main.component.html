@@ -1,0 +1,8 @@
+<swg-nav [user$]="user$" [navLinks]="navLinks" (search)="onSearch($event)">
+  <ng-container profile>
+    <swg-profile-menu [user$]="user$"></swg-profile-menu>
+  </ng-container>
+  <ng-container playlists>
+    <swg-playlists title="Playlists" [user$]="user$" [playlists$]="playlists$"></swg-playlists>
+  </ng-container>
+</swg-nav>

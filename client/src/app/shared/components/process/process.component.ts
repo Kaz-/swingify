@@ -3,8 +3,10 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { AuthService } from '../../services/auth.service';
-import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
+import { SpotifyAuthService } from '../../services/spotify-auth.service';
+import { YoutubeAuthService } from '../../services/youtube-auth.service';
+
+import { AuthPlatform, AuthorizationToken } from '../../models/shared.models';
 
 @Component({
   selector: 'swg-process',
@@ -14,35 +16,61 @@ import { AuthorizationToken } from 'src/app/spotify/models/spotify.models';
 export class ProcessComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
+  private platform: string;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private spotifyAuthService: SpotifyAuthService,
+    private youtubeAuthService: YoutubeAuthService
   ) { }
 
   ngOnInit(): void {
     this.subscription = this.route.queryParams
-      .pipe(mergeMap(params => this.isSecondaryAuthentication(params)))
-      .subscribe(token => {
-        token.created_at = Math.round(Date.now() / 1000); // in seconds
-        this.setTokenAccordingly(token);
-      });
+      .pipe(mergeMap(params => this.handle(params)))
+      .subscribe(token => this.setTokenAccordingly(token));
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  private isSecondaryAuthentication(params: Params): Observable<AuthorizationToken> {
-    return AuthService.isAuthenticated()
-      ? this.authService.verify(params.code, true)
-      : this.authService.verify(params.code, false);
+  private handle(params: Params): Observable<AuthorizationToken> {
+    this.platform = params.platform;
+    switch (params.platform) {
+      case AuthPlatform.SPOTIFY.toLowerCase():
+        return this.authenticateWithSpotify(params);
+      case AuthPlatform.YOUTUBE.toLowerCase():
+        return this.authenticateWithYoutube(params);
+      default:
+        break;
+    }
+  }
+
+  private authenticateWithSpotify(params: Params): Observable<AuthorizationToken> {
+    return SpotifyAuthService.isAuthenticated()
+      ? this.spotifyAuthService.verify(params.code, true)
+      : this.spotifyAuthService.verify(params.code, false);
+  }
+
+  private authenticateWithYoutube(params: Params): Observable<AuthorizationToken> {
+    return this.youtubeAuthService.verify(params.code);
   }
 
   private setTokenAccordingly(token: AuthorizationToken): void {
-    AuthService.isAuthenticated() ? AuthService.setSecondaryToken(token) : AuthService.setToken(token);
-    this.router.navigateByUrl('/spotify/home');
+    token.created_at = Math.round(Date.now() / 1000); // in seconds
+    switch (this.platform) {
+      case AuthPlatform.SPOTIFY.toLowerCase():
+        SpotifyAuthService.isAuthenticated() ? SpotifyAuthService.setSecondaryToken(token) : SpotifyAuthService.setToken(token);
+        this.router.navigateByUrl('/spotify/dashboard');
+        break;
+      case AuthPlatform.YOUTUBE.toLowerCase():
+        YoutubeAuthService.setToken(token);
+        this.router.navigateByUrl('/youtube/dashboard');
+        break;
+      default:
+        break;
+    }
   }
 
 }

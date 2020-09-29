@@ -1,6 +1,8 @@
-<h1>
-  <i class="brand {{ platform.toLowerCase() }}"></i>
-  <span>{{ platform }}</span>
-</h1>
-<ng-content #description></ng-content>
-<button class="{{ platform.toLowerCase() }}-button" (click)="authenticate()">Log In</button>
+<div (click)="authenticate()">
+  <h1>
+    <i class="brand {{ platform.toLowerCase() }}"></i>
+    <span>{{ platform }}</span>
+  </h1>
+  <ng-content #description></ng-content>
+  <button *ngIf="!authenticated" class="{{ platform.toLowerCase() }}-button">Log In</button>
+</div>

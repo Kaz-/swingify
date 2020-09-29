@@ -8,7 +8,7 @@ import { PrimaryService } from '../../services/primary.service';
 import { SecondaryService } from '../../services/secondary.service';
 
 import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack } from '../../models/spotify.models';
-import { AuthService } from '../../../shared/services/auth.service';
+import { SpotifyAuthService } from '../../../shared/services/spotify-auth.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -114,11 +114,11 @@ export class ExportComponent implements OnInit, OnDestroy {
   }
 
   isAuthenticated(): boolean {
-    return AuthService.isAuthenticated();
+    return SpotifyAuthService.isAuthenticated();
   }
 
   isSecondaryAuthenticated(): boolean {
-    return AuthService.isSecondaryAuthenticated();
+    return SpotifyAuthService.isSecondaryAuthenticated();
   }
 
   getHelp(): string {

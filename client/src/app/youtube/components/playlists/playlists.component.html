@@ -1,0 +1,18 @@
+<h2>{{ title }}</h2>
+<ul class="playlists" *ngIf="playlists$ | async as playlists">
+  <li (click)="navigate(true)" title="Liked Songs">
+    <div class="playlist-link">
+      <div class="default liked">
+        <i class="icon heart"></i>
+      </div>
+      <div>Liked Songs</div>
+    </div>
+  </li>
+  <div class="separator"></div>
+  <li *ngFor="let playlist of playlists?.items" [title]="playlist.snippet.title">
+    <a class="playlist-link" (click)="navigate(false, playlist.id)">
+      <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
+      <div>{{ playlist.snippet.title }}</div>
+    </a>
+  </li>
+</ul>

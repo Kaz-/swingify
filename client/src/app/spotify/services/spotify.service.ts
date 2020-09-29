@@ -16,7 +16,7 @@ import {
   LIKED_ID
 } from '../models/spotify.models';
 import { ErrorService } from 'src/app/shared/services/error.service';
-import { AuthService } from '../../shared/services/auth.service';
+import { SpotifyAuthService } from '../../shared/services/spotify-auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -182,7 +182,10 @@ export class SpotifyService implements OnDestroy {
    */
   private setSecondaryHeader(isSecondary: boolean, withAdditionalAuthorization?: boolean): HttpHeaders {
     return withAdditionalAuthorization
-      ? new HttpHeaders({ Secondary: isSecondary.toString(), AdditionalAuthorization: `Bearer ${AuthService.getToken().access_token}` })
+      ? new HttpHeaders({
+        Secondary: isSecondary.toString(),
+        AdditionalAuthorization: `Bearer ${SpotifyAuthService.getToken().access_token}`
+      })
       : new HttpHeaders({ Secondary: isSecondary.toString() });
   }
 

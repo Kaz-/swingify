@@ -24,6 +24,7 @@
     height: 100%;
     .primary-nav {
       grid-area: primary-nav;
+      border-right: 1px solid $background;
     }
     .content {
       grid-area: content;
@@ -72,6 +73,7 @@
     }
     .secondary-nav {
       grid-area: secondary-nav;
+      border-left: 1px solid $background;
     }
   }
 }

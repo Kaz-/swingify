@@ -31,7 +31,7 @@ export class UserController {
           params: {
             grant_type: 'authorization_code',
             code: request.query.authorizationCode,
-            redirect_uri: `${this.sharedService.baseUrl}/process`
+            redirect_uri: `${this.sharedService.baseUrl}/process?platform=spotify`
           }
         };
         return this.http.post<AuthorizationToken>(`${environment.accountsPath}/api/token`, null, options);
@@ -48,7 +48,7 @@ export class UserController {
         const options: AuthorizeQueryOptions = {
           responseType: 'code',
           clientId: config.clientId,
-          redirectUri: escape(`${this.sharedService.baseUrl}/process`),
+          redirectUri: escape(`${this.sharedService.baseUrl}/process?platform=spotify`),
           scope: SCOPES,
           showDialog: true
         };

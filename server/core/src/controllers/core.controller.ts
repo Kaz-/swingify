@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { CoreService } from '../services/core.service';
 import { SpotifyConfiguration } from '../schemas/spotify-configuration.schema';
+import { YoutubeConfiguration } from '../schemas/youtube-configuration.schema';
 
 @Controller('core')
 export class CoreController {
@@ -16,6 +17,12 @@ export class CoreController {
   getSpotifyConfiguration(): Observable<SpotifyConfiguration> {
     this.logger.log(`Received request for Spotify configuration`);
     return this.coreService.getSpotifyConfiguration();
+  }
+
+  @MessagePattern('youtubeConfiguration')
+  getYoutubeConfiguration(): Observable<YoutubeConfiguration> {
+    this.logger.log(`Received request for Youtube configuration`);
+    return this.coreService.getYoutubeConfiguration();
   }
 
 }

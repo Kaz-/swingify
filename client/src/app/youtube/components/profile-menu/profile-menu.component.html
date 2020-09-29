@@ -1,0 +1,16 @@
+<div class="profile" (click)="handle()" (blur)="isMenuActive = false">
+  <ng-container *ngIf="(user$ | async)?.snippet.thumbnails; then image; else default"></ng-container>
+  <ng-template #default>
+    <i class="icon user"></i>
+  </ng-template>
+  <ng-template #image>
+    <img [src]="(user$ | async)?.snippet.thumbnails.default.url">
+  </ng-template>
+  <span class="display-name">
+    {{ (user$ | async)?.snippet.title }}
+    <i class="icon {{ isMenuActive ? 'chevron-up' : 'chevron-down' }}"></i>
+    <ng-container *ngIf="(user$ | async) as user">
+      <swg-dropdown [items]="generateUserLinks(user)" *ngIf="isMenuActive"></swg-dropdown>
+    </ng-container>
+  </span>
+</div>

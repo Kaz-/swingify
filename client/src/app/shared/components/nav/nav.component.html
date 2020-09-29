@@ -1,0 +1,50 @@
+<div class="loader" #loader>
+  <div class="element"></div>
+</div>
+<ng-container *ngIf="user$ | async">
+  <div class="top-bar">
+    <div class="shares">
+      <a class="share-link" href="https://github.com/nohanna" target="_blank">
+        <i class="brand github"></i>
+      </a>
+      <a class="share-link" href="https://twitter.com/wpereira_nhna" target="_blank">
+        <i class="brand twitter"></i>
+      </a>
+    </div>
+    <ng-content select="[profile]"></ng-content>
+  </div>
+  <div class="nav-bar">
+    <nav>
+      <div class="banner">
+        <a routerLink="/home">
+          <span>Swingify</span>
+          <div>v.{{ version }}</div>
+        </a>
+      </div>
+      <div class="nav" *ngIf="navLinks">
+        <ul>
+          <li *ngFor="let navLink of navLinks">
+            <a class="nav-link" [routerLink]="navLink.link" [routerLinkActive]="['is-active']">
+              <i class="icon {{ navLink.icon }}"></i>
+              <span>{{ navLink.name }}</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" (click)="isSearching = true">
+              <i class="icon search"></i>
+              <span>Search</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="playlists">
+        <ng-content select="[playlists]"></ng-content>
+      </div>
+    </nav>
+  </div>
+</ng-container>
+<div class="main-view">
+  <router-outlet #content></router-outlet>
+</div>
+<swg-dialog *ngIf="isSearching" [entry]="dialog" (cancel)="isSearching = false"
+  (action)="onSearch($event)"></swg-dialog>

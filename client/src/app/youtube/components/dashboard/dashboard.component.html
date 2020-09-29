@@ -1,0 +1,18 @@
+<section class="selector">
+  <div class="tip">
+    <h1>Welcome {{ (user$ | async)?.snippet.title }}!</h1>
+    <h3>Select a playlist and let the magic happen!</h3>
+  </div>
+  <div class="wrapper">
+    <ul>
+      <li class="playlist" *ngFor="let playlist of (playlists$ | async)?.items" (click)="redirect(playlist.id)">
+        <div class="box">
+          <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
+          <div class="overlay">
+            <div><i class="icon magic"></i>{{ playlist.snippet.title }}</div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>

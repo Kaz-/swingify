@@ -2,5 +2,9 @@
   "/api/spotify": {
     "target": "http://localhost:7200",
     "secure": false
+  },
+  "/api/youtube": {
+    "target": "http://localhost:7300",
+    "secure": false
   }
 }

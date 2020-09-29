@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LoginComponent } from './shared/components/login/login.component';
+import { HomeComponent } from './shared/components/home/home.component';
 import { ProcessComponent } from './shared/components/process/process.component';
-
 import { PrivacyPolicyComponent } from './shared/components/privacy-policy/privacy-policy.component';
 import { ErrorComponent } from './shared/components/error/error.component';
 
@@ -11,12 +10,12 @@ import { ErrorComponent } from './shared/components/error/error.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'spotify',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
-    path: 'login',
-    component: LoginComponent,
+    path: 'home',
+    component: HomeComponent
   },
   {
     path: 'process',
@@ -25,6 +24,10 @@ const routes: Routes = [
   {
     path: 'spotify',
     loadChildren: () => import('./spotify/spotify.module').then(m => m.SpotifyModule)
+  },
+  {
+    path: 'youtube',
+    loadChildren: () => import('./youtube/youtube.module').then(m => m.YoutubeModule)
   },
   {
     path: 'privacy-policy',
