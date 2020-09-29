@@ -1,11 +1,11 @@
 <section class="selector">
   <div class="tip">
-    <h1>Welcome {{ (spotifyUser$ | async)?.display_name }}!</h1>
+    <h1>Welcome {{ (user$ | async)?.display_name }}!</h1>
     <h3>Select a playlist and let the magic happen!</h3>
   </div>
   <div class="wrapper">
     <ul>
-      <li class="playlist" *ngFor="let playlist of (spotifyPlaylists$ | async)?.items" (click)="redirect(playlist.id)">
+      <li class="playlist" *ngFor="let playlist of (playlists$ | async)?.items" (click)="redirect(playlist.id)">
         <div class="box">
           <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
           <div class="overlay">

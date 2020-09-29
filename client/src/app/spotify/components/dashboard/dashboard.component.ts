@@ -17,11 +17,11 @@ export class DashboardComponent {
     private spotifyService: SpotifyService
   ) { }
 
-  get spotifyUser$(): Observable<SpotifyUser> {
+  get user$(): Observable<SpotifyUser> {
     return this.spotifyService.primaryUser$;
   }
 
-  get spotifyPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
+  get playlists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
     return this.spotifyService.primaryPlaylists$;
   }
 

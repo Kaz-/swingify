@@ -1,54 +1,40 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Router, UrlTree, RouterEvent } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, UrlTree } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { mergeMap, filter, map } from 'rxjs/operators';
 
-import { environment } from '../../../../environments/environment';
-
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
-import { NavLink, DialogInput } from 'src/app/shared/models/shared.models';
+import { NavLink } from 'src/app/shared/models/shared.models';
 
 import { SpotifyService } from '../../services/spotify.service';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 
 @Component({
   selector: 'swg-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MainComponent implements OnInit, OnDestroy {
 
-  @ViewChild('loader') loader: ElementRef;
-
-  version: string = environment.productVersion;
   navLinks: NavLink[];
-  subscriptions: Subscription[] = [];
+  subscription: Subscription;
   isSearching: boolean;
-  dialog: DialogInput;
   featuredPlaylists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
 
   constructor(
     private router: Router,
-    private spotifyService: SpotifyService,
-    private loaderService: LoaderService
+    private spotifyService: SpotifyService
   ) { }
 
   ngOnInit(): void {
     this.initializeLinks();
-    this.initializeDialog();
     this.featuredPlaylists$ = this.spotifyService.getFeaturedPlaylists()
       .pipe(map(featured => featured.playlists));
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  ngAfterViewInit(): void {
-    this.subscriptions.push(
-      this.router.events.subscribe((event: RouterEvent) =>
-        this.loaderService.navigationInterceptor(event, this.loader))
-    );
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   private initializeLinks(): void {
@@ -71,15 +57,6 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
     ];
   }
 
-  private initializeDialog(): void {
-    this.dialog = {
-      title: 'Search a playlist to export',
-      label: `Playlist's name`,
-      placeholder: 'Search in playlists',
-      action: 'Search'
-    };
-  }
-
   get user$(): Observable<SpotifyUser> {
     return this.spotifyService.primaryUser$;
   }
@@ -96,15 +73,13 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSearch(playlistName: string): void {
-    this.subscriptions.push(
-      this.playlists$.pipe(
-        mergeMap(paging => paging.items),
-        filter(playlist => playlist.name.toLowerCase().trim().includes(playlistName))
-      ).subscribe(playlist => {
-        this.navigate(playlist.id);
-        this.isSearching = false;
-      })
-    );
+    this.subscription = this.playlists$.pipe(
+      mergeMap(paging => paging.items),
+      filter(playlist => playlist.name.toLowerCase().trim().includes(playlistName))
+    ).subscribe(playlist => {
+      this.navigate(playlist.id);
+      this.isSearching = false;
+    });
   }
 
 }

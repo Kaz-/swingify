@@ -16,6 +16,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { ErrorComponent } from './components/error/error.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
+import { NavComponent } from './components/nav/nav.component';
 
 import { FormatStatusPipe } from './pipes/status.pipe';
 import { FormatErrorPipe } from './pipes/error.pipe';
@@ -32,7 +33,8 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     FooterComponent,
     PrivacyPolicyComponent,
     FormatErrorPipe,
-    FormatStatusPipe
+    FormatStatusPipe,
+    NavComponent
   ],
   imports: [
     CommonModule,
@@ -50,7 +52,8 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     DropdownComponent,
     DialogComponent,
     FooterComponent,
-    PrivacyPolicyComponent
+    PrivacyPolicyComponent,
+    NavComponent
   ]
 })
 export class SharedModule { }
