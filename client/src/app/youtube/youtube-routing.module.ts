@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { MainComponent } from './components/main/main.component';
-import { HomeComponent } from './components/home/home.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -16,16 +16,16 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
       },
       {
-        path: 'home',
-        component: HomeComponent
+        path: 'dashboard',
+        component: DashboardComponent
       },
       {
         path: 'export',
-        component: HomeComponent
+        component: DashboardComponent
       }
     ]
   }

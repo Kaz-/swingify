@@ -10,11 +10,11 @@ import { YoutubeAuthService } from '../../services/youtube-auth.service';
 import { AuthorizationToken, AuthPlatform } from '../../models/shared.models';
 
 @Component({
-  selector: 'swg-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  selector: 'swg-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class DashboardComponent implements OnDestroy {
+export class HomeComponent implements OnDestroy {
 
   version: string = environment.productVersion;
   private subscriptions: Subscription[] = [];
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnDestroy {
     if (token) {
       SpotifyAuthService.isTokenExpired(token)
         ? this.subscriptions.push(this.spotifyAuthService.refresh(token).subscribe())
-        : this.router.navigateByUrl('/spotify/home');
+        : this.router.navigateByUrl('/spotify/dashboard');
     } else {
       this.subscriptions.push(this.spotifyAuthService.authorize().subscribe());
     }
@@ -58,7 +58,7 @@ export class DashboardComponent implements OnDestroy {
     if (token) {
       YoutubeAuthService.isTokenExpired(token)
         ? this.subscriptions.push(this.youtubeAuthService.refresh(token).subscribe())
-        : this.router.navigateByUrl('/youtube/home');
+        : this.router.navigateByUrl('/youtube/dashboard');
     } else {
       this.subscriptions.push(this.youtubeAuthService.authorize().subscribe());
     }

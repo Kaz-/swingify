@@ -62,11 +62,11 @@ export class ProcessComponent implements OnInit, OnDestroy {
     switch (this.platform) {
       case AuthPlatform.SPOTIFY.toLowerCase():
         SpotifyAuthService.isAuthenticated() ? SpotifyAuthService.setSecondaryToken(token) : SpotifyAuthService.setToken(token);
-        this.router.navigateByUrl('/spotify/home');
+        this.router.navigateByUrl('/spotify/dashboard');
         break;
       case AuthPlatform.YOUTUBE.toLowerCase():
         YoutubeAuthService.setToken(token);
-        this.router.navigateByUrl('/youtube/home');
+        this.router.navigateByUrl('/youtube/dashboard');
         break;
       default:
         break;

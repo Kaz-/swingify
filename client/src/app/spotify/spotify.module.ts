@@ -5,7 +5,7 @@ import { SpotifyRoutingModule } from './spotify-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 import { MainComponent } from './components/main/main.component';
-import { HomeComponent } from './components/home/home.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ExportComponent } from './components/export/export.component';
 import { PlaylistImageComponent } from './components/playlist-image/playlist-image.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
@@ -20,7 +20,7 @@ import { AuthGuard } from './guards/auth.guard';
 @NgModule({
   declarations: [
     MainComponent,
-    HomeComponent,
+    DashboardComponent,
     ExportComponent,
     PlaylistImageComponent,
     PlaylistComponent,

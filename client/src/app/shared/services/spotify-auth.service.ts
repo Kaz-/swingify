@@ -70,11 +70,12 @@ export class SpotifyAuthService {
         if (isSecondary) {
           SpotifyAuthService.removeSecondaryToken();
           this.router.navigateByUrl('/spotify/export');
+          return this.authorize();
         } else {
           SpotifyAuthService.removeToken();
-          this.router.navigateByUrl('/dashboard');
+          this.router.navigateByUrl('/home');
+          return this.authorize();
         }
-        return EMPTY;
       })
     );
   }
@@ -96,10 +97,6 @@ export class SpotifyAuthService {
         token.created_at = Date.now() / 1000; // in seconds
         SpotifyAuthService.setToken(refreshedToken);
         return EMPTY;
-      }),
-      catchError(() => {
-        SpotifyAuthService.removeToken();
-        return this.authorize();
       })
     );
   }

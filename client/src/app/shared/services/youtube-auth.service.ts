@@ -50,8 +50,9 @@ export class YoutubeAuthService {
       { params: new HttpParams().set('authorizationCode', authorizationCode) }
     ).pipe(
       catchError(() => {
-        this.router.navigateByUrl('/dashboard');
-        return EMPTY;
+        this.router.navigateByUrl('/home');
+        YoutubeAuthService.removeToken();
+        return this.authorize();
       })
     );
   }
@@ -73,10 +74,6 @@ export class YoutubeAuthService {
         token.created_at = Date.now() / 1000; // in seconds
         YoutubeAuthService.setToken(refreshedToken);
         return EMPTY;
-      }),
-      catchError(() => {
-        YoutubeAuthService.removeToken();
-        return this.authorize();
       })
     );
   }

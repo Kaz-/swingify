@@ -5,7 +5,7 @@ import { YoutubeRoutingModule } from './youtube-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 import { MainComponent } from './components/main/main.component';
-import { HomeComponent } from './components/home/home.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { AuthGuard } from '../youtube/guards/auth.guard';
 
@@ -13,7 +13,7 @@ import { AuthGuard } from '../youtube/guards/auth.guard';
 @NgModule({
   declarations: [
     MainComponent,
-    HomeComponent
+    DashboardComponent
   ],
   imports: [
     CommonModule,

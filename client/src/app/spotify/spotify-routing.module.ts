@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MainComponent } from '../spotify/components/main/main.component';
-import { HomeComponent } from '../spotify/components/home/home.component';
-import { ExportComponent } from '../spotify/components/export/export.component';
+import { MainComponent } from './components/main/main.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ExportComponent } from './components/export/export.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -17,12 +17,12 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
       },
       {
-        path: 'home',
-        component: HomeComponent
+        path: 'dashboard',
+        component: DashboardComponent
       },
       {
         path: 'export',

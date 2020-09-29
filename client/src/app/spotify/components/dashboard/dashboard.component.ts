@@ -6,11 +6,11 @@ import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 
 @Component({
-  selector: 'swg-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'swg-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class HomeComponent {
+export class DashboardComponent {
 
   constructor(
     private router: Router,

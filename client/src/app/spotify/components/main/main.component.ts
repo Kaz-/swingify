@@ -54,14 +54,14 @@ export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
   private initializeLinks(): void {
     this.navLinks = [
       {
-        name: 'Dashboard',
-        link: '/dashboard',
-        icon: 'bars'
+        name: 'Home',
+        link: '/home',
+        icon: 'home'
       },
       {
-        name: 'Home',
-        link: '/spotify/home',
-        icon: 'home'
+        name: 'Dashboard',
+        link: '/spotify/dashboard',
+        icon: 'bars'
       },
       {
         name: 'Export',
