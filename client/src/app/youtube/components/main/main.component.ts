@@ -66,4 +66,8 @@ export class MainComponent implements OnInit, OnDestroy {
       : this.router.navigate(['/spotify/export'], { queryParams: { p: playlistId } });
   }
 
+  onSearch(playlistName: string): void {
+    // TODO
+  }
+
 }

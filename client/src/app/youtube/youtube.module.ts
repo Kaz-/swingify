@@ -10,6 +10,7 @@ import { ProfileMenuComponent } from './components/profile-menu/profile-menu.com
 import { PlaylistsComponent } from './components/playlists/playlists.component';
 
 import { AuthGuard } from '../youtube/guards/auth.guard';
+import { PlaylistImageComponent } from './components/playlist-image/playlist-image.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { AuthGuard } from '../youtube/guards/auth.guard';
     MainComponent,
     DashboardComponent,
     ProfileMenuComponent,
-    PlaylistsComponent
+    PlaylistsComponent,
+    PlaylistImageComponent
   ],
   imports: [
     CommonModule,
