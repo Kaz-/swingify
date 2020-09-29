@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -13,20 +13,13 @@ export class ErrorComponent implements OnInit {
   status$: Observable<number>;
   isServerActive: boolean;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.status$ = this.route.params.pipe(
       map(params => parseInt(params.status, 10)),
       tap(status => this.isServerActive = !(status === 500 || status === 504))
     );
-  }
-
-  redirect(): void {
-    this.router.navigateByUrl('/dashboard');
   }
 
 }

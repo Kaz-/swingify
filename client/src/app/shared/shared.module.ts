@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ErrorService } from './services/error.service';
@@ -28,13 +29,14 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     DropdownComponent,
     DialogComponent,
     ErrorComponent,
-    FormatErrorPipe,
-    FormatStatusPipe,
     FooterComponent,
-    PrivacyPolicyComponent
+    PrivacyPolicyComponent,
+    FormatErrorPipe,
+    FormatStatusPipe
   ],
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule
   ],
   providers: [
