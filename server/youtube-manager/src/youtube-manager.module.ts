@@ -6,6 +6,7 @@ import { UserController } from './controllers/user/user.controller';
 import { PlaylistsController } from './controllers/playlists/playlists.controller';
 
 import { SharedService } from './services/shared.service';
+import { PlaylistsService } from './services/playlists.service';
 import { YoutubeInterceptor } from './interceptors/youtube.interceptor';
 
 @Module({
@@ -19,6 +20,7 @@ import { YoutubeInterceptor } from './interceptors/youtube.interceptor';
   ],
   providers: [
     SharedService,
+    PlaylistsService,
     { provide: APP_INTERCEPTOR, useClass: YoutubeInterceptor }
   ],
 })

@@ -83,10 +83,6 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
       )).subscribe();
   }
 
-  authenticate(): void {
-    this.subscriptions.push(this.authService.authorize().subscribe());
-  }
-
   navigateBack(): void {
     if (this.isSecondary) {
       this.router.navigate(['/spotify/export'], { queryParams: { p: this.primaryId } });
@@ -95,6 +91,10 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
       this.router.navigate(['/spotify/export'], { queryParams: { s: this.secondaryId } });
       this.primaryService.resetPrimary();
     }
+  }
+
+  authenticate(): void {
+    this.subscriptions.push(this.authService.authorize().subscribe());
   }
 
   execute(action: PlaylistAction): void {

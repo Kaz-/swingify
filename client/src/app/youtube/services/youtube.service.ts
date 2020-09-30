@@ -1,11 +1,11 @@
 import { Inject, Injectable, LOCALE_ID, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { catchError, shareReplay } from 'rxjs/operators';
+import { catchError, scan, shareReplay, tap } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 
-import { Details, PlaylistOverview, Snippet, YoutubePaging } from '../models/youtube.models';
+import { Details, PlaylistItem, PlaylistOverview, Snippet, YoutubePaging } from '../models/youtube.models';
 import { ErrorService } from '../../shared/services/error.service';
 
 @Injectable({
@@ -15,8 +15,15 @@ export class YoutubeService implements OnDestroy {
 
   private user: Subject<Details<Snippet>> = new Subject<Details<Snippet>>();
   user$: Observable<Details<Snippet>> = this.user.asObservable().pipe(shareReplay());
+
   private playlists: Subject<YoutubePaging<PlaylistOverview>> = new Subject<YoutubePaging<PlaylistOverview>>();
   playlists$: Observable<YoutubePaging<PlaylistOverview>> = this.playlists.asObservable().pipe(shareReplay());
+
+  private playlistTracks: Subject<YoutubePaging<PlaylistItem>> = new Subject<YoutubePaging<PlaylistItem>>();
+  playlistTracks$: Observable<YoutubePaging<PlaylistItem>> = this.playlistTracks.asObservable().pipe(
+    scan((prev: YoutubePaging<PlaylistItem>, next: YoutubePaging<PlaylistItem>) => YoutubeService.handleEmittedTracks(prev, next)),
+    shareReplay()
+  );
 
   private subscriptions: Subscription[] = [];
 
@@ -29,6 +36,16 @@ export class YoutubeService implements OnDestroy {
       this.updateUser(),
       this.updatePlaylists()
     );
+  }
+
+  static handleEmittedTracks(
+    prev: YoutubePaging<PlaylistItem>,
+    next: YoutubePaging<PlaylistItem>
+  ): YoutubePaging<PlaylistItem> {
+    const prevPlaylistId: string = prev?.items[0].snippet.playlistId;
+    const nextPlaylistId: string = next?.items[0].snippet.playlistId;
+    return prevPlaylistId === nextPlaylistId && next?.items.length > 0 && next?.fromNext
+      ? { ...next, items: [...prev.items, ...next.items] } : next;
   }
 
   ngOnDestroy(): void {
@@ -45,12 +62,46 @@ export class YoutubeService implements OnDestroy {
       .pipe(catchError(err => this.errorService.handleError(err)));
   }
 
+  getPlaylistTracks(
+    id: string,
+    fromNext?: boolean,
+    toNext?: string,
+    query?: string
+  ): Observable<YoutubePaging<PlaylistItem>> {
+    return this.http.get<YoutubePaging<PlaylistItem>>(
+      `${environment.youtube.playlistsPath}/${id}/tracks`,
+      { params: this.createParams(toNext, query) }
+    ).pipe(
+      tap(tracks => tracks.fromNext = fromNext),
+      tap(tracks => this.updatePlaylistTracks(tracks))
+    );
+  }
+
   updateUser(): Subscription {
     return this.getUser().subscribe(user => this.user.next(user));
   }
 
   updatePlaylists(): Subscription {
     return this.getPlaylists().subscribe(playlists => this.playlists.next(playlists));
+  }
+
+  updatePlaylistTracks(tracks: YoutubePaging<PlaylistItem>): void {
+    this.playlistTracks.next(tracks);
+  }
+
+  private createParams(next?: string, query?: string): HttpParams {
+    let params: HttpParams = new HttpParams();
+    if (next) {
+      params = params.append('next', btoa(next));
+    }
+    if (query) {
+      params = params.append('search', query);
+    }
+    return params;
+  }
+
+  resetPlaylist(): void {
+    this.updatePlaylistTracks(null);
   }
 
 }

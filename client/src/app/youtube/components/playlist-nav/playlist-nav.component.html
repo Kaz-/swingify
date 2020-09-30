@@ -1,0 +1,15 @@
+<swg-export-nav [user$]="user$" [playlists$]="playlists$" [playlist$]="playlist$"
+  [playlistTracks$]="playlistTracks$" [isSecondary]="false" [isAuthenticated]="isAuthenticated"
+  (navigateBack)="navigateBack()" (authenticate)="authenticate()">
+  <ng-container profile>
+    <swg-profile-menu [user$]="user$"></swg-profile-menu>
+  </ng-container>
+  <ng-container playlist>
+    <swg-playlist *ngIf="playlist$ | async" [user$]="user$" [playlists$]="playlists$"
+      [tracks$]="playlistTracks$" (action)="execute($event, false)"
+      (next)="onNext($event, false)" (search)="onSearch($event, false)"></swg-playlist>
+  </ng-container>
+  <ng-container playlists>
+    <swg-playlists title="Playlists" [user$]="user$" [playlists$]="playlists$"></swg-playlists>
+  </ng-container>
+</swg-export-nav>

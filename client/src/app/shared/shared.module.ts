@@ -17,9 +17,11 @@ import { ErrorComponent } from './components/error/error.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 import { NavComponent } from './components/nav/nav.component';
+import { ExportNavComponent } from './components/export-nav/export-nav.component';
 
 import { FormatStatusPipe } from './pipes/status.pipe';
 import { FormatErrorPipe } from './pipes/error.pipe';
+import { ExportWrapperComponent } from './components/export-wrapper/export-wrapper.component';
 
 
 @NgModule({
@@ -34,7 +36,9 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     PrivacyPolicyComponent,
     FormatErrorPipe,
     FormatStatusPipe,
-    NavComponent
+    NavComponent,
+    ExportNavComponent,
+    ExportWrapperComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +57,8 @@ import { FormatErrorPipe } from './pipes/error.pipe';
     DialogComponent,
     FooterComponent,
     PrivacyPolicyComponent,
-    NavComponent
+    NavComponent,
+    ExportNavComponent
   ]
 })
 export class SharedModule { }

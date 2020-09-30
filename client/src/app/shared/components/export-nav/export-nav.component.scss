@@ -1,0 +1,40 @@
+@import "../../../../assets/styles/colors";
+@import "../../../../assets/styles/mixins";
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: $second-background;
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 1em 0 1em;
+    .back {
+      cursor: pointer;
+    }
+  }
+  .card-wrapper {
+    overflow-y: scroll;
+    @include scrollbar;
+    max-height: calc(100vh - 84px);
+    height: 100%;
+    swg-card::ng-deep {
+      > div {
+        margin: 2em 1em 2em 2em;
+      }
+    }
+    .tips {
+      display: grid;
+      row-gap: 2em;
+      justify-content: center;
+      margin: 2em;
+      h2 {
+        font-weight: 600;
+      }
+      p {
+        color: $alt;
+      }
+    }
+  }
+}

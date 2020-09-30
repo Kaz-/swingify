@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../config/environment';
 
 import { ConfigService } from '../config/config.service';
-import { Details, Snippet, YoutubeConfiguration, YoutubePaging } from '../models/youtube.models';
+import { Details, PlaylistItem, Snippet, YoutubeConfiguration, YoutubePaging } from '../models/youtube.models';
 
 @Injectable()
 export class SharedService {
@@ -34,6 +34,10 @@ export class SharedService {
       Authorization: request.headers['authorization'] ? request.headers['authorization'] : null,
       'Content-Type': 'application/json'
     };
+  }
+
+  static findMatchInTrack(item: PlaylistItem, query: string): boolean {
+    return item.title.toLowerCase().trim().includes(query);
   }
 
   getYoutubeConfiguration(): Observable<YoutubeConfiguration> {

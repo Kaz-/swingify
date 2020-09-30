@@ -11,6 +11,8 @@ import { PlaylistsComponent } from './components/playlists/playlists.component';
 
 import { AuthGuard } from '../youtube/guards/auth.guard';
 import { PlaylistImageComponent } from './components/playlist-image/playlist-image.component';
+import { ExportComponent } from './components/export/export.component';
+import { PlaylistNavComponent } from './components/playlist-nav/playlist-nav.component';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import { PlaylistImageComponent } from './components/playlist-image/playlist-ima
     DashboardComponent,
     ProfileMenuComponent,
     PlaylistsComponent,
-    PlaylistImageComponent
+    PlaylistImageComponent,
+    ExportComponent,
+    PlaylistNavComponent
   ],
   imports: [
     CommonModule,

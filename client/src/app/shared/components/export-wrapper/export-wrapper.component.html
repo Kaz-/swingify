@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="primary-nav">
+    <ng-content select="[primary-nav]"></ng-content>
+  </div>
+  <div class="content">
+    <header>
+      <h1>Wanna see a magic trick?</h1>
+      <button class="primary-button share" title="Share my playlist" (click)="share()">
+        <i class="icon copy"></i>
+        <span>Share</span>
+      </button>
+      <span class="tip" [title]="getHelp()"><i class="icon question-circle"></i></span>
+    </header>
+    <div class="from-to">
+      <ng-content select="[primary-box]"></ng-content>
+      <i class="icon long-arrow-right"></i>
+      <ng-content select=[secondary-box]></ng-content>
+    </div>
+  </div>
+  <div class="secondary-nav">
+    <ng-content select="[secondary-nav]"></ng-content>
+  </div>
+</div>
