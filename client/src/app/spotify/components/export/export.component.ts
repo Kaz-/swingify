@@ -1,15 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
 
-import { SpotifyService } from '../../services/spotify.service';
 import { PrimaryService } from '../../services/primary.service';
 import { SecondaryService } from '../../services/secondary.service';
 
 import { SpotifyPlaylist, SpotifyUser, SpotifyPaging, PlaylistTrack, SavedTrack } from '../../models/spotify.models';
 import { SpotifyAuthService } from '../../../shared/services/spotify-auth.service';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'swg-export',
@@ -21,9 +17,6 @@ export class ExportComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private router: Router,
-    private toastr: ToastrService,
-    private spotifyService: SpotifyService,
     private primaryService: PrimaryService,
     private secondaryService: SecondaryService
   ) { }
@@ -31,8 +24,8 @@ export class ExportComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.isSecondaryAuthenticated()) {
       this.subscriptions.push(
-        this.spotifyService.updateUser(true),
-        this.spotifyService.updatePlaylists(true)
+        this.secondaryService.updateSecondaryUser(),
+        this.secondaryService.updateSecondaryPlaylists()
       );
     }
   }
@@ -47,14 +40,14 @@ export class ExportComponent implements OnInit, OnDestroy {
    * Returns the current primary user
    */
   get primaryUser$(): Observable<SpotifyUser> {
-    return this.spotifyService.primaryUser$;
+    return this.primaryService.primaryUser$;
   }
 
   /**
    * Returns all primary playlists
    */
   get primaryPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
-    return this.spotifyService.primaryPlaylists$;
+    return this.primaryService.primaryPlaylists$;
   }
 
   /**
@@ -82,14 +75,14 @@ export class ExportComponent implements OnInit, OnDestroy {
    * Returns the current secondary user
    */
   get secondaryUser$(): Observable<SpotifyUser> {
-    return this.spotifyService.secondaryUser$;
+    return this.secondaryService.secondaryUser$;
   }
 
   /**
    * Returns all secondary playlists
    */
   get secondaryPlaylists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
-    return this.spotifyService.secondaryPlaylists$;
+    return this.secondaryService.secondaryPlaylists$;
   }
 
   /**
@@ -119,26 +112,6 @@ export class ExportComponent implements OnInit, OnDestroy {
 
   isSecondaryAuthenticated(): boolean {
     return SpotifyAuthService.isSecondaryAuthenticated();
-  }
-
-  getHelp(): string {
-    return 'If you want to share your playlist, you can click\n' +
-      'on this button or directly copy the URL from\n' +
-      'your browser with the "p" parameter only.\n' +
-      'Also make sure that your playlist is public.';
-  }
-
-  share(): void {
-    const dummy = document.createElement('input');
-    const url: UrlTree = this.router.parseUrl(this.router.url);
-    url.queryParams = { p: url.queryParams.p }; // remove secondary part
-    dummy.value = `${environment.baseUrl}${this.router.serializeUrl(url)}`;
-    document.body.appendChild(dummy);
-    dummy.focus();
-    dummy.select();
-    document.execCommand('copy');
-    document.body.removeChild(dummy);
-    this.toastr.info('Copied to clipboard!', null, { progressBar: true, timeOut: 2000 });
   }
 
 }

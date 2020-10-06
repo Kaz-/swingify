@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MainComponent } from './components/main/main.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ExportComponent } from './components/export/export.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -25,7 +26,7 @@ const routes: Routes = [
       },
       {
         path: 'export',
-        component: DashboardComponent
+        component: ExportComponent
       }
     ]
   }

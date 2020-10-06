@@ -1,7 +1,5 @@
-<swg-export-nav [user$]="user$" [playlists$]="playlists$" [playlist$]="playlist$"
-  [playlistTracks$]="playlistTracks$" [savedTracks$]="savedTracks$"
-  [isSecondary]="isSecondary" [isAuthenticated]="isAuthenticated"
-  (navigateBack)="navigateBack()" (authenticate)="authenticate()">
+<swg-playlist-nav [user$]="user$" [playlists$]="playlists$" [playlist$]="playlist$"
+  [playlistTracks$]="playlistTracks$" platform="spotify" [isSecondary]="false" [isAuthenticated]="isAuthenticated">
   <ng-container profile>
     <swg-profile-menu [user$]="user$" [isSecondary]="isSecondary"></swg-profile-menu>
   </ng-container>
@@ -17,4 +15,4 @@
     <swg-playlists title="Playlists" [allowCreation]="true" [user$]="user$"
       [playlists$]="playlists$" [isSecondary]="isSecondary"></swg-playlists>
   </ng-container>
-</swg-export-nav>
+</swg-playlist-nav>

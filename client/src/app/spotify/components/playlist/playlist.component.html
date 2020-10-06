@@ -1,6 +1,6 @@
 <div class="header" *ngIf="playlist$ | async as playlist">
   <a href="{{ playlist?.external_urls.spotify }}" target="_blank">
-    <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
+    <swg-spotify-playlist-image [playlist]="playlist"></swg-spotify-playlist-image>
     <div>
       <h3>{{ playlist?.name }}</h3>
       <small>By {{ playlist?.owner.display_name }}</small>

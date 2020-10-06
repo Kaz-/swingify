@@ -17,7 +17,7 @@ export class PlaylistsService {
     return this.http.get<YoutubePaging<PlaylistItem>>(
       request.query.next
         ? Buffer.from(request.query.next.toString(), 'base64').toString()
-        : `${environment.apiBaseUrl}/playlists`,
+        : `${environment.apiBaseUrl}/playlistItems`,
       {
         params: { part: 'snippet', playlistId: request.params.id },
         headers: SharedService.getAuthorizationHeader(request)

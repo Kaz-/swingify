@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-export enum AuthPlatform {
+export enum Platform {
   SPOTIFY = 'Spotify',
   YOUTUBE = 'YouTube'
 }

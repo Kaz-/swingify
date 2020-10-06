@@ -7,6 +7,7 @@ import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/mod
 import { NavLink } from 'src/app/shared/models/shared.models';
 
 import { SpotifyService } from '../../services/spotify.service';
+import { PrimaryService } from '../../services/primary.service';
 
 @Component({
   selector: 'swg-main',
@@ -22,7 +23,8 @@ export class MainComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private primaryService: PrimaryService
   ) { }
 
   ngOnInit(): void {
@@ -58,11 +60,11 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   get user$(): Observable<SpotifyUser> {
-    return this.spotifyService.primaryUser$;
+    return this.primaryService.primaryUser$;
   }
 
   get playlists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
-    return this.spotifyService.primaryPlaylists$;
+    return this.primaryService.primaryPlaylists$;
   }
 
   navigate(playlistId: string): void {

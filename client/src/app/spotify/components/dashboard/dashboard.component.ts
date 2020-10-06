@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 import { SpotifyUser, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
+import { PrimaryService } from '../../services/primary.service';
 
 @Component({
   selector: 'swg-dashboard',
@@ -14,15 +14,15 @@ export class DashboardComponent {
 
   constructor(
     private router: Router,
-    private spotifyService: SpotifyService
+    private primaryService: PrimaryService
   ) { }
 
   get user$(): Observable<SpotifyUser> {
-    return this.spotifyService.primaryUser$;
+    return this.primaryService.primaryUser$;
   }
 
   get playlists$(): Observable<SpotifyPaging<SpotifyPlaylist>> {
-    return this.spotifyService.primaryPlaylists$;
+    return this.primaryService.primaryPlaylists$;
   }
 
   redirect(playlistId: string): void {

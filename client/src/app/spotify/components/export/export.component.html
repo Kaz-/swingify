@@ -1,35 +1,26 @@
-<div class="container">
-  <div class="primary-nav">
-    <swg-playlist-nav [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$"
+<swg-export-wrapper>
+  <ng-container primary-nav>
+    <swg-spotify-playlist-nav [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$"
       [playlistTracks$]="primaryPlaylistTracks$" [savedTracks$]="primarySavedTracks$"
-      [isSecondary]="false" [isAuthenticated]="isAuthenticated()"></swg-playlist-nav>
-  </div>
-  <div class="content">
-    <header>
-      <h1>Wanna see a magic trick?</h1>
-      <button class="primary-button share" title="Share my playlist" (click)="share()">
-        <i class="icon copy"></i>
-        <span>Share</span>
-      </button>
-      <span class="tip" [title]="getHelp()"><i class="icon question-circle"></i></span>
-    </header>
-    <div class="from-to">
-      <div class="box" [title]="(primaryPlaylist$ | async)?.name
-        ? (primaryPlaylist$ | async)?.name
-        : (primarySavedTracks$ | async) ? 'Liked Songs' : 'Unknown'">
-        <swg-playlist-image [playlist]="primaryPlaylist$ | async" [savedTracks]="primarySavedTracks$ | async"></swg-playlist-image>
-      </div>
-      <i class="icon long-arrow-right"></i>
-      <div class="box" [title]="(secondaryPlaylist$ | async)?.name
-        ? (secondaryPlaylist$ | async)?.name
-        : (secondarySavedTracks$ | async) ? 'Liked Songs' : 'Unknown'">
-        <swg-playlist-image [playlist]="secondaryPlaylist$ | async" [savedTracks]="secondarySavedTracks$ | async"></swg-playlist-image>
-      </div>
+      [isSecondary]="false" [isAuthenticated]="isAuthenticated()"></swg-spotify-playlist-nav>
+  </ng-container>
+  <ng-container primary-box>
+    <div class="box" [title]="(primaryPlaylist$ | async)?.name
+      ? (primaryPlaylist$ | async)?.name
+      : (primarySavedTracks$ | async) ? 'Liked Songs' : 'Unknown'">
+      <swg-spotify-playlist-image [playlist]="primaryPlaylist$ | async" [savedTracks]="primarySavedTracks$ | async"></swg-spotify-playlist-image>
     </div>
-  </div>
-  <div class="secondary-nav">
-    <swg-playlist-nav [user$]="secondaryUser$" [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$"
+  </ng-container>
+  <ng-container secondary-box>
+    <div class="box" [title]="(secondaryPlaylist$ | async)?.name
+      ? (secondaryPlaylist$ | async)?.name
+      : (secondarySavedTracks$ | async) ? 'Liked Songs' : 'Unknown'">
+      <swg-spotify-playlist-image [playlist]="secondaryPlaylist$ | async" [savedTracks]="secondarySavedTracks$ | async"></swg-spotify-playlist-image>
+    </div>
+  </ng-container>
+  <ng-container secondary-nav>
+    <swg-spotify-playlist-nav [user$]="secondaryUser$" [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$"
       [playlistTracks$]="secondaryPlaylistTracks$" [savedTracks$]="secondarySavedTracks$"
-      [isSecondary]="true" [isAuthenticated]="isSecondaryAuthenticated()"></swg-playlist-nav>
-  </div>
-</div>
+      [isSecondary]="true" [isAuthenticated]="isSecondaryAuthenticated()"></swg-spotify-playlist-nav>
+  </ng-container>
+</swg-export-wrapper>

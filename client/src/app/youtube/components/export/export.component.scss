@@ -1,0 +1,15 @@
+:host {
+  width: 100%;
+  height: 100%;
+  .box {
+    display: flex;
+    flex-direction: column;
+    swg-spotify-playlist-image::ng-deep,
+    swg-youtube-playlist-image::ng-deep {
+      .container {
+        width: 150px;
+        height: 150px;
+      }
+    }
+  }
+}

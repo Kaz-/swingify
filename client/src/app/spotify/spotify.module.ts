@@ -36,6 +36,10 @@ import { AuthGuard } from './guards/auth.guard';
   ],
   providers: [
     AuthGuard
+  ],
+  exports: [
+    PlaylistNavComponent,
+    PlaylistImageComponent
   ]
 })
 export class SpotifyModule { }

@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { SpotifyPaging, SpotifyPlaylist, PlaylistCreation, SpotifyUser } from 'src/app/spotify/models/spotify.models';
 import { DialogInput } from '../../../shared/models/shared.models';
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
+import { PrimaryService } from '../../services/primary.service';
+import { SecondaryService } from '../../services/secondary.service';
 
 @Component({
   selector: 'swg-playlists',
@@ -28,7 +30,9 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private primaryService: PrimaryService,
+    private secondaryService: SecondaryService
   ) { }
 
   ngOnInit(): void {
@@ -76,7 +80,9 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
     const playlist: PlaylistCreation = { name };
     this.subscriptions.push(this.spotifyService.createPlaylist(user, playlist, this.isSecondary)
       .subscribe(() => {
-        this.spotifyService.updatePlaylists(this.isSecondary);
+        this.isSecondary
+          ? this.secondaryService.updateSecondaryPlaylists()
+          : this.primaryService.updatePrimaryPlaylists();
         this.isCreating = false;
         this.toastr.success('Playlist was successfully created!', null, { progressBar: true, timeOut: 2000 });
       }));

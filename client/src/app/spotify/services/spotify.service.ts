@@ -1,6 +1,6 @@
-import { Injectable, OnDestroy, Inject, LOCALE_ID } from '@angular/core';
+import { Injectable, Inject, LOCALE_ID } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { shareReplay, catchError } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
@@ -21,30 +21,13 @@ import { SpotifyAuthService } from '../../shared/services/spotify-auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SpotifyService implements OnDestroy {
-
-  private primaryUser: Subject<SpotifyUser> = new Subject<SpotifyUser>();
-  private primaryPlaylists: Subject<SpotifyPaging<SpotifyPlaylist>> = new Subject<SpotifyPaging<SpotifyPlaylist>>();
-  primaryUser$: Observable<SpotifyUser> = this.primaryUser.asObservable().pipe(shareReplay());
-  primaryPlaylists$: Observable<SpotifyPaging<SpotifyPlaylist>> = this.primaryPlaylists.asObservable().pipe(shareReplay());
-
-  private secondaryUser: Subject<SpotifyUser> = new Subject<SpotifyUser>();
-  private secondaryPlaylists: Subject<SpotifyPaging<SpotifyPlaylist>> = new Subject<SpotifyPaging<SpotifyPlaylist>>();
-  secondaryUser$: Observable<SpotifyUser> = this.secondaryUser.asObservable().pipe(shareReplay());
-  secondaryPlaylists$: Observable<SpotifyPaging<SpotifyPlaylist>> = this.secondaryPlaylists.asObservable().pipe(shareReplay());
-
-  private subscriptions: Subscription[] = [];
+export class SpotifyService {
 
   constructor(
     private http: HttpClient,
     private errorService: ErrorService,
     @Inject(LOCALE_ID) public locale: string
-  ) {
-    this.subscriptions.push(
-      this.updateUser(false),
-      this.updatePlaylists(false)
-    );
-  }
+  ) { }
 
   static handleEmittedTracks<T>(
     prev: SpotifyPaging<T>,
@@ -52,10 +35,6 @@ export class SpotifyService implements OnDestroy {
   ): SpotifyPaging<T> {
     return prev?.parentId === next?.parentId && next?.items.length > 0 && next?.fromNext
       ? { ...next, items: [...prev.items, ...next.items] } : next;
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   getUser(isSecondary: boolean): Observable<SpotifyUser> {
@@ -70,16 +49,6 @@ export class SpotifyService implements OnDestroy {
       environment.spotify.playlistsPath,
       { headers: this.setSecondaryHeader(isSecondary) }
     ).pipe(catchError(err => this.errorService.handleError(err)));
-  }
-
-  updateUser(isSecondary: boolean): Subscription {
-    return this.getUser(isSecondary)
-      .subscribe(user => isSecondary ? this.secondaryUser.next(user) : this.primaryUser.next(user));
-  }
-
-  updatePlaylists(isSecondary: boolean): Subscription {
-    return this.getPlaylists(isSecondary)
-      .subscribe(playlists => isSecondary ? this.secondaryPlaylists.next(playlists) : this.primaryPlaylists.next(playlists));
   }
 
   getPlaylist(id: string, isSecondary: boolean): Observable<SpotifyPlaylist> {

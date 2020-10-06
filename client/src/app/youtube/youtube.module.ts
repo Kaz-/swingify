@@ -13,6 +13,7 @@ import { AuthGuard } from '../youtube/guards/auth.guard';
 import { PlaylistImageComponent } from './components/playlist-image/playlist-image.component';
 import { ExportComponent } from './components/export/export.component';
 import { PlaylistNavComponent } from './components/playlist-nav/playlist-nav.component';
+import { SpotifyModule } from '../spotify/spotify.module';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { PlaylistNavComponent } from './components/playlist-nav/playlist-nav.com
   imports: [
     CommonModule,
     YoutubeRoutingModule,
-    SharedModule
+    SharedModule,
+    SpotifyModule
   ],
   providers: [
     AuthGuard

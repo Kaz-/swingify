@@ -7,7 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { SpotifyAuthService } from '../../services/spotify-auth.service';
 import { YoutubeAuthService } from '../../services/youtube-auth.service';
 
-import { AuthorizationToken, AuthPlatform } from '../../models/shared.models';
+import { AuthorizationToken, Platform } from '../../models/shared.models';
 
 @Component({
   selector: 'swg-home',
@@ -31,10 +31,10 @@ export class HomeComponent implements OnDestroy {
 
   redirect(platform: string): void {
     switch (platform) {
-      case AuthPlatform.SPOTIFY:
+      case Platform.SPOTIFY:
         this.authenticateWithSpotify();
         break;
-      case AuthPlatform.YOUTUBE:
+      case Platform.YOUTUBE:
         this.authenticateWithYoutube();
         break;
       default:

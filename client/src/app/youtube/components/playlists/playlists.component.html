@@ -11,7 +11,7 @@
   <div class="separator"></div>
   <li *ngFor="let playlist of playlists?.items" [title]="playlist.snippet.title">
     <a class="playlist-link" (click)="navigate(false, playlist.id)">
-      <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
+      <swg-youtube-playlist-image [playlist]="playlist"></swg-youtube-playlist-image>
       <div>{{ playlist.snippet.title }}</div>
     </a>
   </li>

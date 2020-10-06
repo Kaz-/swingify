@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Observable, EMPTY, Subject } from 'rxjs';
+import { Observable, EMPTY, Subject, Subscription } from 'rxjs';
 import { tap, mergeMap, scan, shareReplay, distinctUntilChanged } from 'rxjs/operators';
 
 import { SpotifyService } from './spotify.service';
-import { SpotifyPaging, PlaylistTrack, SpotifyPlaylist, SavedTrack, LIKED_ID } from '../models/spotify.models';
+import { SpotifyPaging, PlaylistTrack, SpotifyPlaylist, SavedTrack, LIKED_ID, SpotifyUser } from '../models/spotify.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SecondaryService {
+
+  private secondaryUser: Subject<SpotifyUser> = new Subject<SpotifyUser>();
+  secondaryUser$: Observable<SpotifyUser> = this.secondaryUser.asObservable().pipe(shareReplay());
+
+  private secondaryPlaylists: Subject<SpotifyPaging<SpotifyPlaylist>> = new Subject<SpotifyPaging<SpotifyPlaylist>>();
+  secondaryPlaylists$: Observable<SpotifyPaging<SpotifyPlaylist>> = this.secondaryPlaylists.asObservable().pipe(shareReplay());
 
   private secondaryPlaylist: Subject<SpotifyPlaylist> = new Subject<SpotifyPlaylist>();
   secondaryPlaylist$: Observable<SpotifyPlaylist> = this.secondaryPlaylist.asObservable().pipe(shareReplay());
@@ -26,6 +32,16 @@ export class SecondaryService {
   );
 
   constructor(private spotifyService: SpotifyService) { }
+
+  updateSecondaryUser(): Subscription {
+    return this.spotifyService.getUser(true)
+      .subscribe(user => this.secondaryUser.next(user));
+  }
+
+  updateSecondaryPlaylists(): Subscription {
+    return this.spotifyService.getPlaylists(true)
+      .subscribe(playlists => this.secondaryPlaylists.next(playlists));
+  }
 
   getSecondaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.spotifyService.getPlaylist(id, true).pipe(

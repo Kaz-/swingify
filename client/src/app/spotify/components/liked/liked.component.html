@@ -1,6 +1,6 @@
 <div class="header">
   <div class="top">
-    <swg-playlist-image [savedTracks]="tracks$ | async"></swg-playlist-image>
+    <swg-spotify-playlist-image [savedTracks]="tracks$ | async"></swg-spotify-playlist-image>
     <h3>Liked Songs</h3>
   </div>
   <div class="sub-header" *ngIf="tracks$ | async as tracks">

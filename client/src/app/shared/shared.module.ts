@@ -18,10 +18,11 @@ import { FooterComponent } from './components/footer/footer.component';
 import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 import { NavComponent } from './components/nav/nav.component';
 import { ExportNavComponent } from './components/export-nav/export-nav.component';
+import { ExportWrapperComponent } from './components/export-wrapper/export-wrapper.component';
+import { PlaylistNavComponent } from './components/playlist-nav/playlist-nav.component';
 
 import { FormatStatusPipe } from './pipes/status.pipe';
 import { FormatErrorPipe } from './pipes/error.pipe';
-import { ExportWrapperComponent } from './components/export-wrapper/export-wrapper.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { ExportWrapperComponent } from './components/export-wrapper/export-wrapp
     FormatStatusPipe,
     NavComponent,
     ExportNavComponent,
-    ExportWrapperComponent
+    ExportWrapperComponent,
+    PlaylistNavComponent
   ],
   imports: [
     CommonModule,
@@ -58,7 +60,9 @@ import { ExportWrapperComponent } from './components/export-wrapper/export-wrapp
     FooterComponent,
     PrivacyPolicyComponent,
     NavComponent,
-    ExportNavComponent
+    ExportNavComponent,
+    ExportWrapperComponent,
+    PlaylistNavComponent
   ]
 })
 export class SharedModule { }

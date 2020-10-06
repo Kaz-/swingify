@@ -21,7 +21,7 @@
   </ng-container>
   <li *ngFor="let playlist of playlists?.items" [title]="playlist.name">
     <a class="playlist-link" (click)="navigate(false, playlist.id)">
-      <swg-playlist-image [playlist]="playlist"></swg-playlist-image>
+      <swg-spotify-playlist-image [playlist]="playlist"></swg-spotify-playlist-image>
       <div>{{ playlist.name }}</div>
     </a>
   </li>

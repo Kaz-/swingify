@@ -8,7 +8,7 @@ import { environment } from '../../config/environment';
 
 import { SharedService } from '../../services/shared.service';
 import { PlaylistsService } from '../../services/playlists.service';
-import { PlaylistItem, PlaylistOverview, YoutubePaging } from '../../models/youtube.models';
+import { Details, PlaylistItem, PlaylistOverview, YoutubePaging } from '../../models/youtube.models';
 
 @Controller('playlists')
 export class PlaylistsController {
@@ -30,6 +30,18 @@ export class PlaylistsController {
         headers: SharedService.getAuthorizationHeader(request)
       }
     ).pipe(map(response => response.data));
+  }
+
+  @Get(':id')
+  getPlaylist(@Req() request: Request): Observable<Details<PlaylistOverview>> {
+    this.logger.log(`Requesting playlist with ID: ${request.params.id}`);
+    return this.http.get<YoutubePaging<PlaylistOverview>>(
+      `${environment.apiBaseUrl}/playlists`,
+      {
+        params: { part: 'snippet', id: request.params.id },
+        headers: SharedService.getAuthorizationHeader(request)
+      }
+    ).pipe(map(response => response.data.items[0]));
   }
 
   @Get('/:id/tracks')

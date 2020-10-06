@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { tap, mergeMap, scan, shareReplay, distinctUntilChanged } from 'rxjs/operators';
 
 import { SpotifyService } from './spotify.service';
-import { SpotifyPaging, PlaylistTrack, SpotifyPlaylist, SavedTrack, LIKED_ID } from '../models/spotify.models';
+import { SpotifyPaging, PlaylistTrack, SpotifyPlaylist, SavedTrack, LIKED_ID, SpotifyUser } from '../models/spotify.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrimaryService {
+
+  private primaryUser: Subject<SpotifyUser> = new Subject<SpotifyUser>();
+  primaryUser$: Observable<SpotifyUser> = this.primaryUser.asObservable().pipe(shareReplay());
+
+  private primaryPlaylists: Subject<SpotifyPaging<SpotifyPlaylist>> = new Subject<SpotifyPaging<SpotifyPlaylist>>();
+  primaryPlaylists$: Observable<SpotifyPaging<SpotifyPlaylist>> = this.primaryPlaylists.asObservable().pipe(shareReplay());
 
   private primaryPlaylist: Subject<SpotifyPlaylist> = new Subject<SpotifyPlaylist>();
   primaryPlaylist$: Observable<SpotifyPlaylist> = this.primaryPlaylist.asObservable().pipe(shareReplay());
@@ -25,7 +31,24 @@ export class PrimaryService {
     shareReplay()
   );
 
-  constructor(private spotifyService: SpotifyService) { }
+  private subscriptions: Subscription[] = [];
+
+  constructor(private spotifyService: SpotifyService) {
+    this.subscriptions.push(
+      this.updatePrimaryUser(),
+      this.updatePrimaryPlaylists()
+    );
+  }
+
+  updatePrimaryUser(): Subscription {
+    return this.spotifyService.getUser(false)
+      .subscribe(user => this.primaryUser.next(user));
+  }
+
+  updatePrimaryPlaylists(): Subscription {
+    return this.spotifyService.getPlaylists(false)
+      .subscribe(playlists => this.primaryPlaylists.next(playlists));
+  }
 
   getPrimaryPlaylist(id: string, fromNext?: boolean): Observable<SpotifyPaging<PlaylistTrack>> {
     return this.spotifyService.getPlaylist(id, false).pipe(

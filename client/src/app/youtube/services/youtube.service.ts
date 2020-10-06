@@ -1,7 +1,7 @@
 import { Inject, Injectable, LOCALE_ID, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { catchError, scan, shareReplay, tap } from 'rxjs/operators';
+import { catchError, scan, shareReplay, tap, mergeMap, distinctUntilChanged } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 
@@ -18,6 +18,9 @@ export class YoutubeService implements OnDestroy {
 
   private playlists: Subject<YoutubePaging<PlaylistOverview>> = new Subject<YoutubePaging<PlaylistOverview>>();
   playlists$: Observable<YoutubePaging<PlaylistOverview>> = this.playlists.asObservable().pipe(shareReplay());
+
+  private playlist: Subject<Details<PlaylistOverview>> = new Subject<Details<PlaylistOverview>>();
+  playlist$: Observable<Details<PlaylistOverview>> = this.playlist.asObservable().pipe(shareReplay());
 
   private playlistTracks: Subject<YoutubePaging<PlaylistItem>> = new Subject<YoutubePaging<PlaylistItem>>();
   playlistTracks$: Observable<YoutubePaging<PlaylistItem>> = this.playlistTracks.asObservable().pipe(
@@ -62,6 +65,16 @@ export class YoutubeService implements OnDestroy {
       .pipe(catchError(err => this.errorService.handleError(err)));
   }
 
+  getPlaylist(id: string): Observable<YoutubePaging<PlaylistItem>> {
+    return this.http.get<Details<PlaylistOverview>>(`${environment.youtube.playlistsPath}/${id}`)
+      .pipe(
+        tap(playlist => this.updatePlaylist(playlist)),
+        mergeMap(playlist => this.getPlaylistTracks(playlist.id)),
+        distinctUntilChanged(),
+        catchError(err => this.errorService.handleError(err))
+      );
+  }
+
   getPlaylistTracks(
     id: string,
     fromNext?: boolean,
@@ -83,6 +96,10 @@ export class YoutubeService implements OnDestroy {
 
   updatePlaylists(): Subscription {
     return this.getPlaylists().subscribe(playlists => this.playlists.next(playlists));
+  }
+
+  updatePlaylist(playlist: Details<PlaylistOverview> | null): void {
+    return this.playlist.next(playlist);
   }
 
   updatePlaylistTracks(tracks: YoutubePaging<PlaylistItem>): void {

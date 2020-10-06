@@ -1,0 +1,14 @@
+<swg-export-nav [user$]="user$" [playlists$]="playlists$" [playlist$]="playlist$"
+  [playlistTracks$]="playlistTracks$" [savedTracks$]="savedTracks$"
+  [isSecondary]="isSecondary" [isAuthenticated]="isAuthenticated"
+  (navigateBack)="navigateBack()" (authenticate)="authenticate()">
+  <ng-container profile>
+    <ng-content select="[profile]"></ng-content>
+  </ng-container>
+  <ng-container playlist>
+    <ng-content select="[playlist]"></ng-content>
+  </ng-container>
+  <ng-container playlists>
+    <ng-content select="[playlists]"></ng-content>
+  </ng-container>
+</swg-export-nav>

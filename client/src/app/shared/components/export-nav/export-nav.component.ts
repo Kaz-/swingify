@@ -1,21 +1,21 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SpotifyPaging } from '../../../spotify/models/spotify.models';
-import { Snippet, YoutubePaging } from '../../../youtube/models/youtube.models';
+import { PlaylistTrack, SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser } from '../../../spotify/models/spotify.models';
+import { Details, PlaylistItem, PlaylistOverview, Snippet, YoutubePaging } from '../../../youtube/models/youtube.models';
 
 @Component({
   selector: 'swg-export-nav',
   templateUrl: './export-nav.component.html',
   styleUrls: ['./export-nav.component.scss']
 })
-export class ExportNavComponent<U, T, S, P, R extends Snippet> {
+export class ExportNavComponent {
 
-  @Input() user$: Observable<U>;
-  @Input() playlists$: Observable<SpotifyPaging<P> | YoutubePaging<R>>;
-  @Input() playlist$: Observable<P>;
-  @Input() playlistTracks$: Observable<SpotifyPaging<T> | YoutubePaging<R>>;
-  @Input() savedTracks$?: Observable<SpotifyPaging<S> | YoutubePaging<R>>;
+  @Input() user$: Observable<SpotifyUser | Details<Snippet>>;
+  @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist> | YoutubePaging<PlaylistOverview>>;
+  @Input() playlist$: Observable<SpotifyPlaylist | Details<PlaylistOverview>>;
+  @Input() playlistTracks$: Observable<SpotifyPaging<PlaylistTrack> | YoutubePaging<PlaylistItem>>;
+  @Input() savedTracks$?: Observable<SpotifyPaging<SavedTrack>>;
   @Input() isSecondary: boolean;
   @Input() isAuthenticated: boolean;
 

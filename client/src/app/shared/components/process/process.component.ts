@@ -6,7 +6,7 @@ import { mergeMap } from 'rxjs/operators';
 import { SpotifyAuthService } from '../../services/spotify-auth.service';
 import { YoutubeAuthService } from '../../services/youtube-auth.service';
 
-import { AuthPlatform, AuthorizationToken } from '../../models/shared.models';
+import { Platform, AuthorizationToken } from '../../models/shared.models';
 
 @Component({
   selector: 'swg-process',
@@ -38,9 +38,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
   private handle(params: Params): Observable<AuthorizationToken> {
     this.platform = params.platform;
     switch (params.platform) {
-      case AuthPlatform.SPOTIFY.toLowerCase():
+      case Platform.SPOTIFY.toLowerCase():
         return this.authenticateWithSpotify(params);
-      case AuthPlatform.YOUTUBE.toLowerCase():
+      case Platform.YOUTUBE.toLowerCase():
         return this.authenticateWithYoutube(params);
       default:
         break;
@@ -60,11 +60,11 @@ export class ProcessComponent implements OnInit, OnDestroy {
   private setTokenAccordingly(token: AuthorizationToken): void {
     token.created_at = Math.round(Date.now() / 1000); // in seconds
     switch (this.platform) {
-      case AuthPlatform.SPOTIFY.toLowerCase():
+      case Platform.SPOTIFY.toLowerCase():
         SpotifyAuthService.isAuthenticated() ? SpotifyAuthService.setSecondaryToken(token) : SpotifyAuthService.setToken(token);
         this.router.navigateByUrl('/spotify/dashboard');
         break;
-      case AuthPlatform.YOUTUBE.toLowerCase():
+      case Platform.YOUTUBE.toLowerCase():
         YoutubeAuthService.setToken(token);
         this.router.navigateByUrl('/youtube/dashboard');
         break;

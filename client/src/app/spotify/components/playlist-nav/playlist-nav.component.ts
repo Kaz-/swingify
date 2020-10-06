@@ -1,19 +1,18 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { EMPTY, Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, mergeMap, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
 
-import { PrimaryService } from '../../../spotify/services/primary.service';
-import { SecondaryService } from '../../../spotify/services/secondary.service';
-import { SpotifyService } from '../../../spotify/services/spotify.service';
-import { SpotifyAuthService } from '../../../shared/services/spotify-auth.service';
-
-import { LIKED_ID, PlaylistTrack, SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser } from '../../../spotify/models/spotify.models';
 import { PlaylistAction, ETrackAction } from '../../../shared/models/shared.models';
+import { LIKED_ID, PlaylistTrack, SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser } from '../../models/spotify.models';
+
+import { PrimaryService } from '../../services/primary.service';
+import { SecondaryService } from '../../services/secondary.service';
+import { SpotifyService } from '../../services/spotify.service';
 
 @Component({
-  selector: 'swg-playlist-nav',
+  selector: 'swg-spotify-playlist-nav',
   templateUrl: './playlist-nav.component.html',
   styleUrls: ['./playlist-nav.component.scss']
 })
@@ -23,8 +22,9 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
   @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
   @Input() playlist$: Observable<SpotifyPlaylist>;
   @Input() playlistTracks$: Observable<SpotifyPaging<PlaylistTrack>>;
-  @Input() savedTracks$: Observable<SpotifyPaging<SavedTrack>>;
+  @Input() savedTracks$?: Observable<SpotifyPaging<SavedTrack>>;
   @Input() isSecondary: boolean;
+  @Input() platform: string;
   @Input() isAuthenticated: boolean;
 
   private primaryId: string;
@@ -32,69 +32,24 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private authService: SpotifyAuthService,
     private spotifyService: SpotifyService,
     private primaryService: PrimaryService,
     private secondaryService: SecondaryService
   ) { }
 
   ngOnInit(): void {
-    this.subscriptions.push(this.initPlaylist());
+    this.subscriptions.push(
+      this.route.queryParams.pipe(
+        tap(params => this.primaryId = params.p),
+        tap(params => this.secondaryId = params.s)
+      ).subscribe()
+    );
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  initPlaylist(): Subscription {
-    const source$: Observable<Params> = this.route.queryParams.pipe(
-      tap(params => this.primaryId = params.p),
-      tap(params => this.secondaryId = params.s)
-    );
-    return this.isSecondary
-      ? this.setupSecondary(source$)
-      : this.setupPrimary(source$);
-  }
-
-  setupPrimary(source$: Observable<Params>): Subscription {
-    return source$.pipe(
-      map(params => params.p),
-      distinctUntilChanged(),
-      mergeMap(primary => primary
-        ? primary === LIKED_ID
-          ? this.primaryService.getPrimarySavedTracks()
-          : this.primaryService.getPrimaryPlaylist(primary)
-        : EMPTY
-      )).subscribe();
-  }
-
-  setupSecondary(source$: Observable<Params>): Subscription {
-    return source$.pipe(
-      map(params => params.s),
-      distinctUntilChanged(),
-      mergeMap(secondary => secondary
-        ? secondary === LIKED_ID
-          ? this.secondaryService.getsecondarySavedTracks()
-          : this.secondaryService.getSecondaryPlaylist(secondary)
-        : EMPTY
-      )).subscribe();
-  }
-
-  navigateBack(): void {
-    if (this.isSecondary) {
-      this.router.navigate(['/spotify/export'], { queryParams: { p: this.primaryId } });
-      this.secondaryService.resetSecondary();
-    } else {
-      this.router.navigate(['/spotify/export'], { queryParams: { s: this.secondaryId } });
-      this.primaryService.resetPrimary();
-    }
-  }
-
-  authenticate(): void {
-    this.subscriptions.push(this.authService.authorize().subscribe());
   }
 
   execute(action: PlaylistAction): void {

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { SavedTrack, SpotifyPaging, SpotifyPlaylist } from 'src/app/spotify/models/spotify.models';
 
 @Component({
-  selector: 'swg-playlist-image',
+  selector: 'swg-spotify-playlist-image',
   templateUrl: './playlist-image.component.html',
   styleUrls: ['./playlist-image.component.scss']
 })
