@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, map, mergeMap, tap } from 'rxjs/operators';
 
 import { PlaylistAction, ETrackAction } from '../../../shared/models/shared.models';
 import { LIKED_ID, PlaylistTrack, SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser } from '../../models/spotify.models';
@@ -40,16 +40,45 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.route.queryParams.pipe(
-        tap(params => this.primaryId = params.p),
-        tap(params => this.secondaryId = params.s)
-      ).subscribe()
-    );
+    this.subscriptions.push(this.initPlaylist());
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  initPlaylist(): Subscription {
+    const source$: Observable<Params> = this.route.queryParams.pipe(
+      tap(params => this.primaryId = params.p),
+      tap(params => this.secondaryId = params.s)
+    );
+    return this.isSecondary
+      ? this.setupSecondary(source$)
+      : this.setupPrimary(source$);
+  }
+
+  setupPrimary(source$: Observable<Params>): Subscription {
+    return source$.pipe(
+      map(params => params.p),
+      distinctUntilChanged(),
+      mergeMap(primary => primary
+        ? primary === LIKED_ID
+          ? this.primaryService.getPrimarySavedTracks()
+          : this.primaryService.getPrimaryPlaylist(primary)
+        : EMPTY
+      )).subscribe();
+  }
+
+  setupSecondary(source$: Observable<Params>): Subscription {
+    return source$.pipe(
+      map(params => params.s),
+      distinctUntilChanged(),
+      mergeMap(secondary => secondary
+        ? secondary === LIKED_ID
+          ? this.secondaryService.getsecondarySavedTracks()
+          : this.secondaryService.getSecondaryPlaylist(secondary)
+        : EMPTY
+      )).subscribe();
   }
 
   execute(action: PlaylistAction): void {

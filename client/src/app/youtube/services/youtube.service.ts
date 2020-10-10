@@ -118,6 +118,7 @@ export class YoutubeService implements OnDestroy {
   }
 
   resetPlaylist(): void {
+    this.updatePlaylist(null);
     this.updatePlaylistTracks(null);
   }
 

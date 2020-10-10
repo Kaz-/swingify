@@ -1,7 +1,7 @@
 <swg-export-wrapper>
   <ng-container primary-nav>
     <swg-youtube-playlist-nav [user$]="primaryUser$" [playlists$]="primaryPlaylists$" [playlist$]="primaryPlaylist$"
-      [playlistTracks$]="primaryPlaylistTracks$" [isAuthenticated]="isAuthenticated()"></swg-youtube-playlist-nav>
+      [playlistTracks$]="primaryPlaylistTracks$" [isAuthenticated]="isAuthenticated()" platform="youtube"></swg-youtube-playlist-nav>
   </ng-container>
   <ng-container primary-box>
     <div class="box" [title]="(primaryPlaylist$ | async)?.snippet.title">
@@ -18,6 +18,6 @@
   <ng-container secondary-nav>
     <swg-spotify-playlist-nav [user$]="secondaryUser$" [playlists$]="secondaryPlaylists$" [playlist$]="secondaryPlaylist$"
       [playlistTracks$]="secondaryPlaylistTracks$" [savedTracks$]="secondarySavedTracks$"
-      [isSecondary]="true" [isAuthenticated]="isSecondaryAuthenticated()"></swg-spotify-playlist-nav>
+      [isSecondary]="true" [isAuthenticated]="isSecondaryAuthenticated()" platform="youtube"></swg-spotify-playlist-nav>
   </ng-container>
 </swg-export-wrapper>

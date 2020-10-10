@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { EMPTY, Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, mergeMap, tap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
-import { LIKED_ID, PlaylistTrack, SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser } from '../../../spotify/models/spotify.models';
+import { PlaylistTrack, SavedTrack, SpotifyPaging, SpotifyPlaylist, SpotifyUser } from '../../../spotify/models/spotify.models';
 import { Details, PlaylistItem, PlaylistOverview, Snippet, YoutubePaging } from '../../../youtube/models/youtube.models';
 import { Platform } from '../../../shared/models/shared.models';
 
@@ -45,86 +45,48 @@ export class PlaylistNavComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.subscriptions.push(this.initPlaylist());
+    this.subscriptions.push(
+      this.route.queryParams.pipe(
+        tap(params => this.primaryId = params.p),
+        tap(params => this.secondaryId = params.s)
+      ).subscribe()
+    );
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  initPlaylist(): Subscription {
-    const source$: Observable<Params> = this.route.queryParams.pipe(
-      tap(params => this.primaryId = params.p),
-      tap(params => this.secondaryId = params.s)
-    );
-    return this.isSecondary
-      ? this.setupSecondary(source$)
-      : this.setupPrimary(source$);
-  }
-
-  setupPrimary(source$: Observable<Params>): Subscription {
-    console.log(this.platform);
+  navigateBack(): void {
     switch (this.platform) {
       case Platform.YOUTUBE.toLowerCase():
-        return this.setupAsYoutube(source$);
+        this.navigateAsYoutube();
+        break;
       case Platform.SPOTIFY.toLowerCase():
       default:
-        return this.setupAsSpotify(source$);
+        this.navigateAsSpotify();
+        break;
     }
   }
 
-  private setupAsSpotify(source$: Observable<Params>): Subscription {
-    return source$.pipe(
-      map(params => params.p),
-      distinctUntilChanged(),
-      mergeMap(primary => primary
-        ? primary === LIKED_ID
-          ? this.primaryService.getPrimarySavedTracks()
-          : this.primaryService.getPrimaryPlaylist(primary)
-        : EMPTY
-      )).subscribe();
-  }
-
-  private setupAsYoutube(source$: Observable<Params>): Subscription {
-    return source$.pipe(
-      map(params => params.p),
-      distinctUntilChanged(),
-      mergeMap(primary => primary
-        ? primary === LIKED_ID
-          ? this.youtubeService.getPlaylist(primary)
-          : this.youtubeService.getPlaylist(primary)
-        : EMPTY
-      )).subscribe();
-  }
-
-  setupSecondary(source$: Observable<Params>): Subscription {
-    return source$.pipe(
-      map(params => params.s),
-      distinctUntilChanged(),
-      mergeMap(secondary => secondary
-        ? secondary === LIKED_ID
-          ? this.secondaryService.getsecondarySavedTracks()
-          : this.secondaryService.getSecondaryPlaylist(secondary)
-        : EMPTY
-      )).subscribe();
-  }
-
-  navigateBack(): void {
+  navigateAsSpotify(): void {
     if (this.isSecondary) {
       this.router.navigate(['/spotify/export'], { queryParams: { p: this.primaryId } });
       this.secondaryService.resetSecondary();
     } else {
-      switch (this.platform) {
-        case Platform.YOUTUBE.toLowerCase():
-          this.router.navigate(['/youtube/export'], { queryParams: { s: this.secondaryId } });
-          this.primaryService.resetPrimary();
-          break;
-        case Platform.SPOTIFY.toLowerCase():
-        default:
-          this.router.navigate(['/spotify/export'], { queryParams: { s: this.secondaryId } });
-          this.primaryService.resetPrimary();
-          break;
-      }
+      this.router.navigate(['/spotify/export'], { queryParams: { s: this.secondaryId } });
+      this.primaryService.resetPrimary();
+    }
+  }
+
+  navigateAsYoutube(): void {
+    if (this.isSecondary) {
+      this.router.navigate(['/youtube/export'], { queryParams: { p: this.primaryId } });
+      this.secondaryService.resetSecondary();
+    } else {
+      this.router.navigate(['/youtube/export'], { queryParams: { s: this.secondaryId } });
+      this.primaryService.resetPrimary();
+      this.youtubeService.resetPlaylist();
     }
   }
 

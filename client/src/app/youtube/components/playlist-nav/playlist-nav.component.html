@@ -1,5 +1,6 @@
 <swg-playlist-nav [user$]="user$" [playlists$]="playlists$" [playlist$]="playlist$"
-  [playlistTracks$]="playlistTracks$" platform="youtube" [isSecondary]="false" [isAuthenticated]="isAuthenticated">
+  [playlistTracks$]="playlistTracks$" [platform]="platform"
+  [isSecondary]="false" [isAuthenticated]="isAuthenticated">
   <ng-container profile>
     <swg-profile-menu [user$]="user$"></swg-profile-menu>
   </ng-container>

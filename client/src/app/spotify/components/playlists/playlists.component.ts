@@ -5,7 +5,8 @@ import { Observable, Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { SpotifyPaging, SpotifyPlaylist, PlaylistCreation, SpotifyUser } from 'src/app/spotify/models/spotify.models';
-import { DialogInput } from '../../../shared/models/shared.models';
+import { DialogInput, Platform } from '../../../shared/models/shared.models';
+
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 import { PrimaryService } from '../../services/primary.service';
 import { SecondaryService } from '../../services/secondary.service';
@@ -22,6 +23,7 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
   @Input() user$: Observable<SpotifyUser>;
   @Input() playlists$: Observable<SpotifyPaging<SpotifyPlaylist>>;
   @Input() isSecondary: boolean;
+  @Input() platform: string;
 
   subscriptions: Subscription[] = [];
   dialog: DialogInput;
@@ -67,12 +69,34 @@ export class PlaylistsComponent implements OnInit, OnDestroy {
 
   secondaryNavigate(toSavedTracks: boolean, playlistId?: string): void {
     const tree: UrlTree = this.router.parseUrl(this.router.url);
+    switch (this.platform) {
+      case Platform.YOUTUBE.toLowerCase():
+        this.navigateAsYoutube(tree, toSavedTracks, playlistId);
+        break;
+      case Platform.SPOTIFY.toLowerCase():
+      default:
+        this.navigateAsSpotify(tree, toSavedTracks, playlistId);
+        break;
+    }
+  }
+
+  private navigateAsSpotify(tree: UrlTree, toSavedTracks: boolean, playlistId?: string): void {
     if (toSavedTracks) {
       this.router.navigate(['/spotify/export'], { queryParams: { p: tree.queryParams.p, s: 'liked' } });
     } else {
       tree.queryParams
         ? this.router.navigate(['/spotify/export'], { queryParams: { p: tree.queryParams.p, s: playlistId } })
         : this.router.navigate(['/spotify/export'], { queryParams: { s: playlistId } });
+    }
+  }
+
+  private navigateAsYoutube(tree: UrlTree, toSavedTracks: boolean, playlistId?: string): void {
+    if (toSavedTracks) {
+      this.router.navigate(['/youtube/export'], { queryParams: { p: tree.queryParams.p, s: 'liked' } });
+    } else {
+      tree.queryParams
+        ? this.router.navigate(['/youtube/export'], { queryParams: { p: tree.queryParams.p, s: playlistId } })
+        : this.router.navigate(['/youtube/export'], { queryParams: { s: playlistId } });
     }
   }
 
